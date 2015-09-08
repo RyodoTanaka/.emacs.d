@@ -27,7 +27,7 @@ Version :  GNU Emacs 24.4.1
 **!! Emacsのバージョンが24.4以上出ないと動きません。!!**  
 2015.09.09現在、`apt`でサポートされているのは、Emacs24.3です。  
 なので、**手動で最新のEmacsをインストールする**必要があります。注意してください。  
-**参考 : ** [Ubuntu Handbook](http://ubuntuhandbook.org/index.php/2014/10/emacs-24-4-released-install-in-ubuntu-14-04/)  
+**参考：** [Ubuntu Handbook](http://ubuntuhandbook.org/index.php/2014/10/emacs-24-4-released-install-in-ubuntu-14-04/)  
 [dofmanさんのメモ]()  
 1. 不必要なものを予めremoveしておく。
    ubuntu14.04の場合、aptで提供されているemacsのversionは24.3なので
