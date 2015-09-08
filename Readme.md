@@ -27,8 +27,8 @@ Version :  GNU Emacs 24.4.1
 **!! Emacsのバージョンが24.4以上出ないと動きません。!!**  
 2015.09.09現在、`apt`でサポートされているのは、Emacs24.3です。  
 なので、**手動で最新のEmacsをインストールする**必要があります。注意してください。  
-**参考 : **[Ubuntu Handbook](http://ubuntuhandbook.org/index.php/2014/10/emacs-24-4-released-install-in-ubuntu-14-04/)  
-[dofmanさんのメモ]()
+**参考 : ** [Ubuntu Handbook](http://ubuntuhandbook.org/index.php/2014/10/emacs-24-4-released-install-in-ubuntu-14-04/)  
+[dofmanさんのメモ]()  
 1. 不必要なものを予めremoveしておく。
    ubuntu14.04の場合、aptで提供されているemacsのversionは24.3なので
    emacs24.3以下をインストールしている場合はアンインストールする。  
@@ -40,26 +40,29 @@ Version :  GNU Emacs 24.4.1
    sudo apt-get remove emacs
    sudo apt-get autoremove
    ```
+   
 2. emacs24.4をソースからビルドし、インストールする。
    1. ビルドに必要な依存パッケージをインストールする。
       ```bash
       sudo apt-get install build-essential
       sudo apt-get build-dep emacs24
       ```
-	  2. emacs24.4のソースを[公式ページ](http://ftp.gnu.org/gnu/emacs/)からダウンロードする。  
-		 `emacs-24.4.tar.gz`と書いてある箇所を見つけて、クリックすればダウンロードが始まる。  
-		 *ここからはダウンロード先が~/Downloads/*以下であると仮定してすすめる。
-		 ```bash
-    	 cd ~/Downloads
-		 tar -xf emacs-24.4.tar.gz
-		 cd emacs-24.4
-		 ```
-	  3. 以下のコマンドでemacs24.4をビルドしてインストールする。
-         ```bash
-		 ./configure
-		 make
-		 sudo make install
-		 ```
+
+   2. emacs24.4のソースを[公式ページ](http://ftp.gnu.org/gnu/emacs/)からダウンロードする。  
+   `emacs-24.4.tar.gz`と書いてある箇所を見つけて、クリックすればダウンロードが始まる。  
+   *ここからはダウンロード先が~/Downloads/*以下であると仮定してすすめる。
+   ```bash
+   cd ~/Downloads
+   tar -xf emacs-24.4.tar.gz
+   cd emacs-24.4
+   ```
+
+   3. 以下のコマンドでemacs24.4をビルドしてインストールする。
+      ```bash
+	  ./configure
+	  make
+	  sudo make install
+	  ```
 
 ### git-2.5.1のinstall
 aptで提供されているgitのversionではmagit-gitflow.elが動いてくれないので、
