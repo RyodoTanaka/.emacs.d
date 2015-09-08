@@ -49,13 +49,13 @@ Version :  GNU Emacs 24.4.1
       ```
 
    2. emacs24.4のソースを[公式ページ](http://ftp.gnu.org/gnu/emacs/)からダウンロードする。  
-   `emacs-24.4.tar.gz`と書いてある箇所を見つけて、クリックすればダウンロードが始まる。  
-   *ここからはダウンロード先が~/Downloads/*以下であると仮定してすすめる。
-   ```bash
-   cd ~/Downloads
-   tar -xf emacs-24.4.tar.gz
-   cd emacs-24.4
-   ```
+      `emacs-24.4.tar.gz`と書いてある箇所を見つけて、クリックすればダウンロードが始まる。  
+      *ここからはダウンロード先が~/Downloads/*以下であると仮定してすすめる。
+      ```bash
+      cd ~/Downloads
+      tar -xf emacs-24.4.tar.gz
+      cd emacs-24.4
+      ```
 
    3. 以下のコマンドでemacs24.4をビルドしてインストールする。
       ```bash
