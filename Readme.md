@@ -27,7 +27,7 @@ Version :  GNU Emacs 24.4.1
 **!! Emacsのバージョンが24.4以上出ないと動きません。!!**  
 2015.09.09現在、`apt`でサポートされているのは、Emacs24.3です。  
 なので、**手動で最新のEmacsをインストールする**必要があります。注意してください。  
-**参考：**  
+**参考**  
 [Ubuntu Handbook](http://ubuntuhandbook.org/index.php/2014/10/emacs-24-4-released-install-in-ubuntu-14-04/)  
 [dofmanさんのメモ]()  
 1. 不必要なものを予めremoveしておく。
@@ -39,7 +39,7 @@ Version :  GNU Emacs 24.4.1
    実行する。
    ```bash
    sudo apt-get remove emacs
-   sudo apt-get autoremove
+   sudo apt-get remove emacs24*
    ```
    
 2. emacs24.4をソースからビルドし、インストールする。
@@ -54,6 +54,7 @@ Version :  GNU Emacs 24.4.1
       *ここからはダウンロード先が~/Downloads/*以下であると仮定してすすめる。
       ```bash
       cd ~/Downloads
+	  wget http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-24.4.tar.gz
       tar -xf emacs-24.4.tar.gz
       cd emacs-24.4
       ```
@@ -69,6 +70,7 @@ Version :  GNU Emacs 24.4.1
 aptで提供されているgitのversionではmagit-gitflow.elが動いてくれないので、
 PPAから最新版をインストールする。以下のコマンドを実行すれば良い。
 ```bash
+sudo apt-get remove git
 sudo add-apt-repository ppa:git-core/ppa  
 sudo apt-get update  
 sudo apt-get install git
