@@ -292,17 +292,17 @@ user-mail-address "GRoadPG@gmail.com")
 
 ;;; auto-install
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/auto-install/"))
-(require 'auto-install)
-(auto-install-update-emacswiki-package-name t)
-(auto-install-compatibility-setup)
+;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/auto-install/"))
+;; (require 'auto-install)
+;; (auto-install-update-emacswiki-package-name t)
+;; (auto-install-compatibility-setup)
 
 ;;; popwin
-(require 'popwin)
-(popwin-mode 1)
+;; (require 'popwin)
+;; (popwin-mode 1)
 ;;; popwin(for yatex)
-(require 'popwin-yatex)
-(push '("*YaTeX-typesetting*") popwin:special-display-config)
+;; (require 'popwin-yatex)
+;; (push '("*YaTeX-typesetting*") popwin:special-display-config)
 
 
 ;;; color-theme
