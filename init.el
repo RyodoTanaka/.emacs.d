@@ -109,7 +109,7 @@ user-mail-address "GRoadPG@gmail.com")
 (setq kept-new-versions 2)
 
 ;;; 上書き時の警告表示
-;;; (setq trim-versions-without-asking nil)
+(setq trim-versions-without-asking nil)
 
 ;;; 古いバックアップファイルの削除
 (setq delete-old-versions t)
@@ -291,7 +291,6 @@ user-mail-address "GRoadPG@gmail.com")
 
 
 ;;; auto-install
-
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/auto-install/"))
 (require 'auto-install)
 (auto-install-update-emacswiki-package-name t)
