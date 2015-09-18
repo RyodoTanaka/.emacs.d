@@ -246,7 +246,7 @@ user-mail-address "GRoadPG@gmail.com")
 (setq YaTeX-kanji-code nil)
 (setq YaTeX-latex-message-code 'utf-8)
 
-;;;(setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
+;; (setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
 (setq tex-command "latexmk")
 (setq dvi2-command "evince")
 (setq bibtex-command "pbibtex")     ; BibTeX のコマンド
@@ -256,6 +256,7 @@ user-mail-address "GRoadPG@gmail.com")
 (setq ac-l-dict-directory "~/.emacs.d/ac-l-dict/")
 (add-to-list 'ac-modes 'foo-mode)
 (add-hook 'foo-mode-hook 'ac-l-setup)
+(add-hook 'yatex-mode-hook '(lambda () (auto-fill-mode -1))) ;; 自動で開業しない
 
 (when platform-linux-p ; for GNU/Linux
 ;;; inverse search
