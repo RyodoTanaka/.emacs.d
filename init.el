@@ -249,6 +249,7 @@ user-mail-address "GRoadPG@gmail.com")
 ;;;(setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
 (setq tex-command "latexmk")
 (setq dvi2-command "evince")
+(setq bibtex-command "pbibtex")     ; BibTeX のコマンド
 
 ;;;auto-complete latex
 (require 'auto-complete-latex)
