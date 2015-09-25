@@ -246,8 +246,8 @@ user-mail-address "GRoadPG@gmail.com")
 (setq YaTeX-kanji-code nil)
 (setq YaTeX-latex-message-code 'utf-8)
 
-;; (setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
-(setq tex-command "latexmk")
+(setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
+;; (setq tex-command "latexmk")
 (setq dvi2-command "evince")
 (setq bibtex-command "pbibtex")     ; BibTeX のコマンド
 
