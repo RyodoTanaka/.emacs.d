@@ -521,3 +521,6 @@ user-mail-address "GRoadPG@gmail.com")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  (require 'magit-gitflow)
  (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
+
+(prefer-coding-system 'utf-8)
+(setq default-process-coding-system 'utf-8)
