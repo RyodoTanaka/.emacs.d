@@ -28,7 +28,7 @@ user-mail-address "GRoadPG@gmail.com")
 (global-auto-revert-mode 1)
 
 ;;マウスで選択した領域を自動コピー
-(setq mouse-drag-copy-region t)
+;; (setq mouse-drag-copy-region t)
 
 ;;フレーム設定
 (size-indication-mode t) ; ファイルサイズを表示
