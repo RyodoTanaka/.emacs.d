@@ -302,7 +302,6 @@ user-mail-address "GRoadPG@gmail.com")
 (add-hook 'yatex-mode-hook 'turn-on-reftex)
 
 
-
 ;;; auto-install
 ;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/auto-install/"))
 ;; (require 'auto-install)
