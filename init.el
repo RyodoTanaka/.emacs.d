@@ -44,6 +44,12 @@ user-mail-address "GRoadPG@gmail.com")
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
 
+;; スペース、タブなどを可視化する
+(global-whitespace-mode 1)
+
+;; タブにスペースを使用する
+(setq-default tab-width 4 indent-tabs-mode nil)
+
 ;;; 列番号の表示
 ;;;(column-number-mode t)
 ;;key-bind setting
@@ -116,6 +122,11 @@ user-mail-address "GRoadPG@gmail.com")
 
 (require 'cedet)
 
+;;; zenkaku-hankaku
+(global-set-key [zenkaku-hankaku] 'mozc-mode)
+(require 'mozc)
+(set-language-environment "Japanese")
+(setq default-input-method "japanese-mozc")
 
 
 ;;;(add-to-list 'load-path "~/.emacs.d/")
@@ -510,3 +521,6 @@ user-mail-address "GRoadPG@gmail.com")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  (require 'magit-gitflow)
  (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
+
+(prefer-coding-system 'utf-8)
+(setq default-process-coding-system 'utf-8)
