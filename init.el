@@ -25,11 +25,11 @@ user-mail-address "GRoadPG@gmail.com")
 (set-frame-parameter nil 'alpha 95)
 
 ;;; 色分けの設定
-(global-font-lock-mode t)
-(if (>= emacs-major-version 21)
-  (setq font-lock-support-mode 'jit-lock-mode)   ; Just-In-Timeな文字装飾方式
-  (setq font-lock-support-mode 'lazy-lock-mode)  ; Emacs20以前では古い方式
-)
+;; (global-font-lock-mode t)
+;; (if (>= emacs-major-version 21)
+;;   (setq font-lock-support-mode 'jit-lock-mode)   ; Just-In-Timeな文字装飾方式
+;;   (setq font-lock-support-mode 'lazy-lock-mode)  ; Emacs20以前では古い方式
+;; )
 
 ;;; 行番号の表示
 ;;;(line-number-mode t)
@@ -409,7 +409,7 @@ user-mail-address "GRoadPG@gmail.com")
 
 ;; smartparent
 (smartparens-global-mode)
-;; [DEL]キーもしくは[C-h]に当てられているdelete-backward-charにadviceをかけられて削除するたびにフリーズする．これを無効化.
+;; [DEL]キーもしくは[C-h]に当てられているdelete-backward-charにadviceをかけられて削除するたびにフリーズする．これを無効化
 (ad-disable-advice 'delete-backward-char 'before 'sp-delete-pair-advice)
 (ad-activate 'delete-backward-char)
 
