@@ -1,7 +1,9 @@
 (add-to-list 'load-path "~/.emacs.d/lisp")
-;;; platfrom-p(http://ongaeshi.hatenablog.com/entry/20120725/1343232098)
-(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/themes")
-(load-theme 'junio t)
+;; Color Theme カラーテーマ 
+;;(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/themes")
+(add-to-list 'load-path "~/.emacs.d/themes/tomorrow")
+(setq custom-theme-directory "~/.emacs.d/themes/tomorrow")
+(load-theme 'tomorrow-night-bright t)
 (require 'platform-p)
 ;;; カッコのハイライト
 (show-paren-mode t)
@@ -11,12 +13,23 @@
 ;; 極力UTF-8とする
 (prefer-coding-system 'utf-8)
 
+;; フォントをRicty 15ptに設定
+;; 同様のフォント設定があればコメントアウトしておくべき
+(add-to-list 'default-frame-alist '(font . "ricty-15"))
+
 ;; ユーザー名とメールアドレスの設定 
 (setq user-full-name "Ryodo Tanaka"
 user-mail-address "GRoadPG@gmail.com")
 
 ;; 背景を透明にする(透明度合いは 95/100)
 (set-frame-parameter nil 'alpha 95)
+
+;;; 色分けの設定
+(global-font-lock-mode t)
+(if (>= emacs-major-version 21)
+  (setq font-lock-support-mode 'jit-lock-mode)   ; Just-In-Timeな文字装飾方式
+  (setq font-lock-support-mode 'lazy-lock-mode)  ; Emacs20以前では古い方式
+)
 
 ;;; 行番号の表示
 ;;;(line-number-mode t)
@@ -315,10 +328,6 @@ user-mail-address "GRoadPG@gmail.com")
 ;; (require 'popwin-yatex)
 ;; (push '("*YaTeX-typesetting*") popwin:special-display-config)
 
-
-;;; color-theme
-;;(load-theme 'deeper-blue t)
-
 ;;; flycheck
 ;; (add-hook 'after-init-hook #'global-flycheck-mode)
 ;; ;;; flycheck-pos-tip
@@ -523,3 +532,12 @@ user-mail-address "GRoadPG@gmail.com")
 
 (prefer-coding-system 'utf-8)
 (setq default-process-coding-system 'utf-8)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; line limit
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'whitespace)
+(setq whitespace-line-column 120) ;; limit line length
+(setq whitespace-style '(face lines-tail))
+
+(add-hook 'prog-mode-hook 'whitespace-mode)
