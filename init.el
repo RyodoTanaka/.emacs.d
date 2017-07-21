@@ -537,7 +537,7 @@ user-mail-address "GRoadPG@gmail.com")
 ;; line limit
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'whitespace)
-(setq whitespace-line-column 120) ;; limit line length
+(setq whitespace-line-column 256) ;; limit line length
 (setq whitespace-style '(face lines-tail))
 
 (add-hook 'prog-mode-hook 'whitespace-mode)
