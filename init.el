@@ -543,3 +543,59 @@ user-mail-address "GRoadPG@gmail.com")
 
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; flyspell
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(mapc
+(lambda (hook)
+(add-hook hook 'flyspell-prog-mode))
+'(
+c-mode-common-hook
+emacs-lisp-mode-hook
+python-mode-hook
+))
+(mapc
+(lambda (hook)
+(add-hook hook
+'(lambda () (flyspell-mode 1))))
+'(
+yatex-mode-hook
+))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Folding a code
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'c++-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
+(add-hook 'c-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
+(add-hook 'scheme-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
+(add-hook 'emacs-lisp-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
+(add-hook 'lisp-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
+(add-hook 'python-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
+(add-hook 'ruby-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
+(add-hook 'xml-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
+
+;; (define-key global-map (kbd "C-:") 'hs-toggle-hiding)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; vimish-folding
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'vimish-fold)
+(global-set-key (kbd "C-c C-v") #'vimish-fold)
+(global-set-key (kbd "C-c C-f") #'vimish-fold-delete)
