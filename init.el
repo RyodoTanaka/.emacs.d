@@ -544,15 +544,16 @@ user-mail-address "GRoadPG@gmail.com")
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; flyspell
+;; Spell Check
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (mapc
 (lambda (hook)
 (add-hook hook 'flyspell-prog-mode))
 '(
 c-mode-common-hook
+cpp-mode-common-hook
 emacs-lisp-mode-hook
-python-mode-hook
+python-mode-common-hook
 ))
 (mapc
 (lambda (hook)
@@ -560,6 +561,7 @@ python-mode-hook
 '(lambda () (flyspell-mode 1))))
 '(
 yatex-mode-hook
+markdown-mode-hook
 ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
