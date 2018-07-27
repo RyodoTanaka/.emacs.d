@@ -597,5 +597,6 @@ yatex-mode-hook
 ;; vimish-folding
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'vimish-fold)
-(global-set-key (kbd "C-c C-v") #'vimish-fold)
-(global-set-key (kbd "C-c C-f") #'vimish-fold-delete)
+(global-set-key (kbd "C-c C-f") #'vimish-fold)
+(global-set-key (kbd "C-c C-v") #'vimish-fold-delete)
+(global-set-key (kbd "C-c C-d") #'vimish-fold-delete-all)
