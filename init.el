@@ -602,3 +602,12 @@ markdown-mode-hook
 (global-set-key (kbd "C-c C-f") #'vimish-fold)
 (global-set-key (kbd "C-c C-v") #'vimish-fold-delete)
 (global-set-key (kbd "C-c C-d") #'vimish-fold-delete-all)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; emacs mozc
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-to-list 'load-path "/usr/share/emacs24/site-lisp/emacs-mozc")
+
+(require 'mozc)
+(setq default-input-method "japanese-mozc")
