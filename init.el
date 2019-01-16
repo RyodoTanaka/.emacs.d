@@ -143,53 +143,53 @@ user-mail-address "GRoadPG@gmail.com")
 
 
 ;;;(add-to-list 'load-path "~/.emacs.d/")
-(require 'auto-complete)
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
-(ac-config-default)
-;; 情報源として
-    ;; * ac-source-filename
-    ;; * ac-source-words-in-same-mode-buffers
-    ;; を利用
-(setq-default ac-sources '(ac-source-filename ac-source-words-in-same-mode-buffers))
-(setq ac-auto-start 3) ;;;2文字以上で補完
-(setq ac-delay 0.05) ;;;0.05秒後に補完開始
-(setq ac-use-fuzzy t) ;;;曖昧補完
-(setq ac-use-comphist t) ;;;補完推測機能有効
-(setq ac-auto-show-menu 0.05) ;;;補完メニューを表示
-(setq ac-quick-help-delay 0.5) ;;;クイックヘルプを表示
-(setq ac-ignore-caes nil) ;;;大文字と小文字を区別する
-; 空気読んでほしい
-(setq ac-dwim t)
-; 情報源として
-;   * ac-source-filename
-;   * ac-source-words-in-same-mode-buffers
-; を利用
-(defun ac-common-setup ()
-  (add-to-list 'ac-sources 'ac-source-filename))
+;; (require 'auto-complete)
+;; (require 'auto-complete-config)
+;; (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
+;; (ac-config-default)
+;; ;; 情報源として
+;;     ;; * ac-source-filename
+;;     ;; * ac-source-words-in-same-mode-buffers
+;;     ;; を利用
+;; (setq-default ac-sources '(ac-source-filename ac-source-words-in-same-mode-buffers))
+;; (setq ac-auto-start 3) ;;;2文字以上で補完
+;; (setq ac-delay 0.05) ;;;0.05秒後に補完開始
+;; (setq ac-use-fuzzy t) ;;;曖昧補完
+;; (setq ac-use-comphist t) ;;;補完推測機能有効
+;; (setq ac-auto-show-menu 0.05) ;;;補完メニューを表示
+;; (setq ac-quick-help-delay 0.5) ;;;クイックヘルプを表示
+;; (setq ac-ignore-caes nil) ;;;大文字と小文字を区別する
+;; ; 空気読んでほしい
+;; (setq ac-dwim t)
+;; ; 情報源として
+;; ;   * ac-source-filename
+;; ;   * ac-source-words-in-same-mode-buffers
+;; ; を利用
+;; (defun ac-common-setup ()
+;;   (add-to-list 'ac-sources 'ac-source-filename))
 
-(setq-default ac-sources '(ac-source-filename ac-source-words-in-same-mode-buffers))
-; また、Emacs Lispモードではac-source-symbolsを追加で利用
-(add-hook 'emacs-lisp-mode-hook (lambda () (add-to-list 'ac-sources 'ac-source-symbols t)))
+;; (setq-default ac-sources '(ac-source-filename ac-source-words-in-same-mode-buffers))
+;; ; また、Emacs Lispモードではac-source-symbolsを追加で利用
+;; (add-hook 'emacs-lisp-mode-hook (lambda () (add-to-list 'ac-sources 'ac-source-symbols t)))
 
-;; auto-completeを適用するファイルの追加とソースの追加
-(set-default 'ac-sources
-	     '(ac-source-imenu
-	       ac-source-dictionary
-	       ac-source-words-in-buffer
-	       ac-source-words-in-same-mode-buffers
-	       ac-source-words-in-all-buffer))
-(dolist (mode '(magit-log-edit-mode
-		log-edit-mode org-mode text-mode haml-mode
-		sass-mode yaml-mode csv-mode espresso-mode haskell-mode
-		html-mode nxml-mode sh-mode smarty-mode clojure-mode
-		lisp-mode textile-mode markdown-mode tuareg-mode
-		js3-mode css-mode less-css-mode sql-mode
-		sql-interactive-mode
-		inferior-emacs-lisp-mode
-		arduino-mode))
-  (add-to-list 'ac-modes mode))
-; 色を変更
+;; ;; auto-completeを適用するファイルの追加とソースの追加
+;; (set-default 'ac-sources
+;; 	     '(ac-source-imenu
+;; 	       ac-source-dictionary
+;; 	       ac-source-words-in-buffer
+;; 	       ac-source-words-in-same-mode-buffers
+;; 	       ac-source-words-in-all-buffer))
+;; (dolist (mode '(magit-log-edit-mode
+;; 		log-edit-mode org-mode text-mode haml-mode
+;; 		sass-mode yaml-mode csv-mode espresso-mode haskell-mode
+;; 		html-mode nxml-mode sh-mode smarty-mode clojure-mode
+;; 		lisp-mode textile-mode markdown-mode tuareg-mode
+;; 		js3-mode css-mode less-css-mode sql-mode
+;; 		sql-interactive-mode
+;; 		inferior-emacs-lisp-mode
+;; 		arduino-mode))
+;;   (add-to-list 'ac-modes mode))
+;; 色を変更
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -611,3 +611,62 @@ markdown-mode-hook
 
 (require 'mozc)
 (setq default-input-method "japanese-mozc")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ivy設定
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'ivy)
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+(setq ivy-height 15) ;; minibufferのサイズを拡大！（重要）
+(setq ivy-extra-directories nil)
+(setq ivy-re-builders-alist
+      '((t . ivy--regex-plus)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; counsel設定
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defvar counsel-find-file-ignore-regexp (regexp-opt '("./" "../")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; swiper設定
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+(global-set-key "\C-s" 'swiper)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+(defvar swiper-include-line-number-in-search t) ;; line-numberでも検索可能
+
+;; migemo + swiper（日本語をローマ字検索できるようになる）
+(require 'avy-migemo)
+(avy-migemo-mode 1)
+(require 'avy-migemo-e.g.swiper)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; company 設定
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'company)
+(global-company-mode) ; 全バッファで有効にする
+(setq company-transformers '(company-sort-by-backend-importance)) ;; ソート順
+(setq company-idle-delay 0) ; デフォルトは0.5
+(setq company-minimum-prefix-length 3) ; デフォルトは4
+(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+(setq completion-ignore-case t)
+(setq company-dabbrev-downcase nil)
+(global-set-key (kbd "C-M-i") 'company-complete)
+(define-key company-active-map (kbd "C-.") 'company-files) ;; filenameを見せる
+(define-key company-active-map (kbd "C-n") 'company-select-next) ;; C-n, C-pで補完候補を次/前の候補を選択
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-search-map (kbd "C-n") 'company-select-next)
+(define-key company-search-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "C-s") 'company-filter-candidates) ;; C-sで絞り込む
+(define-key company-active-map (kbd "C-i") 'company-complete-selection) ;; TABで候補を設定
+(define-key company-active-map [tab] 'company-complete-selection) ;; TABで候補を設定
+(define-key company-active-map (kbd "C-f") 'company-complete-selection) ;; C-fで候補を設定
+(define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete) ;; 各種メジャーモードでも C-M-iで comp
