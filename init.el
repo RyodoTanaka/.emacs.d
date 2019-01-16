@@ -1,9 +1,13 @@
+;;; package --- Summary
+;;; Commentary:
+;;; Code:
 (add-to-list 'load-path "~/.emacs.d/lisp")
 ;; Color Theme カラーテーマ 
 ;;(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/themes")
 (add-to-list 'load-path "~/.emacs.d/themes/tomorrow")
 (setq custom-theme-directory "~/.emacs.d/themes/tomorrow")
 (load-theme 'tomorrow-night-bright t)
+
 (require 'platform-p)
 ;;; カッコのハイライト
 (show-paren-mode t)
@@ -40,8 +44,6 @@ user-mail-address "GRoadPG@gmail.com")
 ;バッファ自動再読み込み
 (global-auto-revert-mode 1)
 
-;;マウスで選択した領域を自動コピー
-;; (setq mouse-drag-copy-region t)
 
 ;;フレーム設定
 (size-indication-mode t) ; ファイルサイズを表示
@@ -68,20 +70,15 @@ user-mail-address "GRoadPG@gmail.com")
 ;;key-bind setting
 
 ;; ;;一定間隔でバッファを自動保存する.
-;; (when (require 'auto-save-buffers nil t)
-;;   (run-with-idle-timer 1.5 t 'auto-save-buffers))
+(when (require 'auto-save-buffers nil t)
+  (run-with-idle-timer 2.0 t 'auto-save-buffers))
 
-(global-set-key (kbd "C-t") 'other-window) ;C-tで分割したwindowの切り替え
-(global-set-key (kbd "C-j") 'set-mark-command) ;C-jでマークセット
+;; Window 移動
 (global-set-key (kbd "M-<left>")  'windmove-left)
 (global-set-key (kbd "M-<down>")  'windmove-down)
 (global-set-key (kbd "M-<up>")    'windmove-up)
 (global-set-key (kbd "M-<right>") 'windmove-right)
-(global-set-key (kbd "M-y") 'anything-show-kill-ring) ;M-yにanything-show-kill-ringを割り当て
 (keyboard-translate ?\C-h ?\C-?); C-hをバックスペースに変更
-;; redo+の設定
-(when (require 'redo+ nil t)
-  (global-set-key (kbd "C-'") 'redo))
 
 ;;; スクロール時のカーソル位置の維持
 (setq scroll-preserve-screen-position t)
@@ -135,73 +132,6 @@ user-mail-address "GRoadPG@gmail.com")
 
 (require 'cedet)
 
-;;; zenkaku-hankaku
-(global-set-key [zenkaku-hankaku] 'mozc-mode)
-(require 'mozc)
-(set-language-environment "Japanese")
-(setq default-input-method "japanese-mozc")
-
-
-;;;(add-to-list 'load-path "~/.emacs.d/")
-;; (require 'auto-complete)
-;; (require 'auto-complete-config)
-;; (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
-;; (ac-config-default)
-;; ;; 情報源として
-;;     ;; * ac-source-filename
-;;     ;; * ac-source-words-in-same-mode-buffers
-;;     ;; を利用
-;; (setq-default ac-sources '(ac-source-filename ac-source-words-in-same-mode-buffers))
-;; (setq ac-auto-start 3) ;;;2文字以上で補完
-;; (setq ac-delay 0.05) ;;;0.05秒後に補完開始
-;; (setq ac-use-fuzzy t) ;;;曖昧補完
-;; (setq ac-use-comphist t) ;;;補完推測機能有効
-;; (setq ac-auto-show-menu 0.05) ;;;補完メニューを表示
-;; (setq ac-quick-help-delay 0.5) ;;;クイックヘルプを表示
-;; (setq ac-ignore-caes nil) ;;;大文字と小文字を区別する
-;; ; 空気読んでほしい
-;; (setq ac-dwim t)
-;; ; 情報源として
-;; ;   * ac-source-filename
-;; ;   * ac-source-words-in-same-mode-buffers
-;; ; を利用
-;; (defun ac-common-setup ()
-;;   (add-to-list 'ac-sources 'ac-source-filename))
-
-;; (setq-default ac-sources '(ac-source-filename ac-source-words-in-same-mode-buffers))
-;; ; また、Emacs Lispモードではac-source-symbolsを追加で利用
-;; (add-hook 'emacs-lisp-mode-hook (lambda () (add-to-list 'ac-sources 'ac-source-symbols t)))
-
-;; ;; auto-completeを適用するファイルの追加とソースの追加
-;; (set-default 'ac-sources
-;; 	     '(ac-source-imenu
-;; 	       ac-source-dictionary
-;; 	       ac-source-words-in-buffer
-;; 	       ac-source-words-in-same-mode-buffers
-;; 	       ac-source-words-in-all-buffer))
-;; (dolist (mode '(magit-log-edit-mode
-;; 		log-edit-mode org-mode text-mode haml-mode
-;; 		sass-mode yaml-mode csv-mode espresso-mode haskell-mode
-;; 		html-mode nxml-mode sh-mode smarty-mode clojure-mode
-;; 		lisp-mode textile-mode markdown-mode tuareg-mode
-;; 		js3-mode css-mode less-css-mode sql-mode
-;; 		sql-interactive-mode
-;; 		inferior-emacs-lisp-mode
-;; 		arduino-mode))
-;;   (add-to-list 'ac-modes mode))
-;; 色を変更
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ac-selection-face ((t (:background "coral" :foreground "black")))))
 
 ;;; Arduino Mode
 (autoload 'arduino-mode "arduino-mode" "Arduino editing mode." t)
@@ -220,9 +150,6 @@ user-mail-address "GRoadPG@gmail.com")
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
 
-;;; auto-complete-latex mode
-(require 'auto-complete-latex)
-
 ;;; C++ style
 (add-hook 'c++-mode-hook
           '(lambda()
@@ -233,10 +160,7 @@ user-mail-address "GRoadPG@gmail.com")
              (c-set-offset 'arglist-close 0) ;;;関数の引数リストの閉じ括弧はインデントしない
              )
 	  (semantic-mode 1)
-	  ;;; (setq ac-sources (append ac-sources '(ac-source-semantic)))
-	  (setq ac-sources (append ac-sources '(ac-source-semantic-raw)))
-	  )
-
+      )
 
 ;;; smooth-scroll
 (require 'smooth-scroll)
@@ -249,7 +173,6 @@ user-mail-address "GRoadPG@gmail.com")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(flycheck-display-errors-function (function flycheck-pos-tip-error-messages))
  '(show-paren-mode t)
  '(tab-width 4)
  '(tool-bar-mode nil)
@@ -274,13 +197,6 @@ user-mail-address "GRoadPG@gmail.com")
 ;; (setq tex-command "latexmk")
 (setq dvi2-command "evince")
 (setq bibtex-command "pbibtex")     ; BibTeX のコマンド
-
-;;;auto-complete latex
-(require 'auto-complete-latex)
-(setq ac-l-dict-directory "~/.emacs.d/ac-l-dict/")
-(add-to-list 'ac-modes 'foo-mode)
-(add-hook 'foo-mode-hook 'ac-l-setup)
-(add-hook 'yatex-mode-hook '(lambda () (auto-fill-mode -1))) ;; 自動で開業しない
 
 (when platform-linux-p ; for GNU/Linux
 ;;; inverse search
@@ -314,27 +230,10 @@ user-mail-address "GRoadPG@gmail.com")
 ;(add-hook 'latex-mode-hook 'turn-on-reftex)
 (add-hook 'yatex-mode-hook 'turn-on-reftex)
 
-
-;;; auto-install
-;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/auto-install/"))
-;; (require 'auto-install)
-;; (auto-install-update-emacswiki-package-name t)
-;; (auto-install-compatibility-setup)
-
-;;; popwin
-;; (require 'popwin)
-;; (popwin-mode 1)
-;;; popwin(for yatex)
-;; (require 'popwin-yatex)
-;; (push '("*YaTeX-typesetting*") popwin:special-display-config)
-
-;;; flycheck
-;; (add-hook 'after-init-hook #'global-flycheck-mode)
-;; ;;; flycheck-pos-tip
-;; (eval-after-load 'flycheck
-;;   '(custom-set-variables
-;;    '(flycheck-display-errors-function #'flycheck-pos-tip-error-messages)))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; flycheck
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;; MELPA
 (require 'package)
@@ -464,44 +363,6 @@ user-mail-address "GRoadPG@gmail.com")
 ;; magit
 (global-set-key (kbd "C-x g") 'magit-status)
 
-;;; anything設定
-;; (auto-install-batch "anything")
-(when (require 'anything nil t)
-	(setq 
-	 ;; 候補を表示するまでの時間． デフォルトは0.5
-	 anything-idle-delay 0.3
-	 ;; タイプして再描画するまでの時間 default 0.1
-	 anything-input-idle-delay 0.2
-	 ;; 候補の最大表示数 default 50
-	 anything-candidate-number-limit 100
-	 ;; 候補が多い時に体感速度を早くする
-	 anything-quick-update t
-	 ;; 候補選択ショートカットをアルファベットに
-	 anything-enable-shortcuts 'alphabet)
-	
-	(when (require 'anything-config nil t)
-		;; root権限でアクションを実行するときのコマンド
-		;; default "su"
-		(setq anything-su-or-sudo "sudo"))
-
-	(require 'anything-match-plugin nil t)
-	
-	(when (and (executable-find "cmigemo")
-						 (require 'migemo nil t))
-		(require 'anything-migemo nil t))
- 
-	(when (require 'anything-complete nil t)
-		;; lispシンボルの補完候補の再検索時間
-		(anything-lisp-complete-symbol-set-timer 150))
-
-	(require 'anything-show-completion nil t)
-	
-	(when (require 'auto-install nil t)
-		(require 'anything-auto-install nil t))
-
-	(when (require 'descbinds-anything nil t)
-		;;describe-bindingsをAnythingに置き換える
-		(descbinds-anything-install)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;選択した範囲の行と列を表示する
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -693,3 +554,6 @@ markdown-mode-hook
 (setq dumb-jump-use-visible-window nil)
 (define-key global-map [(super d)] 'dumb-jump-go) ;; go-to-definition!
 (define-key global-map [(super shift d)] 'dumb-jump-back)
+
+(provide 'init)
+;;; init.el ends here
