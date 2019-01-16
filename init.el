@@ -674,11 +674,22 @@ markdown-mode-hook
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; git complete
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'load-path "~/.emacs.d/lisp/git-complete")
+(add-to-list 'load-path "~/.emacs.d/lisp/git-complete") ;; お好きなように
 (require 'git-complete)
 (global-unset-key (kbd "C-c C-c")) ;; 一応unbindしておきましょう
 (global-set-key (kbd "C-c C-c") 'git-complete)
-(add-to-list 'load-path "~/.emacs.d/git-complete") ;; お好きなように
 (setq git-complete-enable-autopair t)
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; dump jump
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-to-list 'load-path "~/.emacs.d/lisp/dumb-jump")
+(require 'dumb-jump)
+(global-unset-key (kbd "C-j")) ;; 一応unbindしておきましょう
+(global-set-key (kbd "C-j g") 'dumb-jump-go)
+(global-set-key (kbd "C-j b") 'dumb-jump-back)
+(setq dumb-jump-mode t)
+(setq dumb-jump-selector 'ivy) ;; 候補選択をivyに任せます
+(setq dumb-jump-use-visible-window nil)
+(define-key global-map [(super d)] 'dumb-jump-go) ;; go-to-definition!
+(define-key global-map [(super shift d)] 'dumb-jump-back)
