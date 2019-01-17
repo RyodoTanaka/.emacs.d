@@ -504,9 +504,9 @@ markdown-mode-hook
 (defvar swiper-include-line-number-in-search t) ;; line-numberでも検索可能
 
 ;; migemo + swiper（日本語をローマ字検索できるようになる）
-(require 'avy-migemo)
-(avy-migemo-mode 1)
-(require 'avy-migemo-e.g.swiper)
+;; (require 'avy-migemo)
+;; (avy-migemo-mode 1)
+;; (require 'avy-migemo-e.g.swiper)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
