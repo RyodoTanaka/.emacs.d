@@ -547,7 +547,7 @@ markdown-mode-hook
 (add-to-list 'load-path "~/.emacs.d/lisp/dumb-jump")
 (require 'dumb-jump)
 (global-unset-key (kbd "C-j")) ;; 一応unbindしておきましょう
-(global-set-key (kbd "C-j g") 'dumb-jump-go)
+(global-set-key (kbd "C-j j") 'dumb-jump-go)
 (global-set-key (kbd "C-j b") 'dumb-jump-back)
 (setq dumb-jump-mode t)
 (setq dumb-jump-selector 'ivy) ;; 候補選択をivyに任せます
