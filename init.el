@@ -4,9 +4,14 @@
 (add-to-list 'load-path "~/.emacs.d/lisp")
 ;; Color Theme カラーテーマ 
 ;;(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/themes")
-(add-to-list 'load-path "~/.emacs.d/themes/tomorrow")
-(setq custom-theme-directory "~/.emacs.d/themes/tomorrow")
-(load-theme 'tomorrow-night-bright t)
+;; (add-to-list 'load-path "~/.emacs.d/themes/tomorrow")
+;; (setq custom-theme-directory "~/.emacs.d/themes/tomorrow")
+;; (load-theme 'tomorrow-night-bright t)
+
+(add-to-list 'load-path "~/.emacs.d/themes/gruvbox")
+(setq custom-theme-directory "~/.emacs.d/themes/gruvbox")
+(load-theme 'gruvbox-dark-hard t)
+
 
 (require 'platform-p)
 ;;; カッコのハイライト
