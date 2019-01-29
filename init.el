@@ -208,8 +208,6 @@ user-mail-address "GRoadPG@gmail.com")
 
 (when platform-linux-p ; for GNU/Linux
 ;;; inverse search
-  (require 'dbus)
-  
   (defun un-urlify (fname-or-url)
 	"A trivial function that replaces a prefix of file:/// with just /."
 	(if (string= (substring fname-or-url 0 8) "file:///")
@@ -228,10 +226,6 @@ user-mail-address "GRoadPG@gmail.com")
 		(unless (= col -1)
 		  (move-to-column col)))))
   
-  (dbus-register-signal
-   :session nil "/org/gnome/evince/Window/0"
-   "org.gnome.evince.Window" "SyncSource"
-   'evince-inverse-search)
   )
 
 ;; texファイルを開くと自動でRefTexモード
