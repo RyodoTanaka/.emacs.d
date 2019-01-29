@@ -383,6 +383,10 @@ user-mail-address "GRoadPG@gmail.com")
               (count-lines (region-beginning) (region-end))
               (- (region-end) (region-beginning)))
     ""))
+
+;;; Emacs 26以上用の設定
+(if (string-match "26" emacs-version)
+    (setq default-mode-line-format (default-value 'mode-line-format)))
 (add-to-list 'default-mode-line-format
              '(:eval (count-lines-and-chars)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
