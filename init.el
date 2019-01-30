@@ -98,10 +98,10 @@ user-mail-address "GRoadPG@gmail.com")
 (setq next-screen-context-lines 1)
 
 ;;; 起動メッセージの非表示
-(setq inhibit-startup-message t)
-
+;; (setq inhibit-startup-message t)
 ;;; スタートアップ時のエコー領域メッセージの非表示
-(setq inhibit-startup-echo-area-message -1)
+;; (setq inhibit-startup-echo-area-message -1)
+
 
 ;;; @ backup
 
@@ -136,7 +136,6 @@ user-mail-address "GRoadPG@gmail.com")
 (setq delete-old-versions t)
 
 (require 'cedet)
-
 
 ;;; Arduino Mode
 (autoload 'arduino-mode "arduino-mode" "Arduino editing mode." t)
@@ -180,7 +179,7 @@ user-mail-address "GRoadPG@gmail.com")
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
+    (dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
  '(show-paren-mode t)
  '(tab-width 4)
  '(tool-bar-mode nil)
@@ -190,7 +189,7 @@ user-mail-address "GRoadPG@gmail.com")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Ricty" :foundry "unknown" :slant normal :weight normal :height 128 :width normal)))))
+ '(default ((t (:inherit nil :stipple nil :background "#1d2021" :foreground "#fdf4c1" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 160 :width normal :foundry "PfEd" :family "Ricty")))))
 
 ;;;YaTexの設定
 (setq auto-mode-alist
@@ -492,11 +491,6 @@ markdown-mode-hook
       '((t . ivy--regex-plus)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; counsel設定
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (defvar counsel-find-file-ignore-regexp (regexp-opt '("./" "../")))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; swiper設定
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (ivy-mode 1)
@@ -560,6 +554,89 @@ markdown-mode-hook
 (setq dumb-jump-use-visible-window nil)
 (define-key global-map [(super d)] 'dumb-jump-go) ;; go-to-definition!
 (define-key global-map [(super shift d)] 'dumb-jump-back)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Helm
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (require 'helm-config)
+;; (helm-mode 1)
+;; ;;(helm-migemo-mode 1)
+
+;; ;; C-hで前の文字削除
+;; (define-key helm-map (kbd "C-h") 'delete-backward-char)
+;; (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
+
+;; ;; TABとC-zを入れ替える
+;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)   ; rebind tab to run persistent action
+;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)       ; make TAB work in terminal
+;; (define-key helm-map (kbd "C-z")  'helm-select-action)            ; list actions using C-z
+;; ;;(define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+;; ;;(define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+
+;; ;; キーバインド
+;; (global-set-key (kbd "C-c h") 'helm-mini)
+;; (global-set-key (kbd "<f10>") 'helm-mini)
+;; (define-key global-map (kbd "C-x b")   'helm-buffers-list)
+;; ;;(define-key global-map (kbd "C-x b") 'helm-for-files)
+;; (define-key global-map (kbd "C-x C-f") 'helm-find-files)
+;; (define-key global-map (kbd "M-x")     'helm-M-x)
+;; (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Swiper Helm
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (require 'use-package)
+;; (use-package swiper-helm
+;;   :commands (swiper
+;;              swiper-helm
+;;              swiper-helm-at-point
+;;              swiper-helm-from-isearch)
+;;   :bind (("s-s" . swiper-helm-at-point)
+;;          ("C-s-s" . swiper-helm))
+;;   :bind (:map isearch-mode-map
+;;               ("s-s" . swiper-helm-from-isearch))
+;;   ;; Configuration
+;;   :config
+;;   ;; Newly defined
+;;   (defun swiper-helm-at-point ()
+;;     "Custom function to pick up a thing at a point for swiper-helm
+
+;; If there is a symbol at the current point, its textual representation is
+;; searched for by swiper-helm. If there is no symbol, empty search box is
+;; started."
+;;     (interactive)
+;;     (swiper-helm (cond
+;;                   ;; If there is selection use it
+;;                   ((and transient-mark-mode mark-active (not (eq (mark) (point))))
+;;                    (buffer-substring-no-properties (mark) (point)))
+;;                   ;; Otherwise, use symbol at point or empty
+;;                   (t (format "%s"
+;;                              (or (thing-at-point 'symbol)
+;;                                  "")))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 起動画面を Dashboardに
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+;; Or if you use use-package
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+
+;; Set the title
+(setq dashboard-banner-logo-title "!! Welcome back, Master !!")
+;; Set the banner
+(setq dashboard-startup-banner "~/.emacs.d/.image/palta.png")
+;; Value can be
+;; 'official which displays the official emacs logo
+;; 'logo which displays an alternative emacs logo
+;; 1, 2 or 3 which displays one of the text banners
+;; "path/to/your/image.png" which displays whatever image you would prefer
+
 
 (provide 'init)
 ;;; init.el ends here
