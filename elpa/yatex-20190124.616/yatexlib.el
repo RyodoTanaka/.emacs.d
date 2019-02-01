@@ -1,16 +1,25 @@
-;;; yatexlib.el --- YaTeX and yahtml common libraries
+;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
-;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:44:06 2013 on firestorm
-;;; $Id: yatexlib.el,v 1.77 2013/04/01 13:53:45 yuuji Rel $
+;;; (c)1994-2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed May 23 07:59:08 2018 on firestorm
+;;; $Id$
 
 ;;; Code:
+
+;; High-precedence compatible function
+(fset 'YaTeX-str2int
+      (if (fboundp 'string-to-number)
+	  (function
+	   (lambda (string &optional base)
+	     (ceiling (string-to-number string base))))
+	'string-to-int))
+
 ;; General variables
 (defvar YaTeX-dos (memq system-type '(ms-dos windows-nt OS/2)))
 (defvar YaTeX-macos (memq system-type '(darwin)))
-(defvar YaTeX-emacs-19 (>= (string-to-int emacs-version) 19))
-(defvar YaTeX-emacs-20 (>= (string-to-int emacs-version) 20))
-(defvar YaTeX-emacs-21 (>= (string-to-int emacs-version) 21))
+(defvar YaTeX-emacs-19 (>= (YaTeX-str2int emacs-version) 19))
+(defvar YaTeX-emacs-20 (>= (YaTeX-str2int emacs-version) 20))
+(defvar YaTeX-emacs-21 (>= (YaTeX-str2int emacs-version) 21))
 (defvar YaTeX-user-completion-table
   (if YaTeX-dos "~/_yatexrc" "~/.yatexrc")
   "*Default filename in which user completion table is saved.")
@@ -111,6 +120,25 @@ This variable is effective when font-lock is used.
 (make-variable-buffer-local 'YaTeX-parent-file)
 
 ;---------- Define default key bindings on YaTeX mode map ----------
+;;;###autoload
+(defun YaTeX-kanji-ptex-mnemonic ()
+  "Return the kanji-mnemonic of pTeX from current buffer's coding-system."
+  (if (boundp 'NEMACS)
+      (or (cdr-safe (assq kanji-fileio-code
+			  '((1 . "sjis") (2 . "jis") (3 . "euc"))))
+	  "")
+    (let ((coding
+	   (cond
+	    ((boundp 'buffer-file-coding-system)
+	     (symbol-name buffer-file-coding-system))
+	    ((boundp 'file-coding-system) (symbol-name file-coding-system))))
+	  (case-fold-search t))
+      (cond ((string-match "utf-8\\>" coding)			"utf8")
+	    ((string-match "shift.jis\\|cp932\\>" coding)	"sjis")
+	    ((string-match "junet\\|iso.2022" coding)		"jis")
+	    ((string-match "euc.jp\\|ja.*iso.8bit" coding)	"euc")
+	    (t "")))))
+
 ;;;###autoload
 (defun YaTeX-define-key (key binding &optional map)
   "Define key on YaTeX-prefix-map."
@@ -287,8 +315,8 @@ history list variable."
       (delete-region (point) (progn (forward-sexp) (point)))
       (delete-blank-lines)
       (insert "(setq " name " '(\n")
-      (mapcar '(lambda (s)
-		 (insert (format "%s\n" (prin1-to-string s))))
+      (mapcar (function (lambda (s)
+			  (insert (format "%s\n" (prin1-to-string s)))))
 	      value)
       (insert "))\n\n")
       (delete-blank-lines)
@@ -481,7 +509,7 @@ corresponding real arguments ARGS."
 (defun point-end-of-line ()
   (save-excursion (end-of-line)(point)))
 
-
+(defun YaTeX-showup-buffer-bottom-most (x) (nth 3 (window-edges x)))
 ;;;###autoload
 (defun YaTeX-showup-buffer (buffer &optional func select)
   "Make BUFFER show up in certain window (but current window)
@@ -514,6 +542,9 @@ that window.  This function never selects minibuffer window."
 	  ;(other-window 1);This does not work properly on Emacs-19
 	  (select-window (get-lru-window))
 	  (switch-to-buffer buffer)
+	  (if (< (window-height) (/ YaTeX-default-pop-window-height 2))
+	      (enlarge-window (- YaTeX-default-pop-window-height
+				 (window-height))))
 	  (or select (select-window window)))
 	 (t				;if one-window
 	  (cond
@@ -556,7 +587,7 @@ Otherwise split window conventionally."
 	    (if (numberp height)
 		(+ height 2)
 	      (/ (* (YaTeX-screen-height)
-		    (string-to-int height))
+		    (YaTeX-str2int height))
 		 100)))
 	 (- (YaTeX-screen-height) window-min-height 1))
 	window-min-height))))
@@ -729,7 +760,8 @@ If no such window exist, switch to buffer BUFFER."
 	(if (fboundp 'completing-read-with-history-in)
 	    (completing-read-with-history-in
 	     minibuffer-history-symbol prompt table predicate must-match initial)
-	  (completing-read prompt table predicate must-match initial))
+	  (save-excursion ;work around to avoid cursor warp
+	    (completing-read prompt table predicate must-match initial)))
       (if (and YaTeX-emacs-19 hsym) (set hsym minibuffer-history)))))
 
 ;;;###autoload
@@ -737,7 +769,8 @@ If no such window exist, switch to buffer BUFFER."
   "Read from minibuffer with general history: gmhist, Emacs-19."
   (cond
    (YaTeX-emacs-19
-    (read-from-minibuffer prompt init map read hsym))
+    (save-excursion ;work around to avoid cursor warp
+      (read-from-minibuffer prompt init map read hsym)))
    (t
     (let ((minibuffer-history-symbol hsym))
       (read-from-minibuffer prompt init map read)))))
@@ -747,7 +780,8 @@ If no such window exist, switch to buffer BUFFER."
   "Read string with history: gmhist(Emacs-18) and Emacs-19."
   (cond
    (YaTeX-emacs-19
-    (read-from-minibuffer prompt init minibuffer-local-map nil hsym))
+    (save-excursion ;work around to avoid cursor warp
+      (read-from-minibuffer prompt init minibuffer-local-map nil hsym)))
    ((featurep 'gmhist-mh)
     (read-with-history-in hsym prompt init))
    (t (read-string prompt init))))
@@ -758,14 +792,16 @@ If no such window exist, switch to buffer BUFFER."
   (if (equal (if (boundp 'last-input-event) last-input-event last-input-char)
 	     YaTeX-skip-next-reader-char)
       ""
-    (apply 'read-string args)))
+    (save-excursion ;work around to avoid cursor warp
+      (apply 'read-string args))))
 
 (defun YaTeX-completing-read-or-skip (&rest args)
   "Do completing-read, or skip if last input char is \C-j."
   (if (equal (if (boundp 'last-input-event) last-input-event last-input-char)
 	     YaTeX-skip-next-reader-char)
       ""
-    (apply 'completing-read args)))
+    (save-excursion ;work around to avoid cursor warp
+      (apply 'completing-read args))))
 
 ;;;###autoload
 (fset 'YaTeX-rassoc
@@ -779,6 +815,25 @@ If no such window exist, switch to buffer BUFFER."
 		 (if (equal key (cdr (car l)))
 		     (throw 'found (car l)))
 		 (setq l (cdr l)))))))))
+
+(defun YaTeX-set-file-coding-system (code coding)
+  "Set current buffer's coding system according to symbol."
+  (cond ((null code)
+	 nil)
+	((boundp 'MULE)
+	 (set-file-coding-system  coding))
+	((and YaTeX-emacs-20 (boundp 'buffer-file-coding-system))
+	 (setq buffer-file-coding-system
+	       (or (and (fboundp 'set-auto-coding) buffer-file-name
+			(save-excursion
+			  (goto-char (point-min))
+			  (set-auto-coding buffer-file-name (buffer-size))))
+		   coding)))
+	((featurep 'mule)
+	 (set-file-coding-system coding))
+	((boundp 'NEMACS)
+	 (make-local-variable 'kanji-fileio-code)
+	 (setq kanji-fileio-code code))))
 
 (defun YaTeX-insert-file-contents (file visit &optional beg end)
   (cond
@@ -844,9 +899,9 @@ NULL includes null string in a list."
 (fset 'YaTeX-last-key
       (if (fboundp 'win:last-key)
 	  'win:last-key
-	'(lambda () (if (boundp 'last-command-char)
-			last-command-char
-		      last-command-event))))
+	(function (lambda () (if (boundp 'last-command-char)
+				 last-command-char
+			       last-command-event)))))
 (defun YaTeX-switch-to-window ()
   "Switch to windows.el's window decided by last pressed key."
   (interactive)
@@ -869,6 +924,19 @@ NULL includes null string in a list."
 	      (buffer-string))
 	  (kill-buffer tbuf))))))
       
+;;; (defun YaTeX-executable-find(cmd)...)
+(fset 'YaTeX-executable-find
+      (if (fboundp 'executable-find)
+	  'executable-find
+	(function (lambda (cmd)
+		    (let ((list exec-path) path)
+		      (catch 'exec
+			(while list
+			  (if (file-executable-p
+			       (setq path (expand-file-name cmd (car list))))
+			      (throw 'exec path))
+			  (setq list (cdr list)))))))))
+
 ;;;###autoload
 (defun YaTeX-reindent (col)
   "Remove current indentation and reindento to COL column."
@@ -939,7 +1007,65 @@ of 'YaTeX-inner-environment, which can be referred by
 	   (progn (skip-chars-forward open) (1+ (point)))
 	   (progn (skip-chars-forward close) (point)))))))
 
-(defun YaTeX-goto-corresponding-environment (&optional allow-mismatch noerr)
+(defun YaTeX-in-environment-p (env)
+  "Return if current LaTeX environment is ENV.
+ENV is given in the form of environment's name or its list."
+  (let ((md (match-data)) (nest 0) p envrx)
+    (cond
+     ((atom env)
+      (setq envrx
+	    (concat "\\("
+		    (regexp-quote
+		     (YaTeX-replace-format-args
+		      YaTeX-struct-begin env "" ""))
+		    "\\>\\)\\|\\("
+		    (regexp-quote
+		     (YaTeX-replace-format-args
+		      YaTeX-struct-end env "" ""))
+		    "\\)"))
+      (save-excursion
+	(setq p (catch 'open
+		  (while (YaTeX-re-search-active-backward
+			  envrx YaTeX-comment-prefix nil t)
+		    (if (match-beginning 2)
+			(setq nest (1+ nest))
+		      (setq nest (1- nest)))
+		    (if (< nest 0)
+			(throw 'open (cons env (match-beginning 0)))))))))
+     ((listp env)
+      (setq p
+	    (or (YaTeX-in-environment-p (car env))
+		(and (cdr env) (YaTeX-in-environment-p (cdr env)))))))
+    (store-match-data md)
+    p;(or p (YaTeX-in-verb-p (match-beginning 0)))
+    ))
+
+(defun YaTeX-quick-in-environment-p (env)
+  "Check quickly but unsure if current environment is ENV.
+ENV is given in the form of environment's name or its list.
+This function returns correct result only if ENV is NOT nested."
+  (save-excursion
+    (let ((md (match-data)) m0 (p (point)) rc clfound)
+      (cond
+       ((listp env)
+	(or (YaTeX-quick-in-environment-p (car env))
+	    (and (cdr env) (YaTeX-quick-in-environment-p (cdr env)))))
+       (t
+	(unwind-protect
+	    (if (prog1
+		    (YaTeX-search-active-backward
+		     (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
+		     YaTeX-comment-prefix nil t)
+		  (setq m0 (match-beginning 0)))
+		(if (YaTeX-search-active-forward
+		     (YaTeX-replace-format-args
+		      YaTeX-struct-end env)
+		     YaTeX-comment-prefix p t nil)
+		    nil			;if \end{env} found, return nil
+		  (cons env m0)))	;else, return meaningful values
+	  (store-match-data md)))))))
+
+(defun YaTeX-goto-corresponding-environment (&optional allow-mismatch noerr bg)
   "Go to corresponding begin/end enclosure.
 Optional argument ALLOW-MISMATCH allows mismatch open/clese.  Use this
 for \left(, \right).
@@ -951,14 +1077,14 @@ Optional third argument NOERR causes no error for unballanced environment."
 	  (m1 (match-beginning 1))	;environment in \begin{}
 	  (m2 (match-beginning 2))	;environment in \end{}
 	  (m3 (match-beginning 3)))	;environment in \[ \] \( \)
-      ;(setq env (regexp-quote (buffer-substring p (match-beginning 0))))
+					;(setq env (regexp-quote (buffer-substring p (match-beginning 0))))
       (if (cond
 	   (m1				;if begin{xxx}
 	    (setq env
 		  (if allow-mismatch YaTeX-struct-name-regexp
 		    (regexp-quote (buffer-substring m1 (match-end 1)))))
-	;    (setq regexp (concat "\\(\\\\end{" env "}\\)\\|"
-	;			 "\\(\\\\begin{" env "}\\)"))
+					;    (setq regexp (concat "\\(\\\\end{" env "}\\)\\|"
+					;			 "\\(\\\\begin{" env "}\\)"))
 	    (setq regexp
 		  (concat
 		   "\\("
@@ -973,8 +1099,8 @@ Optional third argument NOERR causes no error for unballanced environment."
 	    (setq env
 		  (if allow-mismatch YaTeX-struct-name-regexp
 		    (regexp-quote (buffer-substring m2 (match-end 2)))))
-	;   (setq regexp (concat "\\(\\\\begin{" env "}\\)\\|"
-	;			 "\\(\\\\end{" env "}\\)"))
+					;   (setq regexp (concat "\\(\\\\begin{" env "}\\)\\|"
+					;			 "\\(\\\\end{" env "}\\)"))
 	    (setq regexp
 		  (concat
 		   "\\("
@@ -1012,7 +1138,7 @@ Optional third argument NOERR causes no error for unballanced environment."
 	      (funcall
 	       (if noerr 'message 'error)
 	       "Corresponding environment `%s' not found." env)
-	      (sit-for 1)
+	      (or bg (sit-for 1))
 	      nil))))))
 
 (defun YaTeX-end-environment ()
@@ -1084,7 +1210,7 @@ to most recent sectioning command."
 	    (goto-char curp)
 	    (error "Cannot found the end of current environment."))
 	(YaTeX-goto-corresponding-environment)
-	(beginning-of-line)		;for confirmation
+	;;(beginning-of-line)		;for confirmation ;OUT 2015/1/4
 	(if (< curp (point))
 	    (progn
 	      (message "Mark this environment?(y or n): ")
@@ -1093,8 +1219,27 @@ to most recent sectioning command."
 		(error "Abort.  Please call again at more proper position."))))
 	(set-mark-command nil)
 	(YaTeX-goto-corresponding-environment)
-	(end-of-line)
-	(if (eobp) nil (forward-char 1))))))
+	(goto-char (match-end 0))
+	;;(end-of-line)				;OUT 2015/1/5
+	;;(if (eobp) nil (forward-char 1))	;OUT 2015/1/5
+	))))
+
+(defun YaTeX-in-BEGEND-p (&optional pt)
+  "Check if the point (or PT) is in a %#BEGIN...%#END region.
+Return the list of beginning and ending point of the region and arg-string
+if the point is in BEGEND.  Otherwise nil."
+  (let ((b "%#BEGIN") bp args (e "%#END") (p (point)))
+    (save-excursion
+      (save-match-data			;emacs-19+ yatex1.80+
+	(and (re-search-backward b nil t)
+	     (progn
+	       (setq bp (match-beginning 0))
+	       (goto-char (match-end 0))	;Start to get args of %#BEGIN
+	       (skip-chars-forward " \t")
+	       (setq args (YaTeX-buffer-substring (point) (point-end-of-line))))
+	     (re-search-forward e nil t)
+	     (> (point) p)
+	     (list bp (match-end 0) args))))))
 
 (defun YaTeX-kill-buffer (buffer)
   "Make effort to show parent buffer after kill."
@@ -1262,6 +1407,9 @@ See yatex19.el for example."
 	  'buffer-substring-no-properties
 	'buffer-substring))
 
+(defun YaTeX-region-active-p ()
+  (and (fboundp 'region-active-p) (region-active-p)))
+
 ;;;
 ;; hilit19 vs. font-lock
 ;;;
@@ -1393,7 +1541,7 @@ This function is a makeshift for YaTeX and yahtml."
     '((((class static-color)) (:bold t))
       (((type tty)) (:bold t))
       (((class color) (background dark)) (:foreground "khaki" :bold t))
-      (((class color) (background light)) (:foreground "Goldenrod"))
+      (((class color) (background light)) (:foreground "DarkGoldenrod4"))
       (t (:bold t :underline t)))
     "Font Lock mode face used to highlight formula."
     :group 'font-lock-faces)
@@ -1403,7 +1551,7 @@ This function is a makeshift for YaTeX and yahtml."
     '((((class static-color)) (:bold t))
       (((type tty)) (:bold t))
       (((class color) (background dark))
-       (:foreground "saddlebrown" :background "ivory" :bold t))
+       (:foreground "lightyellow3" :background "navy" :bold t))
       (((class color) (background light)) (:foreground "red"))
       (t (:bold t :underline t)))
     "Font Lock mode face used to highlight delimiters."
@@ -1416,7 +1564,7 @@ This function is a makeshift for YaTeX and yahtml."
       (((class color) (background dark))
        (:foreground "khaki" :bold t :underline t))
       (((class color) (background light))
-       (:foreground "Goldenrod" :underline t))
+       (:foreground "DarkGoldenrod4" :underline t))
       (t (:bold t :underline t)))
     "Font Lock mode face used to highlight subscripts in formula."
     :group 'font-lock-faces)
@@ -1428,7 +1576,7 @@ This function is a makeshift for YaTeX and yahtml."
       (((class color) (background dark))
        (:bold nil :foreground "ivory" :background "lightyellow4"))
       (((class color) (background light))
-       (:underline t :foreground "gold"))
+       (:underline t :foreground "DarkGoldenrod3"))
       (t (:bold t :underline t)))
     "Font Lock mode face used to highlight superscripts in formula."
     :group 'font-lock-faces)
@@ -1464,9 +1612,10 @@ This function is a makeshift for YaTeX and yahtml."
 		    (face-font 'bold)
 		    "giveup!"))
 	    sz medium-i bold-r)
-	(string-match
-	 "^-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-\\(\\([0-9]+\\)\\)" df)
-	(setq sz (or (match-string 1 df) "16"))
+	(if (string-match
+	     "^-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-\\(\\([0-9]+\\)\\)" df)
+	    (setq sz (or (match-string 1 df) "16"))
+	  (setq sz "16"))
 	(setq medium-i (format "-medium-i-[^-]+--%s" sz)
 	      bold-r (format "-bold-r-[^-]+--%s" sz))
 	(while flist
@@ -1553,6 +1702,37 @@ compared by regexp."
 	      (/ (nth 2 before) mil))))))
 
 ;;;
+;; Moved from comment.el
+;;;
+(defun YaTeX-comment-region-sub (string &optional beg end once)
+  "Insert STRING at the beginning of every line between BEG and END."
+  (if (not (stringp string)) (setq string YaTeX-comment-prefix))
+  (let ((b (or beg (region-beginning))) (e (or end (region-end))))
+    (save-excursion
+      (goto-char (max b e))
+      (if (bolp)
+	  (forward-line -1))
+      (save-restriction 
+	(narrow-to-region (min b e) (point))
+	(goto-char (point-min))
+	(message "%s" string)
+	(while (re-search-forward "^" nil t)
+	  (insert string))))))
+
+(defun YaTeX-uncomment-region-sub (string &optional beg end once)
+  "Delete STRING from the beginning of every line between BEG and END.
+BEG and END are optional.  If omitted, active region used.
+Non-nil for optional 4th argument ONCE withholds from removing
+successive comment chars at the beggining of lines."
+  (save-excursion
+    (save-restriction 
+      (narrow-to-region (or beg (region-beginning)) (or end (region-end)))
+      (goto-char (point-min))
+      (while (re-search-forward (concat "^" string) nil t)
+	(replace-match "")
+	(if once (end-of-line))))))
+
+;;;
 ;; Functions for the Installation time
 ;;;
 
@@ -1590,9 +1770,3 @@ compared by regexp."
 	(kill-emacs))))
 
 (provide 'yatexlib)
-; Local variables:
-; fill-prefix: ";;; "
-; paragraph-start: "^$\\|\\|;;;$"
-; paragraph-separate: "^$\\|\\|;;;$"
-; coding: sjis
-; End:

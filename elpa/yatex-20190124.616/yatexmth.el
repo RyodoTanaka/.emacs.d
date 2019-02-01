@@ -1,8 +1,8 @@
-;;; yatexmth.el --- YaTeX math-mode-specific functions
+;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
-;;; (c)1993-2013 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:44:22 2013 on firestorm
-;;; $Id: yatexmth.el,v 1.77 2013/04/01 13:53:45 yuuji Rel $
+;;; (c)1993-2018 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Tue Dec 25 20:02:12 2018 on firestorm
+;;; $Id$
 
 ;;; Commentary:
 ;;; [Customization guide]
@@ -310,6 +310,8 @@
    ("[]"	"Box"		"[]")
    ("no"	"notag"		"\\notag")
    (":"		"colon"		":")
+   (".'."	"therefore"	(".'." "Åà"))
+   ("'.'"	"because"	("'.'" "ÅÊ"))
    ("Diamond"	"Diamond"	"/\\\n\\/")
    ("3"		"triangle"	"/\\\n~~")
    ("C"		"clubsuit"	" o\no+o\n |")
@@ -319,6 +321,7 @@
    ("mi"	"mathit"	"\\mathit{}")
    ("mr"	"mathrm"	"\\mathrm{}")
    ("mb"	"mathbf"	"\\mathbf{}")
+   ("mB"	"mathbb"	"\\mathbb{}")
    ("mt"	"mathtt"	"\\mathtt{}")
    ("ms"	"mathsf"	"\\mathsf{}")
    ("mc"	"mathcal"	"\\mathcal{}")
@@ -344,53 +347,64 @@
 ;;)
 
 (defvar YaTeX-greek-key-alist-default
-  '(
-    ("a"	"alpha"		("a" "Éø"))
-    ("b"	"beta"		("|>\n|>\n|" "É¿"))
-    ("g"	"gamma"		("~r" "É¡"))
-    ("G"	"Gamma"		("|~" "É°"))
-    ("d"	"delta"		("<~\n<>" "É¬"))
-    ("D"	"Delta"		("/\\\n~~" "É¢"))
-    ("e"	"epsilon"	"<\n<~")
-    ("e-"	"varepsilon"	("(\n(~" "É√"))
-    ("z"	"zeta"		("(~\n >" "Éƒ"))
-    ("et"	"eta"		("n\n/" "É≈"))
-    ("th"	"theta"		("8" "É∆"))
-    ("Th"	"Theta"		("(8)" "É¶"))
-    ("th-"	"vartheta"	("-8" "-É∆"))
-    ("i"	"iota"		("i\n\\_/" "É«"))
-    ("k"	"kappa"		("k" "É»"))
-    ("l"	"lambda"	("\\n/\\" "É…"))
-    ("L"	"Lambda"	("/\\" "É©"))
-    ("m"	"mu"		(" u_\n/" "É "))
-    ("n"	"nu"		("|/" "ÉÀ"))
-    ("x"	"xi"		("E\n >" "ÉÃ"))
-    ("X"	"Xi"		("---\n -\n---" "É¨"))
-    ("p"	"pi"		("__\n)(" "ÉŒ"))
-    ("P"	"Pi"		("__\n||" "ÉÆ"))
-    ("p-"	"varpi"		("_\nw" "__\nÉ÷"))
-    ("r"	"rho"		("/O" "Éœ"))
-    ("r-"	"varrho"	("/O\n~~" "Éœ\n~~"))
-    ("s"	"sigma"		("o~" "É–"))
-    ("S"	"Sigma"		("\\-+\n >\n/-+" "É∞"))
-    ("s-"	"varsigma"	"(~~ \n>")
-    ("t"	"tau"		("__\n(" "É—"))
-    ("u"	"upsilon"	("~v" "É“"))
-    ("y"	"upsilon"	("~v" "É“"))
-    ("U"	"Upsilon"	("~Y~" "É≤"))
-    ("Y"	"Upsilon"	("~Y~" "É≤"))
-    ("ph"	"phi"		("  /\n(/)\n/" "É”"))
-    ("Ph"	"Phi"		(" _\n(|)\n ~" "É≥"))
-    ("ph-"	"varphi"	"\\O\n|")
-    ("c"	"chi"		("x" "É‘"))
-    ("ps"	"psi"		("\\|/\\n |" "É’"))
-    ("Ps"	"Psi"		(" ~\n\\|/\\n |" "Éµ"))
-    ("o"	"omega"		("w" "É÷"))
-    ("w"	"omega"		("w" "É÷"))
-    ("O"	"Omega"		("(~)\n~ ~" "É∂"))
-    ("W"	"Omega"		("(~)\n~ ~" "É∂"))
-    ("f" "foo")
-    )
+  (append
+   '(("a"	"alpha"		("a" "Éø"))
+     ("b"	"beta"		("|>\n|>\n|" "É¿"))
+     ("g"	"gamma"		("~r" "É¡"))
+     ("G"	"Gamma"		("|~" "É°"))
+     ("d"	"delta"		("<~\n<>" "É¬"))
+     ("D"	"Delta"		("/\\\n~~" "É¢"))
+     ("e"	"epsilon"	"<\n<~")
+     ("e-"	"varepsilon"	("(\n(~" "_É√"))
+     ("z"	"zeta"		("(~\n >" "Éƒ"))
+     ("et"	"eta"		("n\n/" "É≈"))
+     ("th"	"theta"		("8" "É∆"))
+     ("Th"	"Theta"		("(8)" "É¶"))
+     ("th-"	"vartheta"	("-8" "_É∆"))
+     ("i"	"iota"		("i\n\\_/" "É«"))
+     ("k"	"kappa"		("k" "É»"))
+     ("l"	"lambda"	("\\n/\\" "É…"))
+     ("L"	"Lambda"	("/\\" "É©"))
+     ("m"	"mu"		(" u_\n/" "É "))
+     ("n"	"nu"		("|/" "ÉÀ"))
+     ("x"	"xi"		("E\n >" "ÉÃ"))
+     ("X"	"Xi"		("---\n -\n---" "É¨"))
+     ("p"	"pi"		("__\n)(" "ÉŒ"))
+     ("P"	"Pi"		("__\n||" "ÉÆ"))
+     ("p-"	"varpi"		("__\n/(" "_ÉŒ"))
+     ("r"	"rho"		("/O" "Éœ"))
+     ("r-"	"varrho"	("/O\n~~" "Éœ\n~~"))
+     ("s"	"sigma"		("o~" "É–"))
+     ("S"	"Sigma"		("\\-+\n >\n/-+" "É∞"))
+     ("s-"	"varsigma"	"/~~ \n /")
+     ("t"	"tau"		("__\n(" "É—"))
+     ("u"	"upsilon"	("~v" "É“"))
+     ("y"	"upsilon"	("~v" "É“"))
+     ("U"	"Upsilon"	("~Y~" "É≤"))
+     ("Y"	"Upsilon"	("~Y~" "É≤"))
+     ("ph"	"phi"		("  /\n(/)\n/" "É”"))
+     ("Ph"	"Phi"		(" _\n(|)\n ~" "É≥"))
+     ("ph-"	"varphi"	"\\O\n|")
+     ("c"	"chi"		("x" "É‘"))
+     ("ps"	"psi"		("\\|/\\n |" "É’"))
+     ("Ps"	"Psi"		(" ~\n\\|/\\n |" "Éµ"))
+     ("o"	"omega"		("w" "É÷"))
+     ("w"	"omega"		("w" "É÷"))
+     ("O"	"Omega"		("(~)\n~ ~" "É∂"))
+     ("W"	"Omega"		("(~)\n~ ~" "É∂"))
+     ("f" "foo"))
+   (if YaTeX-use-AMS-LaTeX
+       '(
+	 ("G-"	"varGamma"	("/~" "_É°"))
+	 ("D-"	"varDelta"	("/|\n~~" "_É¢"))
+	 ("Th-"	"varTheta"	("/8/" "_É¶"))
+	 ("L-"	"varLambda"	("/|" "_É©"))
+	 ("X-"	"varXi"		(" --\n -\n-- " "_É¨"))
+	 ("S-"	"varSigma"	(" \\-+\n >\n/-+" "_É∞"))
+	 ("U-"	"varUpsilon"	("~~Y~" "_É≤"))
+	 ("Ph-"	"varPhi"	("  _\n(|)\n~" "_É≥"))
+	 ("Ps-"	"varPsi"	("  ~\n\\//\\n /" "Éµ"))
+	 ("O-"	"varOmega"	("/~/\n~ ~" "_É∂")))))
   "Default LaTeX-math-command alist.")
 
 (defvar YaTeX-greek-key-alist-private nil
@@ -451,7 +465,7 @@
 ;;;
 ;;YaTeX math-mode functions
 ;;;
-;;;###autoload from yatex.el
+;;;###autoload
 (defun YaTeX-toggle-math-mode (&optional arg)
   (interactive "P")
   (or (memq 'YaTeX-math-mode mode-line-format) nil
@@ -520,7 +534,8 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 	      ;;  "equation*" "cases" "flalign" "flalign*"
 	      ;;  "alignat*" "xalignat" "xalignat*" "xxalignat" "xxalignat*"
 	      YaTeX-math-begin-list
-	    )))
+	    )
+	  YaTeX-math-other-env-list))
 	(let*((p (point)) (nest 0) me0 r firstp dollar
 	      (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
 	      (boundary
@@ -658,7 +673,6 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 	(kill-buffer YaTeX-math-menu-buffer))
       command)))
 
-;
 (defun YaTeX-math-show-image (image &optional exit-char)
   "Momentarily display IMAGE at the beginning of the next line;
 erase it on the next keystroke.  The window is recentered if necessary
@@ -971,9 +985,9 @@ If optional argument JUMPTO-CO is non-nil, goto corresponding parentheses."
 	    (t
 	     (setq size nil lr nil)))
       (while (not newsize)
-	(message (format (concat "Change from %s: "
+	(message (concat "Change from %s: "
 				 "l(big) L(Big) h(bigg) H(Bigg) "
-				 "r(left-right) n(NONE) ( { [") size))
+				 "r(left-right) n(NONE) ( { [") size)
 	(setq char (read-char)
 	      newsize (cond ((char-equal char ?l) "\\big")
 			    ((char-equal char ?L) "\\Big")
@@ -1000,7 +1014,7 @@ If optional argument JUMPTO-CO is non-nil, goto corresponding parentheses."
        (t
 	(delete-region (- (point) length) (- (point) paren-length))
 	(backward-char paren-length)))
-      (insert-string newsize)
+      (insert newsize)
       (if big-p (insert ?l))
       (unwind-protect
 	  (progn
@@ -1015,7 +1029,7 @@ If optional argument JUMPTO-CO is non-nil, goto corresponding parentheses."
 	     (t
 	      (delete-region (- (point) length) (- (point) paren-length))
 	      (backward-char paren-length)
-	      (insert-string newsize)
+	      (insert newsize)
 	      (if big-p (insert ?r))
 	      (forward-char paren-length)))
 	    (if (string= lr "l") (backward-list)))

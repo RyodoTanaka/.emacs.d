@@ -1,7 +1,7 @@
-;;; yatex19.el -- YaTeX facilities for Emacs 19 or later
-;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:42:46 2013 on firestorm
-;;; $Id: yatex19.el,v 1.77 2013/04/01 13:53:45 yuuji Rel $
+;;; yatex19.el -- YaTeX facilities for Emacs 19 or later -*- coding: sjis -*-
+;;; (c)1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sun Sep 17 10:22:54 2017 on firestorm
+;;; $Id$
 
 ;;; Code:
 ;(require 'yatex)
@@ -15,10 +15,10 @@
 (defvar YaTeX-background-mode
   (or (if (fboundp 'get-frame-background-mode)
           (get-frame-background-mode (selected-frame)))
-      (if (fboundp 'frame-parameters)
-          (cdr (assq 'background-mode (frame-parameters))))
       (if (boundp 'frame-background-mode)
           frame-background-mode)
+      (if (fboundp 'frame-parameters)
+          (cdr (assq 'background-mode (frame-parameters))))
       (if (boundp 'hilit-background-mode)
           hilit-background-mode)
       (if (face-background 'default)
@@ -54,11 +54,11 @@
 	(list
 	 (if YaTeX-auto-math-mode nil
 	   (cons 'math (cons "Toggle math-mode"
-			     '(lambda () (interactive)
-				(YaTeX-switch-mode-menu nil ?t)))))
+			     (function(lambda () (interactive)
+				(YaTeX-switch-mode-menu nil ?t))))))
 	 (cons 'mod (cons "Toggle Modify Mode"
-			  '(lambda () (interactive)
-			     (YaTeX-switch-mode-menu nil ?m))))))))
+			  (function(lambda () (interactive)
+			     (YaTeX-switch-mode-menu nil ?m)))))))))
 (defvar YaTeX-mode-menu-map-percent (make-sparse-keymap "percent"))
 (YaTeX-define-menu
  'YaTeX-mode-menu-map-percent
@@ -227,11 +227,12 @@
 
 (and (featurep 'xemacs)
      (add-hook 'yatex-mode-hook
-	       '(lambda ()
+	       (function
+		(lambda ()
 		  (or (assoc "YaTeX" current-menubar)
 		      (progn
 			(set-buffer-menubar (copy-sequence current-menubar))
-			(add-submenu nil YaTeX-mode-menu-map))))))
+			(add-submenu nil YaTeX-mode-menu-map)))))))
 
 ;; Other key bindings for window-system
 ;(YaTeX-define-key [?\C- ] 'YaTeX-do-completion)
@@ -483,6 +484,14 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 
 (defun YaTeX-19-create-face (sym fgcolor &optional bgcolor)
   "Create face named SYM with face of FGCOLOR/BGCOLOR."
+  (if (consp fgcolor)
+      (setq fgcolor (if (eq YaTeX-background-mode 'light)
+			(car fgcolor)
+		      (cdr fgcolor))))
+  (if (consp bgcolor)
+      (setq bgcolor (if (eq YaTeX-background-mode 'light)
+			(car bgcolor)
+		      (cdr bgcolor))))
   (cond
    ((and YaTeX-use-font-lock (fboundp 'defface))
     (custom-declare-face
@@ -631,7 +640,8 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 		    (if single (list single 0 'macro))))))))))
 
 ;;2006/6/23 new face, `delimiter' introduced
-(YaTeX-19-create-face 'delimiter "saddlebrown" "ivory")
+(YaTeX-19-create-face
+ 'delimiter '("saddlebrown" . "lightyellow") '("ivory". "navy"))
 
 ;;(YaTeX-19-collect-macros)	;causes an error
 (defun YaTeX-hilit-setup-alist ()
@@ -813,5 +823,4 @@ WARNING, This code is not perfect."
 ; fill-prefix: ";;; "
 ; paragraph-start: "^$\\|\\|;;;$"
 ; paragraph-separate: "^$\\|\\|;;;$"
-; coding: sjis
 ; End:

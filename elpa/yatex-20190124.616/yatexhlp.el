@@ -1,8 +1,8 @@
-;;; yatexhlp.el --- YaTeX helper with LaTeX commands and macros
+;;; yatexhlp.el --- YaTeX helper for LaTeX -*- coding: sjis -*-
 ;;; 
-;;; (c)1994,1998,2004 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:11:14 2012 on firestorm
-;;; $Id: yatexhlp.el,v 1.77 2013/04/01 13:53:45 yuuji Rel $
+;;; (c)1994,1998,2004,2014,2015,2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sat Jun  2 16:45:45 2018 on firestorm
+;;; $Id$
 
 ;;; Code:
 (let ((help-file (concat "YATEXHLP."
@@ -12,8 +12,9 @@
        (cond
 	((and (boundp 'site-directory) site-directory) site-directory)
 	((string-match "\\.app/" doc-directory)	;For Emacs.app(Darwin)
-	 (expand-file-name "../site-lisp" doc-directory))
-	(YaTeX-emacs-19 (expand-file-name "../../site-lisp" doc-directory))
+	 (expand-file-name "../site-lisp/yatex" doc-directory))
+	(YaTeX-emacs-19
+	 (expand-file-name "../../site-lisp/yatex" doc-directory))
 	(t exec-directory))))
   (defvar YaTeX-help-file
     (expand-file-name help-file help-dir)
@@ -45,8 +46,8 @@
   (setq YaTeX-help-mode-map (make-sparse-keymap))
   (let ((map YaTeX-help-mode-map))
     (suppress-keymap map)
-    (define-key map "j" '(lambda () (interactive) (scroll-up 1)))
-    (define-key map "k" '(lambda () (interactive) (scroll-up -1)))
+    (define-key map "j" (function (lambda () (interactive) (scroll-up 1))))
+    (define-key map "k" (function (lambda () (interactive) (scroll-up -1))))
     (define-key map "n" 'next-line)
     (define-key map "p" 'previous-line)
     (define-key map " " 'scroll-up)
@@ -159,7 +160,7 @@ Where:	<DELIM> is the value of YaTeX-help-delimiter.
 		  (concat "^" (regexp-quote YaTeX-help-delimiter)) nil 1)
 		 (- (point) (length YaTeX-help-delimiter))))
       (YaTeX-showup-buffer
-       hbuf (function (lambda (x) (nth 3 (window-edges x)))) t)
+       hbuf 'YaTeX-showup-buffer-bottom-most t)
       (set-buffer hbuf)
       (setq buffer-read-only nil)
       (if append (goto-char (point-max)) (erase-buffer))
@@ -226,7 +227,7 @@ Where:	<DELIM> is the value of YaTeX-help-delimiter.
   (let ((buf (get-buffer-create "**Description**"))
 	(conf (current-window-configuration)))
     (YaTeX-showup-buffer
-     buf (function (lambda (x) (nth 3 (window-edges x)))) t)
+     buf 'YaTeX-showup-buffer-bottom-most t)
     (make-local-variable 'YaTeX-help-file-current)
     (make-local-variable 'YaTeX-help-command-current)
     (make-local-variable 'YaTeX-help-saved-config)
@@ -266,8 +267,7 @@ as a help file."
 	(sw (selected-window))
 	(head (concat "^" (regexp-quote YaTeX-help-delimiter)))
 	pt command)
-    (YaTeX-showup-buffer
-     ab (function (lambda (x) (nth 3 (window-edges x)))))
+    (YaTeX-showup-buffer ab 'YaTeX-showup-buffer-bottom-most)
     (select-window (get-buffer-window ab))
     (set-buffer ab)			;assertion
     (setq buffer-read-only nil)
@@ -302,8 +302,11 @@ as a help file."
       (message "No matches found.")))
 
 ;;;###autoload
-(defun YaTeX-help ()
-  "Show help buffer of LaTeX/TeX commands or macros."
+(defun YaTeX-help (&optional macro ref-only)
+  "Show help buffer of LaTeX/TeX commands or macros.
+Optional argument MACRO, if supplied, is directly selected to keyword.
+Non-nil for optional second argument REF-ONLY inhibits call enrich-help
+for non-interactive use."
   (interactive)
   (let (p beg end command)
     (save-excursion
@@ -311,6 +314,7 @@ as a help file."
 	  (goto-char (match-end 0)))
       (setq p (point))			;remember current position.
       (cond
+       (macro nil)
        ((YaTeX-on-begin-end-p)
 	;;if on \begin or \end, extract its environment.
 	(setq command
@@ -331,11 +335,13 @@ as a help file."
 	    (search-forward "}" (point-end-of-line))
 	    (setq command (buffer-substring beg (match-beginning 0)))))
       (setq command
-	    (completing-read
-	     "Describe (La)TeX command: "
-	     YaTeX-help-entries nil nil command))
-      );end excursion
+	    (or macro
+		(completing-read
+		 "Describe (La)TeX command: "
+		 YaTeX-help-entries nil nil command))));end excursion
+
     (setq YaTeX-help-saved-config (current-window-configuration))
     (or (YaTeX-refer-help command YaTeX-help-file)
 	(YaTeX-refer-help command YaTeX-help-file-private)
+	ref-only
 	(YaTeX-enrich-help command))))

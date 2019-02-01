@@ -179,7 +179,7 @@ user-mail-address "GRoadPG@gmail.com")
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
+    (yatex dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
  '(show-paren-mode t)
  '(tab-width 4)
  '(tool-bar-mode nil)
@@ -195,7 +195,6 @@ user-mail-address "GRoadPG@gmail.com")
 (setq auto-mode-alist
       (cons (cons "\\.tex$" 'yatex-mode)  auto-mode-alist))
 (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
-(setq load-path (cons (expand-file-name "~/.emacs.d/site-lisp/yatex") load-path))
 (setq YaTeX-inhibit-prefix-letter t)
 (setq YaTeX-kanji-code nil)
 (setq YaTeX-latex-message-code 'utf-8)
