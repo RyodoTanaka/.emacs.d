@@ -163,8 +163,18 @@ user-mail-address "GRoadPG@gmail.com")
              (c-set-offset 'innamespace 0)   ;;;namespace {}の中はインデントしない
              (c-set-offset 'arglist-close 0) ;;;関数の引数リストの閉じ括弧はインデントしない
              )
-	  (semantic-mode 1)
-      )
+	  ;; (semantic-mode 1)
+          )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; for smooth loading
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(eval-after-load 'semantic
+    (add-hook 'semantic-mode-hook
+              (lambda ()
+                (dolist (x (default-value 'completion-at-point-functions))
+                  (when (string-prefix-p "semantic-" (symbol-name x))
+                    (remove-hook 'completion-at-point-functions x))))))
 
 ;;; smooth-scroll
 (require 'smooth-scroll)
