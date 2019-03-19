@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path "~/.emacs.d/lisp")
 ;; Color Theme カラーテーマ 
-;;(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/themes")
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/themes")
 ;; (add-to-list 'load-path "~/.emacs.d/themes/tomorrow")
 ;; (setq custom-theme-directory "~/.emacs.d/themes/tomorrow")
 ;; (load-theme 'tomorrow-night-bright t)
@@ -189,7 +189,7 @@ user-mail-address "GRoadPG@gmail.com")
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (yatex dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
+    (multiple-cursors yatex dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
  '(show-paren-mode t)
  '(tab-width 4)
  '(tool-bar-mode nil)
@@ -646,6 +646,14 @@ markdown-mode-hook
 ;; 1, 2 or 3 which displays one of the text banners
 ;; "path/to/your/image.png" which displays whatever image you would prefer
 
+;;;;;;;;;;;;;;;;;;;;;;
+;; 複数行同時編集
+;;;;;;;;;;;;;;;;;;;;;;
+(require 'multiple-cursors)
+(global-set-key (kbd "C-c C-e") 'mc/edit-lines)
+;; (global-set-key (kbd "C-c C-f") 'mc/mark-next-like-this)
+;; (global-set-key (kbd "C-c C-b") 'mc/mark-previous-like-this)
+;; (global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
 
 (provide 'init)
 ;;; init.el ends here
