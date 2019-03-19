@@ -189,7 +189,7 @@ user-mail-address "GRoadPG@gmail.com")
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (yatex dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
+    (multiple-cursors yatex dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
  '(show-paren-mode t)
  '(tab-width 4)
  '(tool-bar-mode nil)
@@ -651,6 +651,15 @@ markdown-mode-hook
 ;; 'logo which displays an alternative emacs logo
 ;; 1, 2 or 3 which displays one of the text banners
 ;; "path/to/your/image.png" which displays whatever image you would prefer
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; 複数行同時編集
+;;;;;;;;;;;;;;;;;;;;;;
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
 
 (provide 'init)
