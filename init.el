@@ -98,9 +98,9 @@ user-mail-address "GRoadPG@gmail.com")
 (setq next-screen-context-lines 1)
 
 ;;; 起動メッセージの非表示
-;; (setq inhibit-startup-message t)
+(setq inhibit-startup-message t)
 ;;; スタートアップ時のエコー領域メッセージの非表示
-;; (setq inhibit-startup-echo-area-message -1)
+(setq inhibit-startup-echo-area-message -1)
 
 
 ;;; @ backup
@@ -187,6 +187,7 @@ user-mail-address "GRoadPG@gmail.com")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files nil)
  '(package-selected-packages
    (quote
     (multiple-cursors yatex dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
@@ -628,23 +629,23 @@ markdown-mode-hook
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 起動画面を Dashboardに
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'dashboard)
-(dashboard-setup-startup-hook)
-;; Or if you use use-package
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook))
+;; (require 'dashboard)
+;; (dashboard-setup-startup-hook)
+;; ;; Or if you use use-package
+;; (use-package dashboard
+;;   :ensure t
+;;   :config
+;;   (dashboard-setup-startup-hook))
 
-;; Set the title
-(setq dashboard-banner-logo-title "!! Welcome back, Master !!")
-;; Set the banner
-(setq dashboard-startup-banner "~/.emacs.d/.image/palta.png")
-;; Value can be
-;; 'official which displays the official emacs logo
-;; 'logo which displays an alternative emacs logo
-;; 1, 2 or 3 which displays one of the text banners
-;; "path/to/your/image.png" which displays whatever image you would prefer
+;; ;; Set the title
+;; (setq dashboard-banner-logo-title "!! Welcome back, Master !!")
+;; ;; Set the banner
+;; (setq dashboard-startup-banner "~/.emacs.d/.image/palta.png")
+;; ;; Value can be
+;; ;; 'official which displays the official emacs logo
+;; ;; 'logo which displays an alternative emacs logo
+;; ;; 1, 2 or 3 which displays one of the text banners
+;; ;; "path/to/your/image.png" which displays whatever image you would prefer
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; 複数行同時編集
@@ -655,5 +656,40 @@ markdown-mode-hook
 ;; (global-set-key (kbd "C-c C-b") 'mc/mark-previous-like-this)
 ;; (global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
 
+;;;;;;;;;;;;;;;;;;;;;
+;; Org Mode
+;;;;;;;;;;;;;;;;;;;;;
+;; 画像をインラインで表示
+(setq org-startup-with-inline-images t)
+
+;; 見出しの余分な*を消す
+(setq org-hide-leading-stars t)
+
+;; LOGBOOK drawerに時間を格納する
+(setq org-clock-into-drawer t)
+
+;; .orgファイルは自動的にorg-mode
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+
+;; org-directory内のファイルすべてからagendaを作成する
+(setq my-org-agenda-dir "~/org/")
+(setq org-agenda-files (list my-org-agenda-dir))
+
+;; TODO状態
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
+
+;; DONEの時刻を記録
+(setq org-log-done 'time)
+
+;; ショートカットキー
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+
+(setq org-latex-to-pdf-process (list "latexmk -pcv %f"))
+
 (provide 'init)
 ;;; init.el ends here
+
