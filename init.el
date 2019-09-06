@@ -187,7 +187,57 @@ user-mail-address "GRoadPG@gmail.com")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files nil)
+ '(org-agenda-files (quote ("~/workspace/memo/vcstool/usage.org")))
+ '(org-format-latex-header
+   "\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
+\\usepackage[usenames]{color}
+[PACKAGES]
+[DEFAULT-PACKAGES]
+\\pagestyle{empty}             % do not remove
+% The settings below are copied from fullpage.sty
+\\setlength{\\textwidth}{\\paperwidth}
+\\addtolength{\\textwidth}{-3cm}
+\\setlength{\\oddsidemargin}{1.5cm}
+\\addtolength{\\oddsidemargin}{-2.54cm}
+\\setlength{\\evensidemargin}{\\oddsidemargin}
+\\setlength{\\textheight}{\\paperheight}
+\\addtolength{\\textheight}{-\\headheight}
+\\addtolength{\\textheight}{-\\headsep}
+\\addtolength{\\textheight}{-\\footskip}
+\\addtolength{\\textheight}{-3cm}
+\\setlength{\\topmargin}{1.5cm}
+\\addtolength{\\topmargin}{-2.54cm}")
+ '(org-latex-default-packages-alist
+   (quote
+    (("AUTO" "inputenc" t
+      ("pdflatex"))
+     ("T1" "fontenc" t
+      ("pdflatex"))
+     ("" "graphicx" t nil)
+     ("" "grffile" t nil)
+     ("" "longtable" nil nil)
+     ("" "wrapfig" nil nil)
+     ("" "rotating" nil nil)
+     ("normalem" "ulem" t nil)
+     ("" "amsmath" t nil)
+     ("" "textcomp" t nil)
+     ("" "amssymb" t nil)
+     ("" "capt-of" nil nil)
+     ("hidelinks" "hyperref" nil nil)
+     ("" "bm" nil nil)
+     ("" "ascmac" nil nil)
+     ("" "color" nil nil)
+     ("" "cite" nil nil)
+     ("" "latexsym" nil nil)
+     ("" "url" nil nil)
+     ("" "algorithm" nil nil)
+     ("" "algpseudocode" nil nil)
+     ("" "examplep" nil nil)
+     ("" "subfigure" nil nil)
+     ("toc,page" "appendix" nil nil)
+     ("" "forloop" nil nil)
+     ("" "tablefootnote" nil nil)
+     ("yyyymmdd" "datetime" nil nil))))
  '(package-selected-packages
    (quote
     (multiple-cursors yatex dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
@@ -438,6 +488,7 @@ python-mode-common-hook
 '(
 yatex-mode-hook
 markdown-mode-hook
+org-mode
 ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -688,7 +739,7 @@ markdown-mode-hook
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
-(setq org-latex-to-pdf-process (list "latexmk -pcv %f"))
+(setq org-latex-pdf-process (list "latexmk -f -pdf %f"))
 
 (provide 'init)
 ;;; init.el ends here
