@@ -1,1 +1,8 @@
-/elpa/*
+# Directories
+/elpa
+/auto-save-list
+/el-get
+/local
+
+# Files
+*~
