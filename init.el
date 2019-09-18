@@ -62,6 +62,15 @@
   :config
   (load-theme 'gruvbox-dark-hard t))
 
+;; Basic settings
+(leaf *basic-settings
+  :config
+  (show-paren-mode t)
+  (set-language-environment 'Japanese)
+  (prefer-coding-system 'utf-8)
+  (add-to-list 'default-frame-alist '(font . "ricty-15"))
+  (set-frame-parameter nil 'alpha 95))
+  
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
