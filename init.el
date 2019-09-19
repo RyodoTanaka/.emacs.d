@@ -192,6 +192,14 @@
   (add-to-list 'default-mode-line-format '(:eval (count-lines-and-chars)))
   )
 
+;;; Hide mode line
+(leaf hide-mode-line
+  :ensure t
+  :hook
+  ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode)
+  )
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom-set settings ;;                        ;;
@@ -203,13 +211,21 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(doom-modeline-buffer-file-name-style nil t)
+ '(doom-modeline-icon nil t)
+ '(doom-modeline-major-mode-icon nil t)
+ '(doom-modeline-minor-modes nil t)
+ '(doom-themes-enable-bold nil)
+ '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
+ '(nil nil t)
  '(package-archives
    (quote
     (("org" . "https://orgmode.org/elpa/")
      ("melpa" . "https://melpa.org/packages/")
      ("gnu" . "https://elpa.gnu.org/packages/"))))
- '(package-selected-packages (quote (gruvbox-theme el-get hydra leaf-keywords leaf))))
+ '(package-selected-packages (quote (gruvbox-theme el-get hydra leaf-keywords leaf)))
+ '(t nil t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
