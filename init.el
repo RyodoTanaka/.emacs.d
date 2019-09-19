@@ -56,11 +56,38 @@
 ;; Original Custom ;;
 ;;;;;;;;;;;;;;;;;;;;;
 ;;; Theme
+;; Doom Tomorrow Night
+(leaf doom-themes
+  :ensure t
+  :custom
+  (doom-themes-enable-italic)
+  (doom-themes-enable-bold)
+  :config
+  (load-theme 'doom-tomorrow-night t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config)
+  )
+(leaf doom-modeline
+  :ensure t
+  :custom
+  (doom-modeline-buffer-file-name-style 'truncate-with-project)
+  (doom-modeline-icon t)
+  (doom-modeline-major-mode-icon nil)
+  (doom-modeline-minor-modes nil)
+  :hook
+  (after-init . doom-modeline-mode)
+  :config
+  (line-number-mode 0)
+  (column-number-mode 0)
+  (doom-modeline-def-modeline 'main
+                              '(bar workspace-number window-number evil-state god-state ryo-modal xah-fly-keys matches buffer-info remote-host buffer-position parrot selection-info)
+                              '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
+  )
 ;; Tomorrow Night
-(leaf tomorrow-night-theme
-  :when (version<= "24.1" emacs-version)
-  :el-get (chriskempson/tomorrow-theme :branch "master" :load-path "GNU Emacs")
-  :require t)
+;; (leaf tomorrow-night-theme
+;;   :when (version<= "24.1" emacs-version)
+;;   :el-get (chriskempson/tomorrow-theme :branch "master" :load-path "GNU Emacs")
+;;   :require t)
 ;; Gruvbox
 ;; (leaf gruvbox-theme
 ;;   :when (version<= "24.1" emacs-version)
