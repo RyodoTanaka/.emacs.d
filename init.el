@@ -216,6 +216,42 @@
         ("\\.yaml\\'"))
   )
 
+;;; C, C++ style
+(leaf c-c++
+  :config
+  (add-to-list 'auto-mode-alist '("\\.c\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.pde\\'" . c++-mode))
+  ;; original cc-mode hooks
+  (leaf cc-mode
+    :preface
+    (defun ROS-c-mode-hook()
+      (setq c-basic-offset 2)
+      (setq indent-tabs-mode nil)
+      (c-set-offset 'substatement-open 0)
+      (c-set-offset 'innamespace 0)
+      (c-set-offset 'case-label '+)
+      (c-set-offset 'brace-list-open 0)
+      (c-set-offset 'brace-list-intro '+)
+      (c-set-offset 'brace-list-entry 0)
+      (c-set-offset 'member-init-intro 0)
+      (c-set-offset 'statement-case-open 0)
+      (c-set-offset 'arglist-intro '+)
+      (c-set-offset 'arglist-cont-nonempty '+)
+      (c-set-offset 'arglist-close '+)
+      (c-set-offset 'template-args-cont '+))
+    :hook
+    (c-mode-common . ROS-c-mode-hook)
+    )
+  ;; google-c-style
+  (leaf google-c-style
+    :ensure t
+    :hook
+    (c-mode-common . google-c-style)
+    )
+  )
+    
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom-set settings ;;                        ;;
