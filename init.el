@@ -199,6 +199,15 @@
   ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode)
   )
 
+;;; nxml-mode
+(leaf nxml-mode
+  :mode (("\\.launch\\'")
+         ("\\.xacro\\'")
+         ("\\.urdf\\'")
+         ("\\.config\\'")
+         ("\\.sdf\\'")
+         ("\\.world\\'"))
+  )
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
