@@ -199,6 +199,13 @@
   ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode)
   )
 
+;;; wich-key
+;; キーバインド覚えなくて良くするやつ
+(leaf which-key
+  :ensure t
+  :hook (after-init . which-key-mode)
+  )
+
 ;;; nxml-mode
 (leaf nxml-mode
   :mode (("\\.launch\\'")
@@ -247,11 +254,21 @@
   ;; google-c-style
   (leaf google-c-style
     :ensure t
-    :hook
-    (c-mode-common . google-c-style)
+    :hook (c-mode-common . google-c-style)
     )
   )
-    
+
+(message "loading init.el, start")
+
+(add-hook 'after-init-hook
+          (lambda ()                    
+            (message "run after-init-hook")))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()                    
+            (message "run emacs-startup-hook")))
+
+(message "loading init.el, end")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom-set settings ;;                        ;;
@@ -276,7 +293,9 @@
     (("org" . "https://orgmode.org/elpa/")
      ("melpa" . "https://melpa.org/packages/")
      ("gnu" . "https://elpa.gnu.org/packages/"))))
- '(package-selected-packages (quote (gruvbox-theme el-get hydra leaf-keywords leaf)))
+ '(package-selected-packages
+   (quote
+    (neotree which-key gruvbox-theme el-get hydra leaf-keywords leaf)))
  '(t nil t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
