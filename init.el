@@ -56,11 +56,16 @@
 ;; Original Custom ;;
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Theme
-(leaf gruvbox-theme
+(leaf tomorrow-night-theme
   :when (version<= "24.1" emacs-version)
-  :ensure t
-  :config
-  (load-theme 'gruvbox-dark-hard t))
+  :el-get (chriskempson/tomorrow-theme :branch "master" :load-path "GNU Emacs")
+  :require t)
+;; (leaf gruvbox-theme
+;;   :when (version<= "24.1" emacs-version)
+;;   :ensure t
+;;   :config
+;;   (load-theme 'gruvbox-dark-hard t))
+
 
 ;; Basic settings
 (leaf *basic-settings
@@ -83,7 +88,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-)
+ '(el-get-git-shallow-clone t)
+ '(package-archives
+   (quote
+    (("org" . "https://orgmode.org/elpa/")
+     ("melpa" . "https://melpa.org/packages/")
+     ("gnu" . "https://elpa.gnu.org/packages/"))))
+ '(package-selected-packages (quote (gruvbox-theme el-get hydra leaf-keywords leaf))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
