@@ -278,8 +278,6 @@
               (neotree-find file-name)))))
     )
   )
-
-
 ;;; Emacs26 specified setting
 ;; Emacs 26.1以上に関する設定
 (leaf *emacs26-settings
@@ -288,6 +286,18 @@
   (setq default-mode-line-format (default-value 'mode-line-format))
   (add-to-list 'default-mode-line-format '(:eval (count-lines-and-chars)))
   )
+
+;;;;;;;;;;;;;;;;;;;;;
+;; IDE environment ;;
+;;;;;;;;;;;;;;;;;;;;;
+(leaf *lsp-settings
+  :config
+  (leaf lsp-mode
+    :ensure t
+    :hook   (prog-major-mode-hook . lsp-prog-major-mode-enable)
+    )
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Language settings ;;
@@ -363,13 +373,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(doom-modeline-buffer-file-name-style nil)
+ '(create-lockfiles nil)
+ '(doom-modeline-buffer-file-name-style nil t)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
  '(highlight-indent-guides-auto-enabled nil)
  '(highlight-indent-guides-method nil)
  '(highlight-indent-guides-responsive nil)
+ '(lsp-inhibit-message nil t)
+ '(lsp-message-project-root-warning nil t)
  '(neo-theme nil t)
  '(nil nil t)
  '(package-archives
@@ -380,9 +393,9 @@
  '(package-selected-packages
    (quote
     (imenu-list minimap neotree which-key gruvbox-theme el-get hydra leaf-keywords leaf)))
- '(show-paren-style nil)
- '(show-paren-when-point-in-periphery nil)
- '(show-paren-when-point-inside-paren nil)
+ '(show-paren-style nil t)
+ '(show-paren-when-point-in-periphery nil t)
+ '(show-paren-when-point-inside-paren nil t)
  '(t nil t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
