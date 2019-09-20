@@ -213,7 +213,7 @@
   :hook (after-init-hook . which-key-mode)
   :config
   (which-key-setup-minibuffer)
-  (setq which-key-idle-secondary-delay 0.05)
+  (setq which-key-idle-secondary-delay 0)
   )
 
 ;;; nxml-mode
