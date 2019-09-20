@@ -288,36 +288,36 @@
 ;;;;;;;;;;;;;;;;;;;;;
 ;; IDE environment ;;
 ;;;;;;;;;;;;;;;;;;;;;
-(leaf *lsp-settings
+(leaf *lsp-basic-settings  
+  :url "https://github.com/emacs-lsp/lsp-mode#supported-languages"
+  :url "https://github.com/MaskRay/ccls/wiki/lsp-mode#find-definitionsreferences"
+  :doc "lsp is language server protocol"
+  :when (version<= "25.1" emacs-version)
   :config
   ;; lsp-mode
   ;; LSPの基本パッケージ
   (leaf lsp-mode
     :ensure t
-    :hook (prog-mode-hook . lsp)
-    :commands lsp
+    :hook ( (c-mode          . lsp)
+           (c++-mode        . lsp)
+           (prog-major-mode . lsp-prog-major-mode-enable))
     )
   ;; lsp-ui
   ;; LSPのカッチョ良いUIパッケージ
   (leaf lsp-ui
     :ensure t
     :hook (lsp-mode-hook . lsp-ui-mode)
-    :commands lsp-ui-mode
     )
   ;; company-lsp
   ;; LSPベースの補間
-  (leaf company-lsp
-    :ensure t
-    :hook (lsp-mode-hook . company-lsp)
-    :commands company-lsp
-    )
+  ;; (leaf company-lsp
+  ;;   :ensure t
+  ;;   :config
+  ;;   (add-to-list 'company-backends 'company-lsp)
+  ;;   )
   ;; lsp-treemacs
-  ;; LSP
-  (leaf lsp-treemacs
-    :ensure t
-    :hook (lsp-mode-hook . lsp-treemacs-errors-list)
-    :commands lsp-treemacs-errors-list
-    )  
+  ;; LSP用treemacs
+  (leaf lsp-treemacs :ensure t)  
   )
 
 
@@ -383,6 +383,13 @@
     (c-mode-common-hook . google-set-c-style)
     (c++-mode-common-hook . google-set-c-style)
     )
+  ;; lsp setting
+  ;; LSPに関する設定
+  (leaf *lsp-setting
+    :config
+    ;; ccls
+    ;; c,c++のLSP server
+    )
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -394,10 +401,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
- '(doom-modeline-icon t t)
- '(doom-modeline-major-mode-icon nil t)
- '(doom-modeline-minor-modes nil t)
+ '(ccls-executable "/usr/local/bin/ccls" t)
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project))
+ '(doom-modeline-icon t)
+ '(doom-modeline-major-mode-icon nil)
+ '(doom-modeline-minor-modes nil)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
@@ -410,10 +418,10 @@
      ("gnu" . "https://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (google-c-style lsp-mode yaml-mode highlight-indent-guides which-key rainbow-delimiters imenu-list minimap hide-mode-line doom-modeline smooth-scroll mozc neotree doom-themes el-get hydra leaf-keywords leaf)))
- '(show-paren-style (quote mixed) t)
- '(show-paren-when-point-in-periphery t t)
- '(show-paren-when-point-inside-paren t t))
+    (ccls google-c-style lsp-mode yaml-mode highlight-indent-guides which-key rainbow-delimiters imenu-list minimap hide-mode-line doom-modeline smooth-scroll mozc neotree doom-themes el-get hydra leaf-keywords leaf)))
+ '(show-paren-style (quote mixed))
+ '(show-paren-when-point-in-periphery t)
+ '(show-paren-when-point-inside-paren t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
