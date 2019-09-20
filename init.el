@@ -102,8 +102,7 @@
 ;;; Editor setting
 (leaf *editor-settings
   :config
-  (show-paren-mode t) ;括弧のハイライト
-  (set-frame-parameter nil 'alpha 95) ;背景透過
+  (set-frame-parameter nil 'alpha 98) ;背景透過
   (size-indication-mode t) ; ファイルサイズを表示
   (setq next-line-add-newlines nil) ;バッファの終わりでのnewlineを禁止する
   (global-font-lock-mode t) ;色分け設定
@@ -216,6 +215,26 @@
   (setq which-key-idle-secondary-delay 0)
   )
 
+;;; rainbow-delimiters
+;; 括弧を虹色に設定してくれる
+(leaf rainbow-delimiters
+  :ensure t
+  :hook
+  (prog-mode-hook . rainbow-delimiters-mode)
+  )
+
+(leaf paren
+  :ensure t
+  :hook
+  (after-init-hook . show-paren-mode)
+  ;; :custom-face
+  (show-paren-match . '((nil (:background "#44475a" :foreground "#f1fa8c"))))
+  :custom
+  (show-paren-style 'mixed)
+  (show-paren-when-point-inside-paren t)
+  (show-paren-when-point-in-periphery t)
+  )
+
 ;;; nxml-mode
 (leaf nxml-mode
   :mode (("\\.launch\\'")
@@ -282,10 +301,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(doom-modeline-buffer-file-name-style nil)
- '(doom-modeline-icon nil)
- '(doom-modeline-major-mode-icon nil)
- '(doom-modeline-minor-modes nil)
+ '(doom-modeline-buffer-file-name-style nil t)
+ '(doom-modeline-icon nil t)
+ '(doom-modeline-major-mode-icon nil t)
+ '(doom-modeline-minor-modes nil t)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
