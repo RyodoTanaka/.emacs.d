@@ -294,7 +294,8 @@
   :config
   (leaf lsp-mode
     :ensure t
-    :hook   (prog-major-mode-hook . lsp-prog-major-mode-enable)
+    :hook
+    (prog-mode-hook . lsp)
     )
   )
 
