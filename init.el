@@ -29,7 +29,7 @@
     (custom-set-variables
      '(package-archives '(("org"   . "https://orgmode.org/elpa/")
                           ("melpa" . "https://melpa.org/packages/")
-                          ("gnu"   . "https://elpa.gnu.org/packages/"))))
+                          ("gnu"   . "https://mirrors.163.com/elpa/gnu/"))))
     (package-initialize))
 
   (prog1 "leaf"
@@ -415,7 +415,7 @@
    (quote
     (("org" . "https://orgmode.org/elpa/")
      ("melpa" . "https://melpa.org/packages/")
-     ("gnu" . "https://elpa.gnu.org/packages/"))))
+     ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
  '(package-selected-packages
    (quote
     (ccls google-c-style lsp-mode yaml-mode highlight-indent-guides which-key rainbow-delimiters imenu-list minimap hide-mode-line doom-modeline smooth-scroll mozc neotree doom-themes el-get hydra leaf-keywords leaf)))
