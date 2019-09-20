@@ -61,8 +61,8 @@
 (leaf doom-themes
   :ensure t neotree 
   :custom
-  (doom-themes-enable-italic)
-  (doom-themes-enable-bold)
+  (doom-themes-enable-italic . nil)
+  (doom-themes-enable-bold . nil)
   :config
   (load-theme 'doom-tomorrow-night t)
   (doom-themes-neotree-config)
@@ -176,10 +176,10 @@
   (leaf doom-modeline
     :ensure t
     :custom
-    (doom-modeline-buffer-file-name-style 'truncate-with-project)
-    ;; (doom-modeline-icon t)
-    ;; (doom-modeline-major-mode-icon nil)
-    ;; (doom-modeline-minor-modes nil)
+    (doom-modeline-buffer-file-name-style . 'truncate-with-project)
+    (doom-modeline-icon . t)
+    (doom-modeline-major-mode-icon . nil)
+    (doom-modeline-minor-modes . nil)
     :hook (after-init-hook . doom-modeline-mode)
     :config
     (line-number-mode 0)
@@ -214,12 +214,11 @@
     :ensure t
     :hook
     (after-init-hook . show-paren-mode)
-    ;; :custom-face
+    :custom-face
     (show-paren-match . '((nil (:background "#44475a" :foreground "#f1fa8c"))))
-    :custom
-    (show-paren-style 'mixed)
-    (show-paren-when-point-inside-paren t)
-    (show-paren-when-point-in-periphery t)
+    :custom ((show-paren-style . 'mixed)
+             (show-paren-when-point-inside-paren . t)
+             (show-paren-when-point-in-periphery . t))
     )
   )
 
@@ -237,13 +236,13 @@
 ;; ソースコードのインデントを見やすくしてくれる
 (leaf highlight-indent-guides
   :ensure t yaml-mode
+  :custom (highlight-indent-guides-method . 'character)
   :hook
   (prog-mode-hook . highlight-indent-guides-mode)
   (yaml-mode-hook . highlight-indent-guides-mode)
-  :config
-  (setq highlight-indent-guides-method 'character)
-  ;; :custom
-  ;; (highlight-indent-guides-method 'character)
+  ;; :config
+  ;; (setq highlight-indent-guides-method 'character)
+
   ) 
 
 ;;; neotree
@@ -253,8 +252,7 @@
   :ensure t
   :commands
   (neotree-show neotree-hide neotree-dir neotree-find)
-  :custom
-  (neo-theme 'nerd2)
+  :custom (neo-theme . 'nerd2)
   :bind
   ("<f9>" . neotree-projectile-toggle)
   :preface
@@ -364,28 +362,24 @@
     )
   )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; custom-set settings ;;                        ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This part will work with GUI setting on Emacs ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Auto generated parameters         ;;
+;; This part generates automatically ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(create-lockfiles nil)
- '(doom-modeline-buffer-file-name-style nil t)
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project))
+ '(doom-modeline-icon t)
+ '(doom-modeline-major-mode-icon nil)
+ '(doom-modeline-minor-modes nil)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
- '(highlight-indent-guides-auto-enabled nil)
- '(highlight-indent-guides-method nil)
- '(highlight-indent-guides-responsive nil)
- '(lsp-inhibit-message nil t)
- '(lsp-message-project-root-warning nil t)
- '(neo-theme nil t)
- '(nil nil t)
+ '(highlight-indent-guides-method (quote character))
+ '(neo-theme (quote nerd2) t)
  '(package-archives
    (quote
     (("org" . "https://orgmode.org/elpa/")
@@ -393,17 +387,16 @@
      ("gnu" . "https://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (imenu-list minimap neotree which-key gruvbox-theme el-get hydra leaf-keywords leaf)))
- '(show-paren-style nil t)
- '(show-paren-when-point-in-periphery nil t)
- '(show-paren-when-point-inside-paren nil t)
- '(t nil t))
+    (google-c-style lsp-mode yaml-mode highlight-indent-guides which-key rainbow-delimiters imenu-list minimap hide-mode-line doom-modeline smooth-scroll mozc neotree doom-themes el-get hydra leaf-keywords leaf)))
+ '(show-paren-style (quote mixed))
+ '(show-paren-when-point-in-periphery t)
+ '(show-paren-when-point-inside-paren t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))
 
 (provide 'init)
 ;;; End:
