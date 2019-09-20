@@ -56,6 +56,7 @@
 ;; Original Custom ;;
 ;;;;;;;;;;;;;;;;;;;;;
 ;;; Theme
+;; テーマの設定
 ;; Doom Tomorrow Night
 (leaf doom-themes
   :ensure t
@@ -67,19 +68,9 @@
   (doom-themes-neotree-config)
   (doom-themes-org-config)
   )
-;; Tomorrow Night
-;; (leaf tomorrow-night-theme
-;;   :when (version<= "24.1" emacs-version)
-;;   :el-get (chriskempson/tomorrow-theme :branch "master" :load-path "GNU Emacs")
-;;   :require t)
-;; Gruvbox
-;; (leaf gruvbox-theme
-;;   :when (version<= "24.1" emacs-version)
-;;   :ensure t
-;;   :config
-;;   (load-theme 'gruvbox-dark-hard t))
 
-;;; User setting
+;;; User information setting
+;; ユーザー情報の設定
 (leaf *user-settings
   :config
   (setq user-full-name "Ryodo Tanaka"
@@ -87,6 +78,7 @@
   )
 
 ;;; Language setting
+;; 言語，文字コード設定
 (leaf *language-settings
   :config
   (set-language-environment 'Japanese) ;言語を日本語に
@@ -100,6 +92,7 @@
   )
 
 ;;; Editor setting
+;; エディタ共通の設定
 (leaf *editor-settings
   :config
   (set-frame-parameter nil 'alpha 98) ;背景透過
@@ -111,28 +104,15 @@
   )
 
 ;;; Start up setting
+;; 起動時の設定
 (leaf *startup-settings
   :config
   (setq inhibit-startup-message t) ;起動メッセージの非表示
   (setq inhibit-startup-echo-area-message -1) ;スタートアップ時のエコー領域メッセージの非表示
   )
 
-;;; Scroll setting
-(leaf *scroll-settings
-  :config
-  (setq scroll-preserve-screen-position t) ;スクロール時のカーソル位置の維持
-
-  (leaf smooth-scroll
-    :ensure t
-    :config
-    (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-    (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-    (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-    (setq scroll-step 1) ;; keyboard scroll one line at a time
-    )
-  )
-
 ;;; Backup setting
+;; バッファのバックアップの設定
 (leaf *backup-settings
   :config
   (setq make-backup-files nil) ;変更ファイルのバックアップ
@@ -148,44 +128,58 @@
   (setq delete-old-versions t) ;古いバックアップファイルの削除
   )
 
+;;; Scroll setting
+;; スクロールに関する設定
+(leaf *scroll-settings
+  :config
+  (setq scroll-preserve-screen-position t) ;スクロール時のカーソル位置の維持
+  ;; smooth-scroll
+  ;; スクロールがスムーズになる
+  (leaf smooth-scroll
+    :ensure t
+    :config
+    (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+    (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+    (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+    (setq scroll-step 1) ;; keyboard scroll one line at a time
+    )
+  )
+
 ;;; Tab, Space setting
+;; タブ，スペースにかんする　設定
 (leaf *tab-space-settings
   :config
   (setq-default tab-width 4 indent-tabs-mode nil) ;タブにスペースを使用する
   (setq-default tab-width 4 indent-tabs-mode nil) ;タブにスペースを使用する
-  ;;(global-whitespace-mode 1) ;スペース、タブなどを可視化する
   )
 
 ;;; Line Setting
+;; 行番号の設定
 (leaf *line-settings
   :config
-  (leaf linum ;行番号の表示
+  ;; linum
+  ;; 行番号の表示設定
+  (leaf linum
     :ensure t
     :config
     (global-linum-mode t)
-    (setq linum-format " %d ")
+    (setq linum-format " %d")
     )
   )
 
-;;; Emacs26 specified setting
-(leaf *emacs26-settings
-  :when (version<= "26.1" emacs-version)
-  :config
-  (setq default-mode-line-format (default-value 'mode-line-format))
-  (add-to-list 'default-mode-line-format '(:eval (count-lines-and-chars)))
-  )
-
 ;;; Mode Line settings
+;; モードライン(下のバー)に関する設定
 (leaf *modeline-settings
   :config
   ;; doom-modeline
+  ;; doom を利用した mode-line
   (leaf doom-modeline
     :ensure t
     :custom
     (doom-modeline-buffer-file-name-style 'truncate-with-project)
-    (doom-modeline-icon t)
-    (doom-modeline-major-mode-icon nil)
-    (doom-modeline-minor-modes nil)
+    ;; (doom-modeline-icon t)
+    ;; (doom-modeline-major-mode-icon nil)
+    ;; (doom-modeline-minor-modes nil)
     :hook (after-init-hook . doom-modeline-mode)
     :config
     (line-number-mode 0)
@@ -194,15 +188,39 @@
       '(bar window-number matches buffer-info remote-host buffer-position parrot selection-info)
       '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
     )
-
-  
   ;; Hide mode line
+  ;; 特定のモードでモードラインを非表示にする
   (leaf hide-mode-line
     :ensure t
     :hook
     ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode)
     )
-  
+  )
+
+;;; deliminator-settings
+;; 括弧に関する設定
+(leaf *deliminator-settings
+  :config
+  ;; rainbow-delimiters
+  ;; 括弧を虹色に設定してくれる
+  (leaf rainbow-delimiters
+    :ensure t
+    :hook
+    (prog-mode-hook . rainbow-delimiters-mode)
+    )
+  ;; paren
+  ;; 括弧を色付きにしてくれる
+  (leaf paren
+    :ensure t
+    :hook
+    (after-init-hook . show-paren-mode)
+    ;; :custom-face
+    (show-paren-match . '((nil (:background "#44475a" :foreground "#f1fa8c"))))
+    :custom
+    (show-paren-style 'mixed)
+    (show-paren-when-point-inside-paren t)
+    (show-paren-when-point-in-periphery t)
+    )
   )
 
 ;;; wich-key
@@ -215,27 +233,33 @@
   (setq which-key-idle-secondary-delay 0)
   )
 
-;;; rainbow-delimiters
-;; 括弧を虹色に設定してくれる
-(leaf rainbow-delimiters
-  :ensure t
+;;; highlight-indent-guides
+;; ソースコードのインデントを見やすくしてくれる
+(leaf highlight-indent-guides
+  :ensure t yaml-mode
   :hook
-  (prog-mode-hook . rainbow-delimiters-mode)
+  (prog-mode-hook . highlight-indent-guides-mode)
+  (yaml-mode-hook . highlight-indent-guides-mode)
+  :config
+  (setq highlight-indent-guides-method 'character)
+  ;; :custom
+  ;; (highlight-indent-guides-method 'character)
+  ) 
+
+;;; Emacs26 specified setting
+;; Emacs 26.1以上に関する設定
+(leaf *emacs26-settings
+  :when (version<= "26.1" emacs-version)
+  :config
+  (setq default-mode-line-format (default-value 'mode-line-format))
+  (add-to-list 'default-mode-line-format '(:eval (count-lines-and-chars)))
   )
 
-(leaf paren
-  :ensure t
-  :hook
-  (after-init-hook . show-paren-mode)
-  ;; :custom-face
-  (show-paren-match . '((nil (:background "#44475a" :foreground "#f1fa8c"))))
-  :custom
-  (show-paren-style 'mixed)
-  (show-paren-when-point-inside-paren t)
-  (show-paren-when-point-in-periphery t)
-  )
-
+;;;;;;;;;;;;;;;;;;;;;;;
+;; Language settings ;;
+;;;;;;;;;;;;;;;;;;;;;;;
 ;;; nxml-mode
+;; xml言語の設定
 (leaf nxml-mode
   :mode (("\\.launch\\'")
          ("\\.xacro\\'")
@@ -246,6 +270,7 @@
   )
 
 ;;; yaml-mode
+;; yaml言語の設定
 (leaf yaml-mode
   :ensure t;
   :mode(("\\.yml\\'")
@@ -253,6 +278,7 @@
   )
 
 ;;; C, C++ style
+;; C, C++言語の設定
 (leaf c-c++
   :config
   (add-to-list 'auto-mode-alist '("\\.c\\'" . c++-mode))
@@ -260,6 +286,7 @@
   (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.pde\\'" . c++-mode))
   ;; original cc-mode hooks
+  ;; オリジナルのcc-mode用hook
   (leaf cc-mode
     :require t
     :preface
@@ -283,6 +310,7 @@
     (c++-mode-common-hook . ROS-c-mode-hook)
     )
   ;; google-c-style
+  ;; Google-c-styleを利用する
   (leaf google-c-style
     :ensure t
     :hook
@@ -308,6 +336,9 @@
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
+ '(highlight-indent-guides-auto-enabled nil t)
+ '(highlight-indent-guides-method nil t)
+ '(highlight-indent-guides-responsive nil t)
  '(nil nil t)
  '(package-archives
    (quote
@@ -317,6 +348,9 @@
  '(package-selected-packages
    (quote
     (minimap neotree which-key gruvbox-theme el-get hydra leaf-keywords leaf)))
+ '(show-paren-style nil t)
+ '(show-paren-when-point-in-periphery nil t)
+ '(show-paren-when-point-inside-paren nil t)
  '(t nil t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
