@@ -67,22 +67,6 @@
   (doom-themes-neotree-config)
   (doom-themes-org-config)
   )
-(leaf doom-modeline
-  :ensure t
-  :custom
-  (doom-modeline-buffer-file-name-style 'truncate-with-project)
-  (doom-modeline-icon t)
-  (doom-modeline-major-mode-icon nil)
-  (doom-modeline-minor-modes nil)
-  :hook
-  (after-init . doom-modeline-mode)
-  :config
-  (line-number-mode 0)
-  (column-number-mode 0)
-  (doom-modeline-def-modeline 'main
-                              '(bar workspace-number window-number evil-state god-state ryo-modal xah-fly-keys matches buffer-info remote-host buffer-position parrot selection-info)
-                              '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
-  )
 ;; Tomorrow Night
 ;; (leaf tomorrow-night-theme
 ;;   :when (version<= "24.1" emacs-version)
@@ -192,22 +176,44 @@
   (add-to-list 'default-mode-line-format '(:eval (count-lines-and-chars)))
   )
 
-;;; Hide mode line
-(leaf hide-mode-line
-  :ensure t
-  :hook
-  ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode)
+;;; Mode Line settings
+(leaf *modeline-settings
+  :config
+  ;; doom-modeline
+  (leaf doom-modeline
+    :ensure t
+    :custom
+    (doom-modeline-buffer-file-name-style 'truncate-with-project)
+    (doom-modeline-icon t)
+    (doom-modeline-major-mode-icon nil)
+    (doom-modeline-minor-modes nil)
+    :hook (after-init-hook . doom-modeline-mode)
+    :config
+    (line-number-mode 0)
+    (column-number-mode 0)
+    (doom-modeline-def-modeline 'main
+      '(bar window-number matches buffer-info remote-host buffer-position parrot selection-info)
+      '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
+    )
+
+  
+  ;; Hide mode line
+  (leaf hide-mode-line
+    :ensure t
+    :hook
+    ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode)
+    )
+  
   )
 
 ;;; wich-key
 ;; キーバインド覚えなくて良くするやつ
 (leaf which-key
   :ensure t
-  ;; :hook (after-init . which-key)
+  :hook (after-init-hook . which-key-mode)
   :config
   (which-key-setup-minibuffer)
   (setq which-key-idle-secondary-delay 0.05)
-  (which-key-mode)
   )
 
 ;;; nxml-mode
@@ -236,6 +242,7 @@
   (add-to-list 'auto-mode-alist '("\\.pde\\'" . c++-mode))
   ;; original cc-mode hooks
   (leaf cc-mode
+    :require t
     :preface
     (defun ROS-c-mode-hook()
       (setq c-basic-offset 2)
@@ -253,26 +260,17 @@
       (c-set-offset 'arglist-close '+)
       (c-set-offset 'template-args-cont '+))
     :hook
-    (c-mode-common . ROS-c-mode-hook)
+    (c-mode-common-hook . ROS-c-mode-hook)
+    (c++-mode-common-hook . ROS-c-mode-hook)
     )
   ;; google-c-style
   (leaf google-c-style
     :ensure t
-    :hook (c-mode-common . google-c-style)
+    :hook
+    (c-mode-common-hook . google-set-c-style)
+    (c++-mode-common-hook . google-set-c-style)
     )
   )
-
-(message "loading init.el, start")
-
-(add-hook 'after-init-hook
-          (lambda ()                    
-            (message "run after-init-hook")))
-
-(add-hook 'emacs-startup-hook
-          (lambda ()                    
-            (message "run emacs-startup-hook")))
-
-(message "loading init.el, end")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom-set settings ;;                        ;;
@@ -284,10 +282,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(doom-modeline-buffer-file-name-style nil t)
- '(doom-modeline-icon nil t)
- '(doom-modeline-major-mode-icon nil t)
- '(doom-modeline-minor-modes nil t)
+ '(doom-modeline-buffer-file-name-style nil)
+ '(doom-modeline-icon nil)
+ '(doom-modeline-major-mode-icon nil)
+ '(doom-modeline-minor-modes nil)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
