@@ -146,7 +146,7 @@
   )
 
 ;;; Tab, Space setting
-;; タブ，スペースにかんする　設定
+;; タブ，スペースに関する設定
 (leaf *tab-space-settings
   :config
   (setq-default tab-width 4 indent-tabs-mode nil) ;タブにスペースを使用する
@@ -222,7 +222,7 @@
     )
   )
 
-;;; wich-key
+;;; which-key
 ;; キーバインド覚えなくて良くするやつ
 (leaf which-key
   :ensure t
@@ -290,11 +290,34 @@
 ;;;;;;;;;;;;;;;;;;;;;
 (leaf *lsp-settings
   :config
+  ;; lsp-mode
+  ;; LSPの基本パッケージ
   (leaf lsp-mode
     :ensure t
-    :hook
-    (prog-mode-hook . lsp)
+    :hook (prog-mode-hook . lsp)
+    :commands lsp
     )
+  ;; lsp-ui
+  ;; LSPのカッチョ良いUIパッケージ
+  (leaf lsp-ui
+    :ensure t
+    :hook (lsp-mode-hook . lsp-ui-mode)
+    :commands lsp-ui-mode
+    )
+  ;; company-lsp
+  ;; LSPベースの補間
+  (leaf company-lsp
+    :ensure t
+    :hook (lsp-mode-hook . company-lsp)
+    :commands company-lsp
+    )
+  ;; lsp-treemacs
+  ;; LSP
+  (leaf lsp-treemacs
+    :ensure t
+    :hook (lsp-mode-hook . lsp-treemacs-errors-list)
+    :commands lsp-treemacs-errors-list
+    )  
   )
 
 
@@ -316,7 +339,7 @@
 ;; yaml言語の設定
 (leaf yaml-mode
   :ensure t;
-  :mode(("\\.yml\\'")
+  :mode (("\\.yml\\'")
         ("\\.yaml\\'"))
   )
 
@@ -371,10 +394,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project))
- '(doom-modeline-icon t)
- '(doom-modeline-major-mode-icon nil)
- '(doom-modeline-minor-modes nil)
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
+ '(doom-modeline-icon t t)
+ '(doom-modeline-major-mode-icon nil t)
+ '(doom-modeline-minor-modes nil t)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
@@ -388,9 +411,9 @@
  '(package-selected-packages
    (quote
     (google-c-style lsp-mode yaml-mode highlight-indent-guides which-key rainbow-delimiters imenu-list minimap hide-mode-line doom-modeline smooth-scroll mozc neotree doom-themes el-get hydra leaf-keywords leaf)))
- '(show-paren-style (quote mixed))
- '(show-paren-when-point-in-periphery t)
- '(show-paren-when-point-inside-paren t))
+ '(show-paren-style (quote mixed) t)
+ '(show-paren-when-point-in-periphery t t)
+ '(show-paren-when-point-inside-paren t t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
