@@ -316,6 +316,32 @@
               (neotree-find file-name)))))
     )
   )
+
+;;; ivy & swiper
+;; 文字検索用
+(leaf ivy
+  :ensure t swiper counsel
+  :hook (after-init-hook . ivy-mode)
+  :custom
+  (ivy-use-virtual-buffers . t)
+  (enable-recursive-minibuffers . t)
+  (ivy-height . 15) ;; minibufferのサイズを拡大！（重要）
+  (ivy-extra-directories . nil)
+  (ivy-re-builders-alist. '((t . ivy--regex-plus)))
+  :config
+  (global-set-key "\C-s" 'swiper)
+  (global-set-key "\C-r" 'ivy-resume)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+  (defvar swiper-include-line-number-in-search t) ;; line-numberでも検索可能
+  ;; 日本語でも検索可能に
+  (leaf avy-migemo
+    :ensure t
+    :hook (ivy-mode . avy-migemo-mode)
+    )
+  )
+
 ;;; Emacs26 specified setting
 ;; Emacs 26.1以上に関する設定
 (leaf *emacs26-settings
@@ -767,10 +793,15 @@
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
+ '(enable-recursive-minibuffers t)
  '(git-complete-enable-autopair t)
  '(highlight-indent-guides-method (quote character) t)
  '(iedit-current-symbol-default nil t)
  '(iedit-toggle-key-default "C-;" t)
+ '(ivy-extra-directories nil)
+ '(ivy-height 15)
+ '(ivy-re-builders-alist\. nil t)
+ '(ivy-use-virtual-buffers t)
  '(neo-theme (quote nerd2) t)
  '(org-clock-into-drawer t t)
  '(org-format-latex-header
@@ -830,7 +861,7 @@
      ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
  '(package-selected-packages
    (quote
-    (web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
+    (avy-migemo ivy-hydra web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
  '(show-paren-style (quote mixed) t)
  '(show-paren-when-point-in-periphery t t)
  '(show-paren-when-point-inside-paren t t)
