@@ -231,6 +231,19 @@
     )
   )
 
+;;; symbol-voerlay
+;; 同じ名前のところを強調する
+(leaf symbol-overlay
+  :ensure t
+  :bind ("M-i" . symbol-overlay-put)
+  :hook ((prog-mode-hook . symbol-overlay-mode)
+         (markdown-mode-hook . symbol-overlay-mode))
+  :config
+  (define-key symbol-overlay-map (kbd "C-p") 'symbol-overlay-jump-prev) ;; 次のシンボルへ
+  (define-key symbol-overlay-map (kbd "C-n") 'symbol-overlay-jump-next) ;; 前のシンボルへ
+  (define-key symbol-overlay-map (kbd "C-g") 'symbol-overlay-remove-all) ;; ハイライトキャンセル
+  )
+
 ;;; which-key
 ;; キーバインド覚えなくて良くするやつ
 (leaf which-key
