@@ -724,9 +724,6 @@
 ;; Auto generated parameters         ;;
 ;; This part generates automatically ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'init)
-;;; End:
-;;; init.el ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -740,7 +737,7 @@
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
  '(git-complete-enable-autopair t t)
- '(highlight-indent-guides-method (quote character) t)
+ '(highlight-indent-guides-method (quote character))
  '(neo-theme (quote nerd2) t)
  '(org-clock-into-drawer t t)
  '(org-format-latex-header
@@ -812,3 +809,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))
+
+(provide 'init)
+;;; End:
+;;; init.el ends here
