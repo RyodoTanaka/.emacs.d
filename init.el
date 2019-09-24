@@ -392,7 +392,7 @@
      (lsp-inhibit-message . t)
      (lsp-message-project-root-warning . t)
      (create-lockfiles . nil))
-    :preface (unbind-key "C-l")
+    :preface (global-unset-key (kbd "C-l"))
     :bind
     (("C-l C-l"  . lsp)
      ("C-l h"    . lsp-describe-session)
@@ -558,7 +558,7 @@
   :require t
   :package popup
   :el-get (zk-phi/git-complete :branch "master")
-  :preface (unbind-key "C-c C-c")
+  :preface (global-unset-key (kbd "C-c C-c"))
   :hook (after-init-hook . git-complete)
   :custom (git-complete-enable-autopair . t)
   )
