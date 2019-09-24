@@ -445,14 +445,14 @@
        ("C-l C-r" . lsp-ui-peek-find-references)))
     ;; company-lsp
     ;; LSPベースの補間
-    (use-package company-lsp
+    (leaf company-lsp
       :ensure t
       :commands company-lsp company
       :custom
-      (company-lsp-cache-candidates nil)
-      (company-lsp-async t)
-      (company-lsp-enable-recompletion t)
-      (company-lsp-enable-snippet t)
+      (company-lsp-cache-candidates . nil)
+      (company-lsp-async . t)
+      (company-lsp-enable-recompletion . t)
+      (company-lsp-enable-snippet . t)
       :after
       (:all lsp-mode lsp-ui company yasnippet)
       :init
@@ -529,7 +529,8 @@
                                      company-irony
                                      company-c-headers
                                      company-auctex
-                                     company-math-symbols-unicode)
+                                     company-math-symbols-unicode
+                                     company-lsp)
                  )
     )
 
@@ -855,35 +856,35 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(\. nil t)
- '(all-the-icons-scale-factor 1.0 t)
+ '(all-the-icons-scale-factor 1.0)
  '(ccls-executable "/usr/local/bin/ccls" t)
- '(ccls-sem-highlight-method (quote font-lock) t)
+ '(ccls-sem-highlight-method (quote font-lock))
  '(ccls-use-default-rainbow-sem-highlight nil t)
  '(company-box-doc-enable nil)
  '(company-box-icons-alist (quote company-box-icons-all-the-icons))
  '(company-echo-delay 0 t)
- '(company-idle-delay 0 t)
- '(company-minimum-prefix-length 2 t)
- '(company-selection-wrap-around t t)
- '(company-transformers (quote (company-sort-by-backend-importance)) t)
+ '(company-idle-delay 0)
+ '(company-minimum-prefix-length 2)
+ '(company-selection-wrap-around t)
+ '(company-transformers (quote (company-sort-by-backend-importance)))
  '(completion-ignore-case t t)
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
- '(doom-modeline-icon t t)
- '(doom-modeline-major-mode-icon nil t)
- '(doom-modeline-minor-modes nil t)
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project))
+ '(doom-modeline-icon t)
+ '(doom-modeline-major-mode-icon nil)
+ '(doom-modeline-minor-modes nil)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
  '(enable-recursive-minibuffers t)
- '(git-complete-enable-autopair t t)
- '(highlight-indent-guides-auto-enabled nil t)
- '(highlight-indent-guides-method (quote character) t)
+ '(git-complete-enable-autopair t)
+ '(highlight-indent-guides-auto-enabled nil)
+ '(highlight-indent-guides-method (quote character))
  '(iedit-current-symbol-default nil t)
  '(iedit-toggle-key-default "C-;" t)
- '(ivy-extra-directories nil t)
- '(ivy-height 15 t)
+ '(ivy-extra-directories nil)
+ '(ivy-height 15)
  '(ivy-re-builders-alist\. nil t)
- '(ivy-use-virtual-buffers t t)
+ '(ivy-use-virtual-buffers t)
  '(neo-theme (quote nerd2) t)
  '(org-clock-into-drawer t t)
  '(org-format-latex-header
@@ -897,8 +898,8 @@
      {color}
      [PACKAGES]
      [DEFAULT-PACKAGES]
-     \\pagestyle{empty} % do not remove % The settings below are copied from fullpage\.sty \\setlength{\\textwidth}{\\paperwidth} \\addtolength{\\textwidth}{-3cm} \\setlength{\\oddsidemargin}{1\.5cm} \\addtolength{\\oddsidemargin}{-2\.54cm} \\setlength{\\evensidemargin}{\\oddsidemargin} \\setlength{\\textheight}{\\paperheight} \\addtolength{\\textheight}{-\\headheight} \\addtolength{\\textheight}{-\\headsep} \\addtolength{\\textheight}{-\\footskip} \\addtolength{\\textheight}{-3cm} \\setlength{\\topmargin}{1\.5cm}z \\addtolength{\\topmargin}{-2\.54cm})) t)
- '(org-hide-leading-stars t t)
+     \\pagestyle{empty} % do not remove % The settings below are copied from fullpage\.sty \\setlength{\\textwidth}{\\paperwidth} \\addtolength{\\textwidth}{-3cm} \\setlength{\\oddsidemargin}{1\.5cm} \\addtolength{\\oddsidemargin}{-2\.54cm} \\setlength{\\evensidemargin}{\\oddsidemargin} \\setlength{\\textheight}{\\paperheight} \\addtolength{\\textheight}{-\\headheight} \\addtolength{\\textheight}{-\\headsep} \\addtolength{\\textheight}{-\\footskip} \\addtolength{\\textheight}{-3cm} \\setlength{\\topmargin}{1\.5cm}z \\addtolength{\\topmargin}{-2\.54cm})))
+ '(org-hide-leading-stars t)
  '(org-latex-default-packages-alist
    (quote
     (("AUTO" "inputenc" t
@@ -929,13 +930,13 @@
      ("toc,page" "appendix" nil nil)
      ("" "forloop" nil nil)
      ("" "tablefootnote" nil nil)
-     ("yyyymmdd" "datetime" nil nil))) t)
+     ("yyyymmdd" "datetime" nil nil))))
  '(org-latex-pdf-process (quote ("latexmk -f -pdf %f")) t)
- '(org-log-done (quote time) t)
- '(org-startup-with-inline-images t t)
+ '(org-log-done (quote time))
+ '(org-startup-with-inline-images t)
  '(org-todo-keywords
    (quote
-    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))) t)
+    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))))
  '(package-archives
    (quote
     (("org" . "https://orgmode.org/elpa/")
@@ -944,9 +945,9 @@
  '(package-selected-packages
    (quote
     (avy-migemo ivy-hydra web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
- '(show-paren-style (quote mixed) t)
- '(show-paren-when-point-in-periphery t t)
- '(show-paren-when-point-inside-paren t t)
+ '(show-paren-style (quote mixed))
+ '(show-paren-when-point-in-periphery t)
+ '(show-paren-when-point-inside-paren t)
  '(web-mode-enable-current-element-highlight t t)
  '(web-mode-engines-alist (quote (("php" . "\\.phtml\\'") ("blade" . "\\.blade\\."))) t))
   
