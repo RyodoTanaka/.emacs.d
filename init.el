@@ -378,6 +378,7 @@
   :url "https://github.com/MaskRay/ccls/wiki/lsp-mode#find-definitionsreferences"
   :doc "lsp is language server protocol"
   :when (version<= "25.1" emacs-version)
+  :ensure flycheck
   :config
   ;; lsp-mode
   ;; LSPの基本パッケージ
