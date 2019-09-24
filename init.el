@@ -607,8 +607,8 @@
     )
   )
 
-;;; Web mode
-;; web-mode
+;;; web-mode
+;; Web modeの設定
 (leaf web-mode
   :ensure t
   :mode (("\\.phtml\\'" . web-mode)
