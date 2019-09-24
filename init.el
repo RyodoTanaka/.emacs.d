@@ -434,6 +434,25 @@
   :custom (git-complete-enable-autopair . t)
   )
 
+;;; flyspell-mode
+;; 動的にスペルチェックしてくれる
+(leaf flyspell
+  :ensure t
+  :hook
+  (text-mode-hook . flyspell-mode)
+  (org-mode-hook . flyspell-mode)
+  (prog-mode-hook . flyspell-prog-mode) 
+  )
+
+;;; ispell-check
+;; 静的にスペルチェックしてくれる
+(leaf *ispell-check
+  :config
+  (setq-default ispell-program-name "aspell")
+  (with-eval-after-load "ispell"
+    (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
+  )
+
 ;;; yasnipet
 ;; スニペットを使えるようにする
 (leaf *snipet-settings
@@ -496,7 +515,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;;; script-settings
 ;; scriptの設定
-(leaf *script-settings
+(leaf executable
+  :ensure t
   :hook
   ;;ファイルが #! から始まる場合， +x (実行権限) を付けて保存する
   (after-save-hook . executable-make-buffer-file-executable-if-script-p)
