@@ -480,6 +480,14 @@
     )
   )
 
+;;; magit
+;; magitの設定
+(leaf magit
+  :ensure t
+  :bind ("C-x g" . magit-status)
+  )
+
+
 ;;; Yatex setting
 ;; Yatexの設定
 (leaf yatex
