@@ -89,8 +89,21 @@
     :config
     (setq default-input-method "japanese-mozc")
     )
+  (leaf all-the-icons
+    :ensure t
+    :custom
+    (all-the-icons-scale-factor . 1.0)
+    :config
+    (let ((font-dest (cl-case window-system
+                       ;; Default Linux install directories
+                       (x  (concat (or (getenv "XDG_DATA_HOME")
+                                       (concat (getenv "HOME") "/.local/share"))
+                                   "/fonts/"))
+                       (mac (concat (getenv "HOME") "/Library/Fonts/" ))
+                       (ns (concat (getenv "HOME") "/Library/Fonts/" )))))
+      )
+    )
   )
-
 ;;; Editor setting
 ;; エディタ共通の設定
 (leaf *editor-settings
@@ -488,6 +501,16 @@
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
   )
 
+;;; company-box
+;; iconの設定
+(use-package company-box
+  :after (company all-the-icons)
+  :hook ((company-mode . company-box-mode))
+  :custom
+  (company-box-icons-alist 'company-box-icons-all-the-icons)
+  (company-box-doc-enable nil))
+
+
 ;;; git-complete
 ;; Gitから補間をしてくれる
 (leaf git-complete
@@ -661,11 +684,11 @@
     :config
     ;; ccls
     ;; c,c++のLSP server
-    (use-package ccls
+    (leaf ccls
       :custom
-      (ccls-executable "/usr/local/bin/ccls")
-      (ccls-sem-highlight-method 'font-lock)
-      (ccls-use-default-rainbow-sem-highlight)
+      (ccls-executable . "/usr/local/bin/ccls")
+      (ccls-sem-highlight-method . 'font-lock)
+      (ccls-use-default-rainbow-sem-highlight .)
       :hook ((c-mode c++-mode objc-mode) .
              (lambda () (require 'ccls) (lsp))))
     )
@@ -785,10 +808,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
- '(doom-modeline-icon t t)
- '(doom-modeline-major-mode-icon nil t)
- '(doom-modeline-minor-modes nil t)
+ '(\. nil t)
+ '(all-the-icons-scale-factor 1.0)
+ '(ccls-executable "/usr/local/bin/ccls" t)
+ '(ccls-sem-highlight-method (quote font-lock) t)
+ '(ccls-use-default-rainbow-sem-highlight nil t)
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project))
+ '(doom-modeline-icon t)
+ '(doom-modeline-major-mode-icon nil)
+ '(doom-modeline-minor-modes nil)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
@@ -814,8 +842,8 @@
      {color}
      [PACKAGES]
      [DEFAULT-PACKAGES]
-     \\pagestyle{empty} % do not remove % The settings below are copied from fullpage\.sty \\setlength{\\textwidth}{\\paperwidth} \\addtolength{\\textwidth}{-3cm} \\setlength{\\oddsidemargin}{1\.5cm} \\addtolength{\\oddsidemargin}{-2\.54cm} \\setlength{\\evensidemargin}{\\oddsidemargin} \\setlength{\\textheight}{\\paperheight} \\addtolength{\\textheight}{-\\headheight} \\addtolength{\\textheight}{-\\headsep} \\addtolength{\\textheight}{-\\footskip} \\addtolength{\\textheight}{-3cm} \\setlength{\\topmargin}{1\.5cm}z \\addtolength{\\topmargin}{-2\.54cm})) t)
- '(org-hide-leading-stars t t)
+     \\pagestyle{empty} % do not remove % The settings below are copied from fullpage\.sty \\setlength{\\textwidth}{\\paperwidth} \\addtolength{\\textwidth}{-3cm} \\setlength{\\oddsidemargin}{1\.5cm} \\addtolength{\\oddsidemargin}{-2\.54cm} \\setlength{\\evensidemargin}{\\oddsidemargin} \\setlength{\\textheight}{\\paperheight} \\addtolength{\\textheight}{-\\headheight} \\addtolength{\\textheight}{-\\headsep} \\addtolength{\\textheight}{-\\footskip} \\addtolength{\\textheight}{-3cm} \\setlength{\\topmargin}{1\.5cm}z \\addtolength{\\topmargin}{-2\.54cm})))
+ '(org-hide-leading-stars t)
  '(org-latex-default-packages-alist
    (quote
     (("AUTO" "inputenc" t
@@ -846,13 +874,13 @@
      ("toc,page" "appendix" nil nil)
      ("" "forloop" nil nil)
      ("" "tablefootnote" nil nil)
-     ("yyyymmdd" "datetime" nil nil))) t)
+     ("yyyymmdd" "datetime" nil nil))))
  '(org-latex-pdf-process (quote ("latexmk -f -pdf %f")) t)
- '(org-log-done (quote time) t)
- '(org-startup-with-inline-images t t)
+ '(org-log-done (quote time))
+ '(org-startup-with-inline-images t)
  '(org-todo-keywords
    (quote
-    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))) t)
+    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))))
  '(package-archives
    (quote
     (("org" . "https://orgmode.org/elpa/")
@@ -861,9 +889,9 @@
  '(package-selected-packages
    (quote
     (avy-migemo ivy-hydra web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
- '(show-paren-style (quote mixed) t)
- '(show-paren-when-point-in-periphery t t)
- '(show-paren-when-point-inside-paren t t)
+ '(show-paren-style (quote mixed))
+ '(show-paren-when-point-in-periphery t)
+ '(show-paren-when-point-inside-paren t)
  '(web-mode-enable-current-element-highlight t t)
  '(web-mode-engines-alist (quote (("php" . "\\.phtml\\'") ("blade" . "\\.blade\\."))) t))
 (custom-set-faces
