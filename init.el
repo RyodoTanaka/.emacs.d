@@ -254,6 +254,16 @@
 
   ) 
 
+;;; hs-minor-mode
+;; コードの折りたたみ機能の追加
+(leaf hs-minor-mode
+  :hook
+  (prog-mode-hook . (lambda () (hs-minor-mode 1))) 
+  :bind (("C-c C-f" . hs-toggle-hiding)
+         ("C-c C-a" . hs-show-all)
+         ("C-c C-d" . hs-hide-all))
+  )
+
 ;;; neotree
 ;; ファイル階層を開いてくれる
 ;; F9 で開いたり閉じたりするように設定
@@ -736,8 +746,8 @@
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
- '(git-complete-enable-autopair t t)
- '(highlight-indent-guides-method (quote character))
+ '(git-complete-enable-autopair t)
+ '(highlight-indent-guides-method (quote character) t)
  '(neo-theme (quote nerd2) t)
  '(org-clock-into-drawer t t)
  '(org-format-latex-header
