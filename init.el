@@ -185,8 +185,8 @@
     (line-number-mode 0)
     (column-number-mode 0)
     (doom-modeline-def-modeline 'main
-                                '(bar window-number matches buffer-info remote-host buffer-position parrot selection-info)
-                                '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
+      '(bar window-number matches buffer-info remote-host buffer-position parrot selection-info)
+      '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
     )
   ;; Hide mode line
   ;; 特定のモードでモードラインを非表示にする
@@ -429,6 +429,46 @@
     :init
     (yas-global-mode t))
   )
+
+;;; Yatex setting
+;; Yatexの設定
+(leaf yatex
+  :ensure t
+  :mode ("\\.tex$" . yatex-mode)
+  :bind ("C-c C-t" . YaTeX-typeset-menu)
+  :hook ((yatex-mode . turn-on-reftex)
+         (latex-mode . (lambda ()
+                         (define-key tex-mode-map "\t" 'latex-indent-command)
+                         (define-key tex-mode-map "\M-\C-\\" 'latex-indent-region-command)))
+         )
+  :config
+  (setq YaTeX-inhibit-prefix-letter t)
+  (setq YaTeX-kanji-code nil)
+  (setq YaTeX-latex-message-code 'utf-8)
+  (setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
+  (setq dvi2-command "evince")
+  (setq bibtex-command "pbibtex")     ; BibTeX のコマンド
+  (when  (eq system-type 'gnu/linux) ; for GNU/Linux
+    ;; inverse search
+    (defun un-urlify (fname-or-url)
+      "A trivial function that replaces a prefix of file:/// with just /."
+      (if (string= (substring fname-or-url 0 8) "file:///")
+          (substring fname-or-url 7)
+        fname-or-url))
+    (defun evince-inverse-search (file linecol &rest ignored)
+      (let* ((fname (un-urlify file))
+             (buf (find-file fname))
+             (line (car linecol))
+             (col (cadr linecol)))
+        (if (null buf)
+            (message "[Synctex]: %s is not opened..." fname)
+          (switch-to-buffer buf)
+          (goto-line (car linecol))
+          (unless (= col -1)
+            (move-to-n col)))))
+    )
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Language settings ;;
 ;;;;;;;;;;;;;;;;;;;;;;;
@@ -459,6 +499,7 @@
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.pde\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
   ;; original cc-mode hooks
   ;; オリジナルのcc-mode用hook
   (leaf cc-mode
@@ -507,13 +548,14 @@
     )
   )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Auto generated parameters         ;;
-    ;; This part generates automatically ;;
+;; Auto generated parameters         ;;
+;; This part generates automatically ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    
-    (provide 'init)
+
+(provide 'init)
 ;;; End:
 ;;; init.el ends here
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -526,7 +568,7 @@
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
- '(highlight-indent-guides-method (quote character) t)
+ '(highlight-indent-guides-method (quote character))
  '(neo-theme (quote nerd2) t)
  '(package-archives
    (quote
@@ -539,6 +581,7 @@
  '(show-paren-style (quote mixed) t)
  '(show-paren-when-point-in-periphery t t)
  '(show-paren-when-point-inside-paren t t))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
