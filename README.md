@@ -62,3 +62,10 @@ $ emacs
 Then, you will get several messages after it initialized.  
 And if the message does not include Error (if just warning).  
 It succeed to install my emacs environment.
+
+## Trouble Shooting
+### The icon looks not good...
+This occurs when the computer have not downloaded the icon fonts yet...
+To fix this, 
+1. run emacs
+2. Do `M-x all-the-icons-install-fonts
