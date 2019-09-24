@@ -494,6 +494,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Language settings ;;
 ;;;;;;;;;;;;;;;;;;;;;;;
+;;; script-settings
+;; scriptの設定
+(leaf *script-settings
+  :hook
+  ;;ファイルが #! から始まる場合， +x (実行権限) を付けて保存する
+  (after-save-hook . executable-make-buffer-file-executable-if-script-p)
+  )
+
 ;;; nxml-mode
 ;; xml言語の設定
 (leaf nxml-mode
