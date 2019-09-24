@@ -622,6 +622,7 @@
   (setq YaTeX-inhibit-prefix-letter t)
   (setq YaTeX-kanji-code nil)
   (setq YaTeX-latex-message-code 'utf-8)
+  (setq YaTeX-use-font-lock t)
   (setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
   (setq dvi2-command "evince")
   (setq bibtex-command "pbibtex")     ; BibTeX のコマンド
@@ -874,7 +875,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(\. nil t)
- '(all-the-icons-scale-factor 1.0 t)
+ '(all-the-icons-scale-factor 1.0)
  '(ccls-executable "/usr/local/bin/ccls" t)
  '(ccls-sem-highlight-method (quote font-lock) t)
  '(ccls-use-default-rainbow-sem-highlight nil t)
