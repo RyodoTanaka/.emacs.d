@@ -685,11 +685,12 @@
     ;; ccls
     ;; c,c++のLSP server
     (leaf ccls
+      :ensure t
       :custom
-      (ccls-executable . "/usr/local/bin/ccls")
+      (ccls-executable .  "/usr/local/bin/ccls")
       (ccls-sem-highlight-method . 'font-lock)
       (ccls-use-default-rainbow-sem-highlight .)
-      :hook ((c-mode c++-mode objc-mode) .
+      :hook ((c-mode-hook c++-mode-hook objc-mode-hook) .
              (lambda () (require 'ccls) (lsp))))
     )
   )
@@ -809,26 +810,26 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(\. nil t)
- '(all-the-icons-scale-factor 1.0)
+ '(all-the-icons-scale-factor 1.0 t)
  '(ccls-executable "/usr/local/bin/ccls" t)
- '(ccls-sem-highlight-method (quote font-lock) t)
+ '(ccls-sem-highlight-method (quote font-lock))
  '(ccls-use-default-rainbow-sem-highlight nil t)
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project))
- '(doom-modeline-icon t)
- '(doom-modeline-major-mode-icon nil)
- '(doom-modeline-minor-modes nil)
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
+ '(doom-modeline-icon t t)
+ '(doom-modeline-major-mode-icon nil t)
+ '(doom-modeline-minor-modes nil t)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
  '(enable-recursive-minibuffers t)
- '(git-complete-enable-autopair t)
+ '(git-complete-enable-autopair t t)
  '(highlight-indent-guides-method (quote character))
  '(iedit-current-symbol-default nil t)
  '(iedit-toggle-key-default "C-;" t)
- '(ivy-extra-directories nil)
- '(ivy-height 15)
+ '(ivy-extra-directories nil t)
+ '(ivy-height 15 t)
  '(ivy-re-builders-alist\. nil t)
- '(ivy-use-virtual-buffers t)
+ '(ivy-use-virtual-buffers t t)
  '(neo-theme (quote nerd2) t)
  '(org-clock-into-drawer t t)
  '(org-format-latex-header
@@ -842,8 +843,8 @@
      {color}
      [PACKAGES]
      [DEFAULT-PACKAGES]
-     \\pagestyle{empty} % do not remove % The settings below are copied from fullpage\.sty \\setlength{\\textwidth}{\\paperwidth} \\addtolength{\\textwidth}{-3cm} \\setlength{\\oddsidemargin}{1\.5cm} \\addtolength{\\oddsidemargin}{-2\.54cm} \\setlength{\\evensidemargin}{\\oddsidemargin} \\setlength{\\textheight}{\\paperheight} \\addtolength{\\textheight}{-\\headheight} \\addtolength{\\textheight}{-\\headsep} \\addtolength{\\textheight}{-\\footskip} \\addtolength{\\textheight}{-3cm} \\setlength{\\topmargin}{1\.5cm}z \\addtolength{\\topmargin}{-2\.54cm})))
- '(org-hide-leading-stars t)
+     \\pagestyle{empty} % do not remove % The settings below are copied from fullpage\.sty \\setlength{\\textwidth}{\\paperwidth} \\addtolength{\\textwidth}{-3cm} \\setlength{\\oddsidemargin}{1\.5cm} \\addtolength{\\oddsidemargin}{-2\.54cm} \\setlength{\\evensidemargin}{\\oddsidemargin} \\setlength{\\textheight}{\\paperheight} \\addtolength{\\textheight}{-\\headheight} \\addtolength{\\textheight}{-\\headsep} \\addtolength{\\textheight}{-\\footskip} \\addtolength{\\textheight}{-3cm} \\setlength{\\topmargin}{1\.5cm}z \\addtolength{\\topmargin}{-2\.54cm})) t)
+ '(org-hide-leading-stars t t)
  '(org-latex-default-packages-alist
    (quote
     (("AUTO" "inputenc" t
@@ -874,13 +875,13 @@
      ("toc,page" "appendix" nil nil)
      ("" "forloop" nil nil)
      ("" "tablefootnote" nil nil)
-     ("yyyymmdd" "datetime" nil nil))))
+     ("yyyymmdd" "datetime" nil nil))) t)
  '(org-latex-pdf-process (quote ("latexmk -f -pdf %f")) t)
- '(org-log-done (quote time))
- '(org-startup-with-inline-images t)
+ '(org-log-done (quote time) t)
+ '(org-startup-with-inline-images t t)
  '(org-todo-keywords
    (quote
-    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))))
+    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))) t)
  '(package-archives
    (quote
     (("org" . "https://orgmode.org/elpa/")
@@ -889,9 +890,9 @@
  '(package-selected-packages
    (quote
     (avy-migemo ivy-hydra web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
- '(show-paren-style (quote mixed))
- '(show-paren-when-point-in-periphery t)
- '(show-paren-when-point-inside-paren t)
+ '(show-paren-style (quote mixed) t)
+ '(show-paren-when-point-in-periphery t t)
+ '(show-paren-when-point-inside-paren t t)
  '(web-mode-enable-current-element-highlight t t)
  '(web-mode-engines-alist (quote (("php" . "\\.phtml\\'") ("blade" . "\\.blade\\."))) t))
 (custom-set-faces
