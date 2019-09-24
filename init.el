@@ -298,6 +298,7 @@
   ;; lsp-mode
   ;; LSPの基本パッケージ
   (use-package lsp-mode
+    :ensure t
     :commands lsp
     :custom
     ((lsp-enable-snippet t)
@@ -321,6 +322,7 @@
   ;; lsp-ui
   ;; LSPのカッチョ良いUIパッケージ
   (use-package lsp-ui
+    :ensure t
     :commands lsp-ui-mode
     :after lsp-mode
     :custom
@@ -357,49 +359,12 @@
     (("C-l s"   . lsp-ui-sideline-mode)
      ("C-l C-d" . lsp-ui-peek-find-definitions)
      ("C-l C-r" . lsp-ui-peek-find-references)))
-  ;; company & company-lsp
+  ;; company-lsp
   ;; LSPベースの補間
-  (use-package company
-    :custom
-    (company-transformers '(company-sort-by-backend-importance))
-    (company-idle-delay 0)
-    (company-echo-delay 0)
-    (company-minimum-prefix-length 2)
-    (company-selection-wrap-around t)
-    (completion-ignore-case t)
-    :bind
-    (("C-M-c" . company-complete))
-    (:map company-active-map
-          ("C-n" . company-select-next)
-          ("C-p" . company-select-previous)
-          ("C-s" . company-filter-candidates)
-          ("C-i" . company-complete-selection)
-          ([tab] . company-complete-selection))
-    (:map company-search-map
-          ("C-n" . company-select-next)
-          ("C-p" . company-select-previous))
-    :config
-    (global-company-mode)
-    ;; lowercaseを優先にするソート
-    (defun my-sort-uppercase (candidates)
-      (let (case-fold-search
-            (re "\\`[[:upper:]]*\\'"))
-        (sort candidates
-              (lambda (s1 s2)
-                (and (string-match-p re s2)
-                     (not (string-match-p re s1)))))))
-    (push 'my-sort-uppercase company-transformers)
-    ;; yasnippetとの連携
-    (defvar company-mode/enable-yas t)
-    (defun company-mode/backend-with-yas (backend)
-      (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-          backend
-        (append (if (consp backend) backend (list backend))
-                '(:with company-yasnippet))))
-    (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
   ;; company-lsp
   (use-package company-lsp
-    :commands company-lsp
+    :ensure t
+    :commands company-lsp company
     :custom
     (company-lsp-cache-candidates nil)
     (company-lsp-async t)
@@ -413,12 +378,70 @@
   ;; LSP用treemacs
   (leaf lsp-treemacs :ensure t)  
   )
+
+;;; company
+;; 補間機能が使えるようにする
+(use-package company
+  :ensure t
+  :custom
+  (company-transformers '(company-sort-by-backend-importance))
+  (company-idle-delay 0)
+  (company-echo-delay 0)
+  (company-minimum-prefix-length 2)
+  (company-selection-wrap-around t)
+  (completion-ignore-case t)
+  :bind
+  (("C-M-c" . company-complete))
+  (:map company-active-map
+        ("C-n" . company-select-next)
+        ("C-p" . company-select-previous)
+        ("C-s" . company-filter-candidates)
+        ("C-i" . company-complete-selection)
+        ([tab] . company-complete-selection))
+  (:map company-search-map
+        ("C-n" . company-select-next)
+        ("C-p" . company-select-previous)
+        )
+  :hook (after-init-hook .  global-company-mode)
+  :config
+  ;; lowercaseを優先にするソート
+  (defun my-sort-uppercase (candidates)
+    (let (case-fold-search
+          (re "\\`[[:upper:]]*\\'"))
+      (sort candidates
+            (lambda (s1 s2)
+              (and (string-match-p re s2)
+                   (not (string-match-p re s1)))))))
+  (push 'my-sort-uppercase company-transformers)
+  ;; yasnippetとの連携
+  (defvar company-mode/enable-yas t)
+  (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+  )
+
+;;; git-complete
+;; Gitから補間をしてくれる
+(leaf git-complete
+  :require t
+  :package popup
+  :el-get (zk-phi/git-complete :branch "master")
+  :init (unbind-key "C-c C-c")
+  :hook (after-init-hook . git-complete)
+  :custom (git-complete-enable-autopair . t)
+)
+
 ;;; yasnipet
 ;; スニペットを使えるようにする
 (leaf *snipet-settings
   :ensure use-package
   :config
   (use-package yasnippet
+    :ensure t
+    :hook (after-init . yas-global-mode)
     :bind
     (:map yas-minor-mode-map
           ("C-x i n" . yas-new-snippet)
@@ -426,8 +449,7 @@
           ("C-M-i"   . yas-insert-snippet))
     (:map yas-keymap
           ("<tab>" . nil)) ;; because of avoiding conflict with company keymap
-    :init
-    (yas-global-mode t))
+    )
   )
 
 ;;; Yatex setting
@@ -568,6 +590,7 @@
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
+ '(git-complete-enable-autopair t t)
  '(highlight-indent-guides-method (quote character))
  '(neo-theme (quote nerd2) t)
  '(package-archives
