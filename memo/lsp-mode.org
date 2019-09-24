@@ -19,12 +19,6 @@
     $ sudo add-apt-repository ppa:ubuntu-toolchain-r/test
     $ sudo apt install gcc7
     #+END_SRC
-*** LLVM/Clangのインストール
-    多分この項目はいらない
-    #+BEGIN_SRC bash
-    $ sudo apt install clang-8
-    $ sudo atp install 
-    #+END_SRC
 *** cclsのインストール
     llvmとclangのwgetに時間かかるので注意．
     #+BEGIN_SRC bash
