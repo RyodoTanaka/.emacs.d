@@ -68,4 +68,4 @@ It succeed to install my emacs environment.
 This occurs when the computer have not downloaded the icon fonts yet...
 To fix this, 
 1. run emacs
-2. Do `M-x all-the-icons-install-fonts
+2. Do `M-x all-the-icons-install-fonts`
