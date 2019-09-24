@@ -273,7 +273,7 @@
   :ensure t yaml-mode
   :custom
   (highlight-indent-guides-method . 'character)
-  (highlight-indent-guides-auto-enables . nil)
+  (highlight-indent-guides-auto-enabled . nil)
   :hook
   (prog-mode-hook . highlight-indent-guides-mode)
   (yaml-mode-hook . highlight-indent-guides-mode)
