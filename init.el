@@ -503,12 +503,13 @@
 
 ;;; company-box
 ;; iconの設定
-(use-package company-box
+(leaf company-box
+  :ensure t
   :after (company all-the-icons)
   :hook ((company-mode . company-box-mode))
   :custom
-  (company-box-icons-alist 'company-box-icons-all-the-icons)
-  (company-box-doc-enable nil))
+  (company-box-icons-alist . 'company-box-icons-all-the-icons)
+  (company-box-doc-enable . nil))
 
 
 ;;; git-complete
@@ -810,10 +811,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(\. nil t)
- '(all-the-icons-scale-factor 1.0 t)
+ '(all-the-icons-scale-factor 1.0)
  '(ccls-executable "/usr/local/bin/ccls" t)
- '(ccls-sem-highlight-method (quote font-lock))
+ '(ccls-sem-highlight-method (quote font-lock) t)
  '(ccls-use-default-rainbow-sem-highlight nil t)
+ '(company-box-doc-enable nil)
+ '(company-box-icons-alist (quote company-box-icons-all-the-icons))
  '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
  '(doom-modeline-icon t t)
  '(doom-modeline-major-mode-icon nil t)
@@ -822,7 +825,7 @@
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
  '(enable-recursive-minibuffers t)
- '(git-complete-enable-autopair t t)
+ '(git-complete-enable-autopair t)
  '(highlight-indent-guides-method (quote character))
  '(iedit-current-symbol-default nil t)
  '(iedit-toggle-key-default "C-;" t)
