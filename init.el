@@ -432,7 +432,7 @@
   :init (unbind-key "C-c C-c")
   :hook (after-init-hook . git-complete)
   :custom (git-complete-enable-autopair . t)
-)
+  )
 
 ;;; yasnipet
 ;; スニペットを使えるようにする
@@ -569,45 +569,89 @@
              (lambda () (require 'ccls) (lsp))))
     )
   )
+
+;;; Org mode
+;; Org modeの設定
+(leaf org-mode
+  :bind(("\C-cl" . org-store-link)
+        ("\C-cc" . org-capture)
+        ("\C-ca" . org-agenda)
+        ("\C-cb" . org-iswitchb))
+  :config
+  ;; 拡張子
+  (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
+  :custom
+  ;; 画像をインラインで表示
+  (org-startup-with-inline-images . t)
+  ;; 見出しの余分な*を消す
+  (org-hide-leading-stars . t)
+  ;; LOGBOOK drawerに時間を格納する
+  (org-clock-into-drawer . t)
+  ;; TODO状態
+  (org-todo-keywords . '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
+  ;; DONEの時刻を記録
+  (org-log-done . 'time)
+  ;; latexのコンパイラ設定
+  (org-latex-pdf-process . '("latexmk -f -pdf %f"))
+  ;; Latex のHeader 設定
+  (org-format-latex-header . '(\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
+                               \\usepackage[usenames]{color}
+                               [PACKAGES]
+                               [DEFAULT-PACKAGES]
+                               \\pagestyle{empty}             % do not remove
+                               % The settings below are copied from fullpage.sty
+                               \\setlength{\\textwidth}{\\paperwidth}
+                               \\addtolength{\\textwidth}{-3cm}
+                               \\setlength{\\oddsidemargin}{1.5cm}
+                               \\addtolength{\\oddsidemargin}{-2.54cm}
+                               \\setlength{\\evensidemargin}{\\oddsidemargin}
+                               \\setlength{\\textheight}{\\paperheight}
+                               \\addtolength{\\textheight}{-\\headheight}
+                               \\addtolength{\\textheight}{-\\headsep}
+                               \\addtolength{\\textheight}{-\\footskip}
+                               \\addtolength{\\textheight}{-3cm}
+                               \\setlength{\\topmargin}{1.5cm}z
+                               \\addtolength{\\topmargin}{-2.54cm}))
+  ;; Latex のデフォルトパッケージ設定
+  (org-latex-default-packages-alist . (quote (("AUTO" "inputenc" t
+                                               ("pdflatex"))
+                                              ("T1" "fontenc" t
+                                               ("pdflatex"))
+                                              ("" "graphicx" t nil)
+                                              ("" "grffile" t nil)
+                                              ("" "longtable" nil nil)
+                                              ("" "wrapfig" nil nil)
+                                              ("" "rotating" nil nil)
+                                              ("normalem" "ulem" t nil)
+                                              ("" "amsmath" t nil)
+                                              ("" "textcomp" t nil)
+                                              ("" "amssymb" t nil)
+                                              ("" "capt-of" nil nil)
+                                              ("hidelinks" "hyperref" nil nil)
+                                              ("" "bm" nil nil)
+                                              ("" "ascmac" nil nil)
+                                              ("" "color" nil nil)
+                                              ("" "cite" nil nil)
+                                              ("" "latexsym" nil nil)
+                                              ("" "url" nil nil)
+                                              ("" "algorithm" nil nil)
+                                              ("" "algpseudocode" nil nil)
+                                              ("" "examplep" nil nil)
+                                              ("" "subfigure" nil nil)
+                                              ("toc,page" "appendix" nil nil)
+                                              ("" "forloop" nil nil)
+                                              ("" "tablefootnote" nil nil)
+                                              ("yyyymmdd" "datetime" nil nil))
+                                             )
+                                    )
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto generated parameters         ;;
 ;; This part generates automatically ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (provide 'init)
 ;;; End:
 ;;; init.el ends here
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
- '(doom-modeline-icon t t)
- '(doom-modeline-major-mode-icon nil t)
- '(doom-modeline-minor-modes nil t)
- '(doom-themes-enable-bold nil)
- '(doom-themes-enable-italic nil)
- '(el-get-git-shallow-clone t)
- '(git-complete-enable-autopair t t)
- '(highlight-indent-guides-method (quote character))
- '(neo-theme (quote nerd2) t)
- '(package-archives
-   (quote
-    (("org" . "https://orgmode.org/elpa/")
-     ("melpa" . "https://melpa.org/packages/")
-     ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
- '(package-selected-packages
-   (quote
-    (google-c-style yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line el-get doom-themes doom-modeline ccls)))
- '(show-paren-style (quote mixed) t)
- '(show-paren-when-point-in-periphery t t)
- '(show-paren-when-point-inside-paren t t))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))
