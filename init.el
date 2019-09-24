@@ -607,6 +607,33 @@
     )
   )
 
+;;; Web mode
+;; web-mode
+(leaf web-mode
+  :ensure t
+  :mode (("\\.phtml\\'" . web-mode)
+         ("\\.tpl\\.php\\'" . web-mode)
+         ("\\.[gj]sp\\'" . web-mode)
+         ("\\.as[cp]x\\'" . web-mode)
+         ("\\.erb\\'" . web-mode)
+         ("\\.mustache\\'" . web-mode)
+         ("\\.djhtml\\'" . web-mode)
+         ("\\.html?\\'" . web-mode)
+         )
+  :custom
+  (web-mode-engines-alist . '(("php"    . "\\.phtml\\'")
+                              ("blade"  . "\\.blade\\.")))
+  (web-mode-enable-current-element-highlight . t)
+  :preface
+  (defun my-web-mode-hook () "Hooks for Web mode." 
+         (setq web-mode-markup-indent-offset 2) 
+         (setq web-mode-markup-indent-offset 2)
+         (setq web-mode-css-indent-offset 2)
+         (setq web-mode-code-indent-offset 2)
+         ) 
+  :hook (web-mode-hook . my-web-mode-hook)
+  )
+
 ;;; Org mode
 ;; Org modeの設定
 (leaf org-mode
@@ -692,3 +719,88 @@
 (provide 'init)
 ;;; End:
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
+ '(doom-modeline-icon t t)
+ '(doom-modeline-major-mode-icon nil t)
+ '(doom-modeline-minor-modes nil t)
+ '(doom-themes-enable-bold nil)
+ '(doom-themes-enable-italic nil)
+ '(el-get-git-shallow-clone t)
+ '(git-complete-enable-autopair t t)
+ '(highlight-indent-guides-method (quote character) t)
+ '(neo-theme (quote nerd2) t)
+ '(org-clock-into-drawer t t)
+ '(org-format-latex-header
+   (quote
+    (\\documentclass
+     [11pt
+      (\, a4paper)
+      (\, dvipdfmx)]
+     {jarticle} \\usepackage
+     [usenames]
+     {color}
+     [PACKAGES]
+     [DEFAULT-PACKAGES]
+     \\pagestyle{empty} % do not remove % The settings below are copied from fullpage\.sty \\setlength{\\textwidth}{\\paperwidth} \\addtolength{\\textwidth}{-3cm} \\setlength{\\oddsidemargin}{1\.5cm} \\addtolength{\\oddsidemargin}{-2\.54cm} \\setlength{\\evensidemargin}{\\oddsidemargin} \\setlength{\\textheight}{\\paperheight} \\addtolength{\\textheight}{-\\headheight} \\addtolength{\\textheight}{-\\headsep} \\addtolength{\\textheight}{-\\footskip} \\addtolength{\\textheight}{-3cm} \\setlength{\\topmargin}{1\.5cm}z \\addtolength{\\topmargin}{-2\.54cm})) t)
+ '(org-hide-leading-stars t t)
+ '(org-latex-default-packages-alist
+   (quote
+    (("AUTO" "inputenc" t
+      ("pdflatex"))
+     ("T1" "fontenc" t
+      ("pdflatex"))
+     ("" "graphicx" t nil)
+     ("" "grffile" t nil)
+     ("" "longtable" nil nil)
+     ("" "wrapfig" nil nil)
+     ("" "rotating" nil nil)
+     ("normalem" "ulem" t nil)
+     ("" "amsmath" t nil)
+     ("" "textcomp" t nil)
+     ("" "amssymb" t nil)
+     ("" "capt-of" nil nil)
+     ("hidelinks" "hyperref" nil nil)
+     ("" "bm" nil nil)
+     ("" "ascmac" nil nil)
+     ("" "color" nil nil)
+     ("" "cite" nil nil)
+     ("" "latexsym" nil nil)
+     ("" "url" nil nil)
+     ("" "algorithm" nil nil)
+     ("" "algpseudocode" nil nil)
+     ("" "examplep" nil nil)
+     ("" "subfigure" nil nil)
+     ("toc,page" "appendix" nil nil)
+     ("" "forloop" nil nil)
+     ("" "tablefootnote" nil nil)
+     ("yyyymmdd" "datetime" nil nil))) t)
+ '(org-latex-pdf-process (quote ("latexmk -f -pdf %f")) t)
+ '(org-log-done (quote time) t)
+ '(org-startup-with-inline-images t t)
+ '(org-todo-keywords
+   (quote
+    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))) t)
+ '(package-archives
+   (quote
+    (("org" . "https://orgmode.org/elpa/")
+     ("melpa" . "https://melpa.org/packages/")
+     ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
+ '(package-selected-packages
+   (quote
+    (web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
+ '(show-paren-style (quote mixed) t)
+ '(show-paren-when-point-in-periphery t t)
+ '(show-paren-when-point-inside-paren t t)
+ '(web-mode-enable-current-element-highlight t t)
+ '(web-mode-engines-alist (quote (("php" . "\\.phtml\\'") ("blade" . "\\.blade\\."))) t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))
