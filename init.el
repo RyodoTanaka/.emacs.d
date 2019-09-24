@@ -277,12 +277,11 @@
          ("C-c C-d" . hs-hide-all))
   )
 
-;;; iedit-mode
+;;; multiple-cursors
 ;; 複数行同時編集のためのパッケージ
-;; (leaf iedit
-;;   :bind ("C-i" . iedit-mode)
-;;   :custom
-;;   (iedit-current-symbol-default . nil) 
+;; (leaf multiple-cursors
+;;   :bind ((kbd "C-x C-e") . mc/edit-lines)
+;;   :ensure t
 ;;   )
 
 ;;; neotree
@@ -795,7 +794,7 @@
  '(el-get-git-shallow-clone t)
  '(enable-recursive-minibuffers t)
  '(git-complete-enable-autopair t)
- '(highlight-indent-guides-method (quote character) t)
+ '(highlight-indent-guides-method (quote character))
  '(iedit-current-symbol-default nil t)
  '(iedit-toggle-key-default "C-;" t)
  '(ivy-extra-directories nil)
