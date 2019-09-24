@@ -1,1 +1,0 @@
-(define-package "avy" "20190115.1414" "Jump to arbitrary positions in visible text and select text quickly." '((emacs "24.1") (cl-lib "0.5")) :commit "e7c0fc046dc8b8043c387270cb85824641cd7c08" :keywords '("point" "location") :authors '(("Oleh Krehel" . "ohwoeowho@gmail.com")) :maintainer '("Oleh Krehel" . "ohwoeowho@gmail.com") :url "https://github.com/abo-abo/avy")

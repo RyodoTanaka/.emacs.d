@@ -1,0 +1,37 @@
+* インストール
+** cclsのインストール
+   https://github.com/MaskRay/ccls/wiki/Build
+   上記を参考に行う．
+   が，前提環境があるので，これをインストール．
+*** CMake>=3.8のインストール
+    #+BEGIN_SRC bash
+    $ git clone -b release --depth=1 https://github.com/Kitware/CMake.git
+    $ cd CMake
+    $ ./bootstrap && make && sudo make install
+    #+END_SRC
+    その後，エイリアスを貼る．
+    #+BEGIN_SRC bash
+    $ echo "alias cmake=/usr/local/bin/cmake" >> ~/.bashrc
+    $ source ~/.bashrc
+    #+END_SRC
+*** gcc>=7.2のインストール
+    #+BEGIN_SRC bash
+    $ sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+    $ sudo apt install gcc7
+    #+END_SRC
+*** LLVM/Clangのインストール
+    多分この項目はいらない
+    #+BEGIN_SRC bash
+    $ sudo apt install clang-8
+    $ sudo atp install 
+    #+END_SRC
+*** cclsのインストール
+    llvmとclangのwgetに時間かかるので注意．
+    #+BEGIN_SRC bash
+    $ git clone --depth=1 --recursive https://github.com/MaskRay/ccls
+    $ cd ccls
+    $ wget -c http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    $ tar xf clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    $ cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04
+    $ cmake --build Release --target install
+    #+END_SRC

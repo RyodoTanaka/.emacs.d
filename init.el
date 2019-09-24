@@ -1,212 +1,849 @@
-;;; package --- Summary
-;;; Commentary:
+;;; init.el ---
+;;; Copyright (C) 2019  Ryodo Tanaka
+;;; Author: Ryodo Tanaka
 ;;; Code:
-(add-to-list 'load-path "~/.emacs.d/lisp")
-;; Color Theme カラーテーマ 
-;; (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/themes")
-;; (add-to-list 'load-path "~/.emacs.d/themes/tomorrow")
-;; (setq custom-theme-directory "~/.emacs.d/themes/tomorrow")
-;; (load-theme 'tomorrow-night-bright t)
 
-(add-to-list 'load-path "~/.emacs.d/themes/gruvbox")
-(setq custom-theme-directory "~/.emacs.d/themes/gruvbox")
-(load-theme 'gruvbox-dark-hard t)
+;;;;;;;;;;;;;;;;;;
+;; Requirements ;;
+;;;;;;;;;;;;;;;;;;
+(prog1 "Change user-emacs-directory"
+  ;; enable debug
+  (setq debug-on-error  t
+        init-file-debug t)
+
+  ;; you can run like 'emacs -q -l ~/hoge/init.el'
+  (when load-file-name
+    (setq user-emacs-directory
+          (expand-file-name (file-name-directory load-file-name))))
+
+  ;; change user-emacs-directory
+  (setq user-emacs-directory
+        (expand-file-name
+         (format "local/%s.%s/"
+                 emacs-major-version emacs-minor-version)
+         user-emacs-directory))
+  (make-directory user-emacs-directory t))
+
+(prog1 "prepare leaf"
+  (prog1 "package"
+    (custom-set-variables
+     '(package-archives '(("org"   . "https://orgmode.org/elpa/")
+                          ("melpa" . "https://melpa.org/packages/")
+                          ("gnu"   . "https://mirrors.163.com/elpa/gnu/"))))
+    (package-initialize))
+
+  (prog1 "leaf"
+    (unless (package-installed-p 'leaf)
+      (unless (assoc 'leaf package-archive-contents)
+        (package-refresh-contents))
+      (condition-case err
+          (package-install 'leaf)
+        (error
+         (package-refresh-contents)       ; renew local melpa cache if fail
+         (package-install 'leaf))))
+
+    (leaf leaf-keywords
+      :ensure t
+      :config (leaf-keywords-init)))
+
+  (prog1 "optional packages for leaf-keywords"
+    ;; optional packages if you want to use :hydra, :el-get,,,
+    (leaf hydra :ensure t)
+    (leaf el-get :ensure t
+      :custom ((el-get-git-shallow-clone  . t)))))
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Original Custom ;;
+;;;;;;;;;;;;;;;;;;;;;
+;;; Theme
+;; テーマの設定
+;; Doom Tomorrow Night
+(leaf doom-themes
+  :ensure t neotree 
+  :custom
+  (doom-themes-enable-italic . nil)
+  (doom-themes-enable-bold . nil)
+  :config
+  (load-theme 'doom-tomorrow-night t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config)
+  )
+
+;;; User information setting
+;; ユーザー情報の設定
+(leaf *user-settings
+  :config
+  (setq user-full-name "Ryodo Tanaka"
+        user-mail-address "GRoadPG@gmail.com")
+  )
+
+;;; Language setting
+;; 言語，文字コード設定
+(leaf *language-settings
+  :config
+  (set-language-environment 'Japanese) ;言語を日本語に
+  (prefer-coding-system 'utf-8) ;極力UTF-8を使う
+  (add-to-list 'default-frame-alist '(font . "hackgen-15")) ;フォント設定
+  (leaf mozc ;; Mozc setting
+    :ensure t
+    :config
+    (setq default-input-method "japanese-mozc")
+    )
+  (leaf all-the-icons
+    :ensure t
+    :custom
+    (all-the-icons-scale-factor . 1.0)
+    :config
+    (let ((font-dest (cl-case window-system
+                       ;; Default Linux install directories
+                       (x  (concat (or (getenv "XDG_DATA_HOME")
+                                       (concat (getenv "HOME") "/.local/share"))
+                                   "/fonts/"))
+                       (mac (concat (getenv "HOME") "/Library/Fonts/" ))
+                       (ns (concat (getenv "HOME") "/Library/Fonts/" )))))
+      )
+    )
+  )
+;;; Editor setting
+;; エディタ共通の設定
+(leaf *editor-settings
+  :config
+  (set-frame-parameter nil 'alpha 98) ;背景透過
+  (size-indication-mode t) ; ファイルサイズを表示
+  (setq next-line-add-newlines nil) ;バッファの終わりでのnewlineを禁止する
+  (global-font-lock-mode t) ;色分け設定
+  (setq font-lock-support-mode 'jit-lock-mode) ;Just-In-Timeな文字装飾方式
+  (keyboard-translate ?\C-h ?\C-?) ;C-hをバックスペースに変更
+  ;; Docモードやpdf-modeで行番号は付けない
+  (add-hook 'doc-view-mode-hook
+            (lambda ()
+              (linum-mode -1)
+              ))
+  (add-hook 'pdf-view-mode-hook
+            (lambda ()
+              (linum-mode -1)
+              ))
+  )
+
+;;; Start up setting
+;; 起動時の設定
+(leaf *startup-settings
+  :config
+  (setq inhibit-startup-message t) ;起動メッセージの非表示
+  (setq inhibit-startup-echo-area-message -1) ;スタートアップ時のエコー領域メッセージの非表示
+  )
+
+;;; Backup setting
+;; バッファのバックアップの設定
+(leaf *backup-settings
+  :config
+  (setq make-backup-files nil) ;変更ファイルのバックアップ
+  (setq version-control nil) ;変更ファイルの番号つきバックアップ
+  (setq auto-save-list-file-name nil) ;編集中ファイルのバックアップ
+  (setq auto-save-list-file-prefix nil)
+  (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))) ;編集中ファイルのバックアップ先
+  (setq auto-save-timeout 30) ;編集中ファイルのバックアップ間隔（秒）
+  (setq auto-save-interval 500) ;編集中ファイルのバックアップ間隔（打鍵）
+  (setq kept-old-versions 1) ;バックアップ世代数
+  (setq kept-new-versions 2)
+  (setq trim-versions-without-asking nil) ;上書き時の警告表示
+  (setq delete-old-versions t) ;古いバックアップファイルの削除
+  )
+
+;;; Scroll setting
+;; スクロールに関する設定
+(leaf *scroll-settings
+  :config
+  (setq scroll-preserve-screen-position t) ;スクロール時のカーソル位置の維持
+  ;; smooth-scroll
+  ;; スクロールがスムーズになる
+  (leaf smooth-scroll
+    :ensure t
+    :config
+    (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+    (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+    (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+    (setq scroll-step 1) ;; keyboard scroll one line at a time
+    )
+  )
+
+;;; Tab, Space setting
+;; タブ，スペースに関する設定
+(leaf *tab-space-settings
+  :config
+  (setq-default tab-width 4 indent-tabs-mode nil) ;タブにスペースを使用する
+  (setq-default tab-width 4 indent-tabs-mode nil) ;タブにスペースを使用する
+  )
+
+;;; Line Setting
+;; 行番号の設定
+(leaf *line-settings
+  :config
+  ;; linum
+  ;; 行番号の表示設定
+  (leaf linum
+    :ensure t
+    :config
+    (global-linum-mode t)
+    (setq linum-format " %d")
+    )
+  )
+
+;;; Mode Line settings
+;; モードライン(下のバー)に関する設定
+(leaf *modeline-settings
+  :config
+  ;; doom-modeline
+  ;; doom を利用した mode-line
+  (leaf doom-modeline
+    :ensure t
+    :custom
+    (doom-modeline-buffer-file-name-style . 'truncate-with-project)
+    (doom-modeline-icon . t)
+    (doom-modeline-major-mode-icon . nil)
+    (doom-modeline-minor-modes . nil)
+    :hook (after-init-hook . doom-modeline-mode)
+    :config
+    (line-number-mode 0)
+    (column-number-mode 0)
+    (doom-modeline-def-modeline 'main
+      '(bar window-number matches buffer-info remote-host buffer-position parrot selection-info)
+      '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
+    )
+  ;; Hide mode line
+  ;; 特定のモードでモードラインを非表示にする
+  (leaf hide-mode-line
+    :ensure t neotree minimap imenu-list
+    :hook
+    ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode)
+    )
+  )
+
+;;; deliminator-settings
+;; 括弧に関する設定
+(leaf *deliminator-settings
+  :config
+  ;; rainbow-delimiters
+  ;; 括弧を虹色に設定してくれる
+  (leaf rainbow-delimiters
+    :ensure t
+    :hook
+    (prog-mode-hook . rainbow-delimiters-mode)
+    )
+  ;; paren
+  ;; 括弧を色付きにしてくれる
+  (leaf paren
+    :ensure t
+    :hook
+    (after-init-hook . show-paren-mode)
+    :custom-face
+    (show-paren-match . '((nil (:background "#44475a" :foreground "#f1fa8c"))))
+    :custom ((show-paren-style . 'mixed)
+             (show-paren-when-point-inside-paren . t)
+             (show-paren-when-point-in-periphery . t))
+    )
+  )
+
+;;; symbol-voerlay
+;; 同じ名前のところを強調する
+(leaf symbol-overlay
+  :ensure t
+  :bind ("M-i" . symbol-overlay-put)
+  :hook ((prog-mode-hook . symbol-overlay-mode)
+         (markdown-mode-hook . symbol-overlay-mode))
+  :config
+  (define-key symbol-overlay-map (kbd "C-p") 'symbol-overlay-jump-prev) ;; 次のシンボルへ
+  (define-key symbol-overlay-map (kbd "C-n") 'symbol-overlay-jump-next) ;; 前のシンボルへ
+  (define-key symbol-overlay-map (kbd "C-g") 'symbol-overlay-remove-all) ;; ハイライトキャンセル
+  )
+
+;;; which-key
+;; キーバインド覚えなくて良くするやつ
+(leaf which-key
+  :ensure t
+  :hook (after-init-hook . which-key-mode)
+  :config
+  (which-key-setup-minibuffer)
+  (setq which-key-idle-secondary-delay 0)
+  )
+
+;;; highlight-indent-guides
+;; ソースコードのインデントを見やすくしてくれる
+(leaf highlight-indent-guides
+  :ensure t yaml-mode
+  :custom (highlight-indent-guides-method . 'character)
+  :hook
+  (prog-mode-hook . highlight-indent-guides-mode)
+  (yaml-mode-hook . highlight-indent-guides-mode)
+  ;; :config
+  ;; (setq highlight-indent-guides-method 'character)
+
+  ) 
+
+;;; hs-minor-mode
+;; コードの折りたたみ機能の追加
+(leaf hs-minor-mode
+  :hook
+  (prog-mode-hook . (lambda () (hs-minor-mode 1))) 
+  :bind (("C-c C-f" . hs-toggle-hiding)
+         ("C-c C-a" . hs-show-all)
+         ("C-c C-d" . hs-hide-all))
+  )
+
+;;; multiple-cursors
+;; 複数行同時編集のためのパッケージ
+;; (leaf multiple-cursors
+;;   :bind ((kbd "C-x C-e") . mc/edit-lines)
+;;   :ensure t
+;;   )
+
+;;; neotree
+;; ファイル階層を開いてくれる
+;; F9 で開いたり閉じたりするように設定
+(leaf neotree
+  :ensure t
+  :commands
+  (neotree-show neotree-hide neotree-dir neotree-find)
+  :custom (neo-theme . 'nerd2)
+  :bind
+  ("<f9>" . neotree-projectile-toggle)
+  :preface
+  (defun neotree-projectile-toggle ()
+    (interactive)
+    (let ((project-dir
+           (ignore-errors
+         ;;; Pick one: projectile or find-file-in-project
+             (projectile-project-root)
+             ))
+          (file-name (buffer-file-name))
+          (neo-smart-open t))
+      (if (and (fboundp 'neo-global--window-exists-p)
+               (neo-global--window-exists-p))
+          (neotree-hide)
+        (progn
+          (neotree-show)
+          (if project-dir
+              (neotree-dir project-dir))
+          (if file-name
+              (neotree-find file-name)))))
+    )
+  )
+
+;;; ivy & swiper
+;; 文字検索用
+(leaf ivy
+  :ensure t swiper counsel
+  :hook (after-init-hook . ivy-mode)
+  :custom
+  (ivy-use-virtual-buffers . t)
+  (enable-recursive-minibuffers . t)
+  (ivy-height . 15) ;; minibufferのサイズを拡大！（重要）
+  (ivy-extra-directories . nil)
+  (ivy-re-builders-alist. '((t . ivy--regex-plus)))
+  :config
+  (global-set-key "\C-s" 'swiper)
+  (global-set-key "\C-r" 'ivy-resume)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+  (defvar swiper-include-line-number-in-search t) ;; line-numberでも検索可能
+  ;; 日本語でも検索可能に
+  (leaf avy-migemo
+    :ensure t
+    :hook (ivy-mode . avy-migemo-mode)
+    )
+  )
+
+;;; Emacs26 specified setting
+;; Emacs 26.1以上に関する設定
+(leaf *emacs26-settings
+  :when (version<= "26.1" emacs-version)
+  :config
+  (setq default-mode-line-format (default-value 'mode-line-format))
+  (add-to-list 'default-mode-line-format '(:eval (count-lines-and-chars)))
+  )
+
+;;;;;;;;;;;;;;;;;;;;;
+;; IDE environment ;;
+;;;;;;;;;;;;;;;;;;;;;
+(leaf *lsp-basic-settings  
+  :url "https://github.com/emacs-lsp/lsp-mode#supported-languages"
+  :url "https://github.com/MaskRay/ccls/wiki/lsp-mode#find-definitionsreferences"
+  :doc "lsp is language server protocol"
+  :when (version<= "25.1" emacs-version)
+  :ensure use-package
+  :config
+  ;; lsp-mode
+  ;; LSPの基本パッケージ
+  (use-package lsp-mode
+    :ensure t
+    :commands lsp
+    :custom
+    ((lsp-enable-snippet t)
+     (lsp-enable-indentation nil)
+     (lsp-prefer-flymake nil)
+     (lsp-document-sync-method 'incremental)
+     (lsp-inhibit-message t)
+     (lsp-message-project-root-warning t)
+     (create-lockfiles nil))
+    :init
+    (unbind-key "C-l")
+    :bind
+    (("C-l C-l"  . lsp)
+     ("C-l h"    . lsp-describe-session)
+     ("C-l t"    . lsp-goto-type-definition)
+     ("C-l r"    . lsp-rename)
+     ("C-l <f5>" . lsp-restart-workspace)
+     ("C-l l"    . lsp-lens-mode))
+    :hook
+    (prog-major-mode . lsp-prog-major-mode-enable))
+  ;; lsp-ui
+  ;; LSPのカッチョ良いUIパッケージ
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode
+    :after lsp-mode
+    :custom
+    ;; lsp-ui-doc
+    (lsp-ui-doc-enable t)
+    (lsp-ui-doc-header t)
+    (lsp-ui-doc-include-signature t)
+    (lsp-ui-doc-position 'top)
+    (lsp-ui-doc-max-width  60)
+    (lsp-ui-doc-max-height 20)
+    (lsp-ui-doc-use-childframe t)
+    (lsp-ui-doc-use-webkit nil)
+    ;; lsp-ui-flycheck
+    (lsp-ui-flycheck-enable t)
+    ;; lsp-ui-sideline
+    (lsp-ui-sideline-enable t)
+    (lsp-ui-sideline-ignore-duplicate t)
+    (lsp-ui-sideline-show-symbol t)
+    (lsp-ui-sideline-show-hover t)
+    (lsp-ui-sideline-show-diagnostics t)
+    (lsp-ui-sideline-show-code-actions t)
+    ;; lsp-ui-imenu
+    (lsp-ui-imenu-enable nil)
+    (lsp-ui-imenu-kind-position 'top)
+    ;; lsp-ui-peek
+    (lsp-ui-peek-enable t)
+    (lsp-ui-peek-always-show t)
+    (lsp-ui-peek-peek-height 30)
+    (lsp-ui-peek-list-width 30)
+    (lsp-ui-peek-fontify 'always)
+    :hook
+    (lsp-mode . lsp-ui-mode)
+    :bind
+    (("C-l s"   . lsp-ui-sideline-mode)
+     ("C-l C-d" . lsp-ui-peek-find-definitions)
+     ("C-l C-r" . lsp-ui-peek-find-references)))
+  ;; company-lsp
+  ;; LSPベースの補間
+  ;; company-lsp
+  (use-package company-lsp
+    :ensure t
+    :commands company-lsp company
+    :custom
+    (company-lsp-cache-candidates nil)
+    (company-lsp-async t)
+    (company-lsp-enable-recompletion t)
+    (company-lsp-enable-snippet t)
+    :after
+    (:all lsp-mode lsp-ui company yasnippet)
+    :init
+    (push 'company-lsp company-backends))
+  ;; lsp-treema
+  ;; LSP用treemacs
+  (leaf lsp-treemacs :ensure t)  
+  )
+
+;;; company
+;; 補間機能が使えるようにする
+(use-package company
+  :ensure t
+  :custom
+  (company-transformers '(company-sort-by-backend-importance))
+  (company-idle-delay 0)
+  (company-echo-delay 0)
+  (company-minimum-prefix-length 2)
+  (company-selection-wrap-around t)
+  (completion-ignore-case t)
+  :bind
+  (("C-M-c" . company-complete))
+  (:map company-active-map
+        ("C-n" . company-select-next)
+        ("C-p" . company-select-previous)
+        ("C-s" . company-filter-candidates)
+        ("C-i" . company-complete-selection)
+        ([tab] . company-complete-selection))
+  (:map company-search-map
+        ("C-n" . company-select-next)
+        ("C-p" . company-select-previous)
+        )
+  :hook (after-init-hook .  global-company-mode)
+  :config
+  ;; lowercaseを優先にするソート
+  (defun my-sort-uppercase (candidates)
+    (let (case-fold-search
+          (re "\\`[[:upper:]]*\\'"))
+      (sort candidates
+            (lambda (s1 s2)
+              (and (string-match-p re s2)
+                   (not (string-match-p re s1)))))))
+  (push 'my-sort-uppercase company-transformers)
+  ;; yasnippetとの連携
+  (defvar company-mode/enable-yas t)
+  (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+  )
+
+;;; company-box
+;; iconの設定
+(use-package company-box
+  :after (company all-the-icons)
+  :hook ((company-mode . company-box-mode))
+  :custom
+  (company-box-icons-alist 'company-box-icons-all-the-icons)
+  (company-box-doc-enable nil))
 
 
-(require 'platform-p)
-;;; カッコのハイライト
-(show-paren-mode t)
+;;; git-complete
+;; Gitから補間をしてくれる
+(leaf git-complete
+  :require t
+  :package popup
+  :el-get (zk-phi/git-complete :branch "master")
+  :init (unbind-key "C-c C-c")
+  :hook (after-init-hook . git-complete)
+  :custom (git-complete-enable-autopair . t)
+  )
 
-;; 言語を日本語にする
-(set-language-environment 'Japanese)
-;; 極力UTF-8とする
-(prefer-coding-system 'utf-8)
+;;; flyspell-mode
+;; 動的にスペルチェックしてくれる
+(leaf flyspell
+  :ensure t
+  :hook
+  (text-mode-hook . flyspell-mode)
+  (org-mode-hook . flyspell-mode)
+  (prog-mode-hook . flyspell-prog-mode) 
+  )
 
-;; フォントをRicty 15ptに設定
-;; 同様のフォント設定があればコメントアウトしておくべき
-(add-to-list 'default-frame-alist '(font . "ricty-15"))
+;;; ispell-check
+;; 静的にスペルチェックしてくれる
+(leaf *ispell-check
+  :config
+  (setq-default ispell-program-name "aspell")
+  (with-eval-after-load "ispell"
+    (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+")))
+  )
 
-;; ユーザー名とメールアドレスの設定 
-(setq user-full-name "Ryodo Tanaka"
-user-mail-address "GRoadPG@gmail.com")
+;;; yasnipet
+;; スニペットを使えるようにする
+(leaf *snipet-settings
+  :ensure use-package
+  :config
+  (use-package yasnippet
+    :ensure t
+    :hook (after-init . yas-global-mode)
+    :bind
+    (:map yas-minor-mode-map
+          ("C-x i n" . yas-new-snippet)
+          ("C-x i v" . yas-visit-snippet-file)
+          ("C-M-i"   . yas-insert-snippet))
+    (:map yas-keymap
+          ("<tab>" . nil)) ;; because of avoiding conflict with company keymap
+    )
+  )
 
-;; 背景を透明にする(透明度合いは 95/100)
-(set-frame-parameter nil 'alpha 95)
-
-;;; 色分けの設定
-;; (global-font-lock-mode t)
-;; (if (>= emacs-major-version 21)
-;;   (setq font-lock-support-mode 'jit-lock-mode)   ; Just-In-Timeな文字装飾方式
-;;   (setq font-lock-support-mode 'lazy-lock-mode)  ; Emacs20以前では古い方式
-;; )
-
-;;; 行番号の表示
-;;;(line-number-mode t)
-(require 'linum)
-(global-linum-mode t)
-(setq linum-format " %d ")
-
-;バッファ自動再読み込み
-(global-auto-revert-mode 1)
-
-
-;;フレーム設定
-(size-indication-mode t) ; ファイルサイズを表示
-(setq frame-title-format "%f") ; タイトルに編集中ファイルのフルパスを表示
-
-;; バッファの終わりでのnewlineを禁止する
-(setq next-line-add-newlines nil)
-;;常に最終行に一行追加する(自動的に)
-(setq require-final-newline t)
-
-
-;;ファイルが #! から始まる場合， +x (実行権限) を付けて保存する
-(add-hook 'after-save-hook
-	  'executable-make-buffer-file-executable-if-script-p)
-
-;; スペース、タブなどを可視化する
-(global-whitespace-mode 1)
-
-;; タブにスペースを使用する
-(setq-default tab-width 4 indent-tabs-mode nil)
-
-;;; 列番号の表示
-;;;(column-number-mode t)
-;;key-bind setting
-
-;; ;;一定間隔でバッファを自動保存する.
-(when (require 'auto-save-buffers nil t)
-  (run-with-idle-timer 2.0 t 'auto-save-buffers))
-
-;; Window 移動
-(global-set-key (kbd "M-<left>")  'windmove-left)
-(global-set-key (kbd "M-<down>")  'windmove-down)
-(global-set-key (kbd "M-<up>")    'windmove-up)
-(global-set-key (kbd "M-<right>") 'windmove-right)
-(keyboard-translate ?\C-h ?\C-?); C-hをバックスペースに変更
-
-;;; スクロール時のカーソル位置の維持
-(setq scroll-preserve-screen-position t)
-
-;;; スクロール行数（一行ごとのスクロール）
-(setq vertical-centering-font-regexp ".*")
-(setq scroll-conservatively 35)
-(setq scroll-margin 0)
-(setq scroll-step 1)
-
-;;; 画面スクロール時の重複行数
-(setq next-screen-context-lines 1)
-
-;;; 起動メッセージの非表示
-(setq inhibit-startup-message t)
-;;; スタートアップ時のエコー領域メッセージの非表示
-(setq inhibit-startup-echo-area-message -1)
+;;; magit
+;; magitの設定
+(leaf magit
+  :ensure t
+  :bind ("C-x g" . magit-status)
+  )
 
 
-;;; @ backup
+;;; Yatex setting
+;; Yatexの設定
+(leaf yatex
+  :ensure t
+  :mode ("\\.tex$" . yatex-mode)
+  :bind ("C-c C-t" . YaTeX-typeset-menu)
+  :hook ((yatex-mode . turn-on-reftex)
+         (latex-mode . (lambda ()
+                         (define-key tex-mode-map "\t" 'latex-indent-command)
+                         (define-key tex-mode-map "\M-\C-\\" 'latex-indent-region-command)))
+         )
+  :config
+  (setq YaTeX-inhibit-prefix-letter t)
+  (setq YaTeX-kanji-code nil)
+  (setq YaTeX-latex-message-code 'utf-8)
+  (setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
+  (setq dvi2-command "evince")
+  (setq bibtex-command "pbibtex")     ; BibTeX のコマンド
+  (when  (eq system-type 'gnu/linux) ; for GNU/Linux
+    ;; inverse search
+    (defun un-urlify (fname-or-url)
+      "A trivial function that replaces a prefix of file:/// with just /."
+      (if (string= (substring fname-or-url 0 8) "file:///")
+          (substring fname-or-url 7)
+        fname-or-url))
+    (defun evince-inverse-search (file linecol &rest ignored)
+      (let* ((fname (un-urlify file))
+             (buf (find-file fname))
+             (line (car linecol))
+             (col (cadr linecol)))
+        (if (null buf)
+            (message "[Synctex]: %s is not opened..." fname)
+          (switch-to-buffer buf)
+          (goto-line (car linecol))
+          (unless (= col -1)
+            (move-to-n col)))))
+    )
+  )
 
-;;; 変更ファイルのバックアップ
-(setq make-backup-files nil)
+;;;;;;;;;;;;;;;;;;;;;;;
+;; Language settings ;;
+;;;;;;;;;;;;;;;;;;;;;;;
+;;; script-settings
+;; scriptの設定
+(leaf executable
+  :ensure t
+  :hook
+  ;;ファイルが #! から始まる場合， +x (実行権限) を付けて保存する
+  (after-save-hook . executable-make-buffer-file-executable-if-script-p)
+  )
 
-;;; 変更ファイルの番号つきバックアップ
-(setq version-control nil)
+;;; nxml-mode
+;; xml言語の設定
+(leaf nxml-mode
+  :mode (("\\.launch\\'")
+         ("\\.xacro\\'")
+         ("\\.urdf\\'")
+         ("\\.config\\'")
+         ("\\.sdf\\'")
+         ("\\.world\\'"))
+  )
 
-;;; 編集中ファイルのバックアップ
-(setq auto-save-list-file-name nil)
-(setq auto-save-list-file-prefix nil)
+;;; yaml-mode
+;; yaml言語の設定
+(leaf yaml-mode
+  :ensure t;
+  :mode (("\\.yml\\'")
+         ("\\.yaml\\'"))
+  )
 
-;;; 編集中ファイルのバックアップ先
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+;;; C, C++ style
+;; C, C++言語の設定
+(leaf c-c++
+  :config
+  (add-to-list 'auto-mode-alist '("\\.c\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.pde\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
+  ;; original cc-mode hooks
+  ;; オリジナルのcc-mode用hook
+  (leaf cc-mode
+    :require t
+    :preface
+    (defun ROS-c-mode-hook()
+      (setq c-basic-offset 2)
+      (setq indent-tabs-mode nil)
+      (c-set-offset 'substatement-open 0)
+      (c-set-offset 'innamespace 0)
+      (c-set-offset 'case-label '+)
+      (c-set-offset 'brace-list-open 0)
+      (c-set-offset 'brace-list-intro '+)
+      (c-set-offset 'brace-list-entry 0)
+      (c-set-offset 'member-init-intro 0)
+      (c-set-offset 'statement-case-open 0)
+      (c-set-offset 'arglist-intro '+)
+      (c-set-offset 'arglist-cont-nonempty '+)
+      (c-set-offset 'arglist-close '+)
+      (c-set-offset 'template-args-cont '+))
+    :hook
+    (c-mode-common-hook . ROS-c-mode-hook)
+    (c++-mode-common-hook . ROS-c-mode-hook)
+    )
+  ;; google-c-style
+  ;; Google-c-styleを利用する
+  (leaf google-c-style
+    :ensure t
+    :hook
+    (c-mode-common-hook . google-set-c-style)
+    (c++-mode-common-hook . google-set-c-style)
+    )
+  ;; lsp setting
+  ;; LSPに関する設定
+  (leaf *lsp-setting
+    :config
+    ;; ccls
+    ;; c,c++のLSP server
+    (leaf ccls
+      :custom
+      (ccls-executable . "/usr/local/bin/ccls")
+      (ccls-sem-highlight-method . 'font-lock)
+      (ccls-use-default-rainbow-sem-highlight .)
+      :hook ((c-mode c++-mode objc-mode) .
+             (lambda () (require 'ccls) (lsp))))
+    )
+  )
 
-;;; 編集中ファイルのバックアップ間隔（秒）
-(setq auto-save-timeout 30)
+;;; web-mode
+;; Web modeの設定
+(leaf web-mode
+  :ensure t
+  :mode (("\\.phtml\\'" . web-mode)
+         ("\\.tpl\\.php\\'" . web-mode)
+         ("\\.[gj]sp\\'" . web-mode)
+         ("\\.as[cp]x\\'" . web-mode)
+         ("\\.erb\\'" . web-mode)
+         ("\\.mustache\\'" . web-mode)
+         ("\\.djhtml\\'" . web-mode)
+         ("\\.html?\\'" . web-mode)
+         )
+  :custom
+  (web-mode-engines-alist . '(("php"    . "\\.phtml\\'")
+                              ("blade"  . "\\.blade\\.")))
+  (web-mode-enable-current-element-highlight . t)
+  :preface
+  (defun my-web-mode-hook () "Hooks for Web mode." 
+         (setq web-mode-markup-indent-offset 2) 
+         (setq web-mode-markup-indent-offset 2)
+         (setq web-mode-css-indent-offset 2)
+         (setq web-mode-code-indent-offset 2)
+         ) 
+  :hook (web-mode-hook . my-web-mode-hook)
+  )
 
-;;; 編集中ファイルのバックアップ間隔（打鍵）
-(setq auto-save-interval 500)
+;;; Org mode
+;; Org modeの設定
+(leaf org-mode
+  :bind(("\C-cl" . org-store-link)
+        ("\C-cc" . org-capture)
+        ("\C-ca" . org-agenda)
+        ("\C-cb" . org-iswitchb))
+  :config
+  ;; 拡張子
+  (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
+  :custom
+  ;; 画像をインラインで表示
+  (org-startup-with-inline-images . t)
+  ;; 見出しの余分な*を消す
+  (org-hide-leading-stars . t)
+  ;; LOGBOOK drawerに時間を格納する
+  (org-clock-into-drawer . t)
+  ;; TODO状態
+  (org-todo-keywords . '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
+  ;; DONEの時刻を記録
+  (org-log-done . 'time)
+  ;; latexのコンパイラ設定
+  (org-latex-pdf-process . '("latexmk -f -pdf %f"))
+  ;; Latex のHeader 設定
+  (org-format-latex-header . '(\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
+                               \\usepackage[usenames]{color}
+                               [PACKAGES]
+                               [DEFAULT-PACKAGES]
+                               \\pagestyle{empty}             % do not remove
+                               % The settings below are copied from fullpage.sty
+                               \\setlength{\\textwidth}{\\paperwidth}
+                               \\addtolength{\\textwidth}{-3cm}
+                               \\setlength{\\oddsidemargin}{1.5cm}
+                               \\addtolength{\\oddsidemargin}{-2.54cm}
+                               \\setlength{\\evensidemargin}{\\oddsidemargin}
+                               \\setlength{\\textheight}{\\paperheight}
+                               \\addtolength{\\textheight}{-\\headheight}
+                               \\addtolength{\\textheight}{-\\headsep}
+                               \\addtolength{\\textheight}{-\\footskip}
+                               \\addtolength{\\textheight}{-3cm}
+                               \\setlength{\\topmargin}{1.5cm}z
+                               \\addtolength{\\topmargin}{-2.54cm}))
+  ;; Latex のデフォルトパッケージ設定
+  (org-latex-default-packages-alist . (quote (("AUTO" "inputenc" t
+                                               ("pdflatex"))
+                                              ("T1" "fontenc" t
+                                               ("pdflatex"))
+                                              ("" "graphicx" t nil)
+                                              ("" "grffile" t nil)
+                                              ("" "longtable" nil nil)
+                                              ("" "wrapfig" nil nil)
+                                              ("" "rotating" nil nil)
+                                              ("normalem" "ulem" t nil)
+                                              ("" "amsmath" t nil)
+                                              ("" "textcomp" t nil)
+                                              ("" "amssymb" t nil)
+                                              ("" "capt-of" nil nil)
+                                              ("hidelinks" "hyperref" nil nil)
+                                              ("" "bm" nil nil)
+                                              ("" "ascmac" nil nil)
+                                              ("" "color" nil nil)
+                                              ("" "cite" nil nil)
+                                              ("" "latexsym" nil nil)
+                                              ("" "url" nil nil)
+                                              ("" "algorithm" nil nil)
+                                              ("" "algpseudocode" nil nil)
+                                              ("" "examplep" nil nil)
+                                              ("" "subfigure" nil nil)
+                                              ("toc,page" "appendix" nil nil)
+                                              ("" "forloop" nil nil)
+                                              ("" "tablefootnote" nil nil)
+                                              ("yyyymmdd" "datetime" nil nil))
+                                             )
+                                    )
+  )
 
-;;;バックアップ世代数
-(setq kept-old-versions 1)
-(setq kept-new-versions 2)
-
-;;; 上書き時の警告表示
-(setq trim-versions-without-asking nil)
-
-;;; 古いバックアップファイルの削除
-(setq delete-old-versions t)
-
-(require 'cedet)
-
-;;; Arduino Mode
-(autoload 'arduino-mode "arduino-mode" "Arduino editing mode." t)
-; 拡張子の関連付け
-(setq auto-mode-alist (cons '("\\.\\(pde\\|ino\\)$" . arduino-mode) auto-mode-alist))
-
-;;; .launch, .xacro, .urdf, .config, .sdf, .world を xml-mode で読み込む
-(add-to-list 'auto-mode-alist '("\\.launch\\'" . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.xacro\\'" . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.urdf\\'" . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.config\\'" . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.sdf\\'" . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.world\\'" . xml-mode))
-
-;;; yaml Mode
-(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
-
-;;; C++ style
-(add-hook 'c++-mode-hook
-          '(lambda()
-             (c-set-style "stroustrup")
-             (setq indent-tabs-mode nil)     ;; インデントは空白文字で行う（TABコードを空白に変換）
-	     (setq tab-width 4)
-             (c-set-offset 'innamespace 0)   ;;;namespace {}の中はインデントしない
-             (c-set-offset 'arglist-close 0) ;;;関数の引数リストの閉じ括弧はインデントしない
-             )
-	  ;; (semantic-mode 1)
-          )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; for smooth loading
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(eval-after-load 'semantic
-    (add-hook 'semantic-mode-hook
-              (lambda ()
-                (dolist (x (default-value 'completion-at-point-functions))
-                  (when (string-prefix-p "semantic-" (symbol-name x))
-                    (remove-hook 'completion-at-point-functions x))))))
-
-;;; smooth-scroll
-(require 'smooth-scroll)
-(smooth-scroll-mode t)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;;; one line at at time
-(setq mouse-wheel-progressive-speed nil) ;;; dont accelerate scrolling
-(setq mouse-wheel-follow-mouse 't) ;;; scroll window under mouse
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Auto generated parameters         ;;
+;; This part generates automatically ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/workspace/memo/vcstool/usage.org")))
+ '(\. nil t)
+ '(all-the-icons-scale-factor 1.0)
+ '(ccls-executable "/usr/local/bin/ccls" t)
+ '(ccls-sem-highlight-method (quote font-lock) t)
+ '(ccls-use-default-rainbow-sem-highlight nil t)
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project))
+ '(doom-modeline-icon t)
+ '(doom-modeline-major-mode-icon nil)
+ '(doom-modeline-minor-modes nil)
+ '(doom-themes-enable-bold nil)
+ '(doom-themes-enable-italic nil)
+ '(el-get-git-shallow-clone t)
+ '(enable-recursive-minibuffers t)
+ '(git-complete-enable-autopair t)
+ '(highlight-indent-guides-method (quote character))
+ '(iedit-current-symbol-default nil t)
+ '(iedit-toggle-key-default "C-;" t)
+ '(ivy-extra-directories nil)
+ '(ivy-height 15)
+ '(ivy-re-builders-alist\. nil t)
+ '(ivy-use-virtual-buffers t)
+ '(neo-theme (quote nerd2) t)
+ '(org-clock-into-drawer t t)
  '(org-format-latex-header
-   "\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
-\\usepackage[usenames]{color}
-[PACKAGES]
-[DEFAULT-PACKAGES]
-\\pagestyle{empty}             % do not remove
-% The settings below are copied from fullpage.sty
-\\setlength{\\textwidth}{\\paperwidth}
-\\addtolength{\\textwidth}{-3cm}
-\\setlength{\\oddsidemargin}{1.5cm}
-\\addtolength{\\oddsidemargin}{-2.54cm}
-\\setlength{\\evensidemargin}{\\oddsidemargin}
-\\setlength{\\textheight}{\\paperheight}
-\\addtolength{\\textheight}{-\\headheight}
-\\addtolength{\\textheight}{-\\headsep}
-\\addtolength{\\textheight}{-\\footskip}
-\\addtolength{\\textheight}{-3cm}
-\\setlength{\\topmargin}{1.5cm}
-\\addtolength{\\topmargin}{-2.54cm}")
+   (quote
+    (\\documentclass
+     [11pt
+      (\, a4paper)
+      (\, dvipdfmx)]
+     {jarticle} \\usepackage
+     [usenames]
+     {color}
+     [PACKAGES]
+     [DEFAULT-PACKAGES]
+     \\pagestyle{empty} % do not remove % The settings below are copied from fullpage\.sty \\setlength{\\textwidth}{\\paperwidth} \\addtolength{\\textwidth}{-3cm} \\setlength{\\oddsidemargin}{1\.5cm} \\addtolength{\\oddsidemargin}{-2\.54cm} \\setlength{\\evensidemargin}{\\oddsidemargin} \\setlength{\\textheight}{\\paperheight} \\addtolength{\\textheight}{-\\headheight} \\addtolength{\\textheight}{-\\headsep} \\addtolength{\\textheight}{-\\footskip} \\addtolength{\\textheight}{-3cm} \\setlength{\\topmargin}{1\.5cm}z \\addtolength{\\topmargin}{-2\.54cm})))
+ '(org-hide-leading-stars t)
  '(org-latex-default-packages-alist
    (quote
     (("AUTO" "inputenc" t
@@ -238,509 +875,32 @@ user-mail-address "GRoadPG@gmail.com")
      ("" "forloop" nil nil)
      ("" "tablefootnote" nil nil)
      ("yyyymmdd" "datetime" nil nil))))
+ '(org-latex-pdf-process (quote ("latexmk -f -pdf %f")) t)
+ '(org-log-done (quote time))
+ '(org-startup-with-inline-images t)
+ '(org-todo-keywords
+   (quote
+    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))))
+ '(package-archives
+   (quote
+    (("org" . "https://orgmode.org/elpa/")
+     ("melpa" . "https://melpa.org/packages/")
+     ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
  '(package-selected-packages
    (quote
-    (multiple-cursors yatex dashboard-hackernews org-dashboard dashboard swiper-helm helm gruvbox-theme yaml-mode web-mode vimish-fold sublime-themes smartparens scss-mode sass-mode rust-mode pdf-tools multi-term matlab-mode markdown-mode magit-gitflow gnuplot-mode gitignore-mode flycheck-pos-tip elscreen counsel company cmake-mode avy-migemo avy-menu avy-flycheck autothemer arduino-mode 0blayout)))
- '(show-paren-mode t)
- '(tab-width 4)
- '(tool-bar-mode nil)
- '(tool-bar-position (quote bottom)))
+    (avy-migemo ivy-hydra web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
+ '(show-paren-style (quote mixed))
+ '(show-paren-when-point-in-periphery t)
+ '(show-paren-when-point-inside-paren t)
+ '(web-mode-enable-current-element-highlight t t)
+ '(web-mode-engines-alist (quote (("php" . "\\.phtml\\'") ("blade" . "\\.blade\\."))) t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#1d2021" :foreground "#fdf4c1" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 160 :width normal :foundry "PfEd" :family "Ricty")))))
-
-;;;YaTexの設定
-(setq auto-mode-alist
-      (cons (cons "\\.tex$" 'yatex-mode)  auto-mode-alist))
-(autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
-(setq YaTeX-inhibit-prefix-letter t)
-(setq YaTeX-kanji-code nil)
-(setq YaTeX-latex-message-code 'utf-8)
-
-(setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
-;; (setq tex-command "latexmk")
-(setq dvi2-command "evince")
-(setq bibtex-command "pbibtex")     ; BibTeX のコマンド
-
-(when platform-linux-p ; for GNU/Linux
-;;; inverse search
-  (defun un-urlify (fname-or-url)
-	"A trivial function that replaces a prefix of file:/// with just /."
-	(if (string= (substring fname-or-url 0 8) "file:///")
-		(substring fname-or-url 7)
-	  fname-or-url))
-  
-  (defun evince-inverse-search (file linecol &rest ignored)
-	(let* ((fname (un-urlify file))
-		   (buf (find-file fname))
-		   (line (car linecol))
-		   (col (cadr linecol)))
-	  (if (null buf)
-		  (message "[Synctex]: %s is not opened..." fname)
-		(switch-to-buffer buf)
-		(goto-line (car linecol))
-		(unless (= col -1)
-		  (move-to-column col)))))
-  
-  )
-
-;; texファイルを開くと自動でRefTexモード
-;(add-hook 'latex-mode-hook 'turn-on-reftex)
-(add-hook 'yatex-mode-hook 'turn-on-reftex)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; flycheck
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-hook 'after-init-hook #'global-flycheck-mode)
-
-;;; MELPA
-(require 'package)
-
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(package-initialize)
-
-;; 
-(defun in-directory (dir)
-  "Runs execute-extended-command with default-directory set to the given directory."
-  (interactive "DIn directory: ")
-  (let ((default-directory dir))
-	(call-interactively 'execute-extended-command)))
-
-(global-set-key (kbd "M-X") 'in-directory)
-
-; roslaunch highlighting
-(add-to-list 'auto-mode-alist '("\\.launch$" . xml-mode))
-
-;; shellに色をつける
-;; (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-;; (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
-(add-hook 'compilation-mode-hook 'ansi-color-for-comint-mode-on)
-(add-hook 'compilation-filter-hook
-          '(lambda ()
-             (let ((start-marker (make-marker))
-                   (end-marker (process-mark (get-buffer-process (current-buffer)))))
-               (set-marker start-marker (point-min))
-               (ansi-color-apply-on-region start-marker end-marker))))
-
-;; yatex-indent
-(autoload 'latex-indent-command "~/misc/latex-indent"
-  "Indent current line accroding to LaTeX block structure.")
-(autoload 'latex-indent-region-command "~/misc/latex-indent"
-  "Indent each line in the region according to LaTeX block structure.")
-(add-hook
- 'latex-mode-hook
- '(lambda ()
-    (define-key tex-mode-map "\t"       'latex-indent-command)
-    (define-key tex-mode-map "\M-\C-\\" 'latex-indent-region-command)))
-
-;; elscreen.el
-;;; プレフィクスキーはC-z
-(setq elscreen-prefix-key (kbd "C-z"))
-(elscreen-start)
-;;; タブの先頭に[X]を表示しない
-(setq elscreen-tab-display-kill-screen nil)
-;;; header-lineの先頭に[<->]を表示しない
-(setq elscreen-tab-display-control nil)
-;;; バッファ名・モード名からタブに表示させる内容を決定する(デフォルト設定)
-(setq elscreen-buffer-to-nickname-alist
-      '(("^dired-mode$" .
-         (lambda ()
-           (format "Dired(%s)" dired-directory)))
-        ("^Info-mode$" .
-         (lambda ()
-           (format "Info(%s)" (file-name-nondirectory Info-current-file))))
-        ("^mew-draft-mode$" .
-         (lambda ()
-           (format "Mew(%s)" (buffer-name (current-buffer)))))
-        ("^mew-" . "Mew")
-        ("^irchat-" . "IRChat")
-        ("^liece-" . "Liece")
-        ("^lookup-" . "Lookup")))
-(setq elscreen-mode-to-nickname-alist
-      '(("[Ss]hell" . "shell")
-        ("compilation" . "compile")
-        ("-telnet" . "telnet")
-        ("dict" . "OnlineDict")
-        ("*WL:Message*" . "Wanderlust")))
-
-;; smartparent
-(smartparens-global-mode)
-;; [DEL]キーもしくは[C-h]に当てられているdelete-backward-charにadviceをかけられて削除するたびにフリーズする．これを無効化
-(ad-disable-advice 'delete-backward-char 'before 'sp-delete-pair-advice)
-(ad-activate 'delete-backward-char)
-
-;; gnuplot-mode
-(require 'gnuplot-mode)
-(setq auto-mode-alist 
-(append '(("\\.\\(gp\\|gnuplot\\|plt\\)$" . gnuplot-mode)) auto-mode-alist))
-
-;; doc-view-modeのときに行番号を表示すると非常に重たい
-(add-hook 'doc-view-mode-hook
-		  (lambda ()
-			(linum-mode -1)
-			))
-(add-hook 'pdf-view-mode-hook
-		  (lambda ()
-			(linum-mode -1)
-			))
-;; pdf-tools
-(pdf-tools-install)
-;;(setq revert-without-query 'yes)
-(add-hook 'doc-view-mode-hook 'auto-revert-mode)
-
-;; for ssh
-(require 'tramp)
-(setq tramp-default-method "scp")
-
-;; web-mode
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[gj]sp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(setq web-mode-engines-alist
-'(("php"    . "\\.phtml\\'")
-  ("blade"  . "\\.blade\\.")))
-(setq web-mode-enable-current-element-highlight t)
-(defun my-web-mode-hook () "Hooks for Web mode." 
-  (setq web-mode-markup-indent-offset 2) 
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  ) 
-(add-hook 'web-mode-hook 'my-web-mode-hook)
-;;;(setq web-mode-enable-current-column-highlight t)
-;;(setq web-mode-current-element-highlight-face "#0000cd")
-
-;; magit
-(global-set-key (kbd "C-x g") 'magit-status)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;選択した範囲の行と列を表示する
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(line-number-mode t)
-(column-number-mode t)
-;;選択範囲の情報表示
-(defun count-lines-and-chars ()
-  (if mark-active
-      (format "[%3d:%4d]" 
-              (count-lines (region-beginning) (region-end))
-              (- (region-end) (region-beginning)))
-    ""))
-
-;;; Emacs 26以上用の設定
-(if (string-match "26" emacs-version)
-    (setq default-mode-line-format (default-value 'mode-line-format)))
-(add-to-list 'default-mode-line-format
-             '(:eval (count-lines-and-chars)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;cudaプログラムを色分け
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq auto-mode-alist
-(cons (cons "\\.cu$" 'c++-mode) auto-mode-alist))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;magit-flow
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- (require 'magit-gitflow)
- (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
-
-(prefer-coding-system 'utf-8)
-(setq default-process-coding-system 'utf-8)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; line limit
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'whitespace)
-(setq whitespace-line-column 256) ;; limit line length
-(setq whitespace-style '(face lines-tail))
-
-(add-hook 'prog-mode-hook 'whitespace-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Spell Check
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(mapc
-(lambda (hook)
-(add-hook hook 'flyspell-prog-mode))
-'(
-c-mode-common-hook
-cpp-mode-common-hook
-emacs-lisp-mode-hook
-python-mode-common-hook
-))
-(mapc
-(lambda (hook)
-(add-hook hook
-'(lambda () (flyspell-mode 1))))
-'(
-yatex-mode-hook
-markdown-mode-hook
-org-mode
-))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Folding a code
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-hook 'c++-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'c-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'scheme-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'lisp-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'python-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'ruby-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'xml-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-
-;; (define-key global-map (kbd "C-:") 'hs-toggle-hiding)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; vimish-folding
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'vimish-fold)
-(global-set-key (kbd "C-c C-f") #'vimish-fold)
-(global-set-key (kbd "C-c C-v") #'vimish-fold-delete)
-(global-set-key (kbd "C-c C-d") #'vimish-fold-delete-all)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; emacs mozc
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'load-path "/usr/share/emacs24/site-lisp/emacs-mozc")
-
-(require 'mozc)
-(setq default-input-method "japanese-mozc")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ivy設定
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'ivy)
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq enable-recursive-minibuffers t)
-(setq ivy-height 15) ;; minibufferのサイズを拡大！（重要）
-(setq ivy-extra-directories nil)
-(setq ivy-re-builders-alist
-      '((t . ivy--regex-plus)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; swiper設定
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq enable-recursive-minibuffers t)
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
-(defvar swiper-include-line-number-in-search t) ;; line-numberでも検索可能
-
-;; migemo + swiper（日本語をローマ字検索できるようになる）
-;; (require 'avy-migemo)
-;; (avy-migemo-mode 1)
-;; (require 'avy-migemo-e.g.swiper)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; company 設定
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'company)
-(global-company-mode) ; 全バッファで有効にする
-(setq company-transformers '(company-sort-by-backend-importance)) ;; ソート順
-(setq company-idle-delay 0) ; デフォルトは0.5
-(setq company-minimum-prefix-length 3) ; デフォルトは4
-(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-(setq completion-ignore-case t)
-(setq company-dabbrev-downcase nil)
-(global-set-key (kbd "C-M-i") 'company-complete)
-(define-key company-active-map (kbd "C-.") 'company-files) ;; filenameを見せる
-(define-key company-active-map (kbd "C-n") 'company-select-next) ;; C-n, C-pで補完候補を次/前の候補を選択
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
-(define-key company-search-map (kbd "C-n") 'company-select-next)
-(define-key company-search-map (kbd "C-p") 'company-select-previous)
-(define-key company-active-map (kbd "C-s") 'company-filter-candidates) ;; C-sで絞り込む
-(define-key company-active-map (kbd "C-i") 'company-complete-selection) ;; TABで候補を設定
-(define-key company-active-map [tab] 'company-complete-selection) ;; TABで候補を設定
-(define-key company-active-map (kbd "C-f") 'company-complete-selection) ;; C-fで候補を設定
-(define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete) ;; 各種メジャーモードでも C-M-iで comp
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; git complete
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'load-path "~/.emacs.d/lisp/git-complete") ;; お好きなように
-(require 'git-complete)
-(global-unset-key (kbd "C-c C-c")) ;; 一応unbindしておきましょう
-(global-set-key (kbd "C-c C-c") 'git-complete)
-(setq git-complete-enable-autopair t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; dump jump
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'load-path "~/.emacs.d/lisp/dumb-jump")
-(require 'dumb-jump)
-(global-unset-key (kbd "C-j")) ;; 一応unbindしておきましょう
-(global-set-key (kbd "C-j j") 'dumb-jump-go)
-(global-set-key (kbd "C-j b") 'dumb-jump-back)
-(setq dumb-jump-mode t)
-(setq dumb-jump-selector 'ivy) ;; 候補選択をivyに任せます
-(setq dumb-jump-use-visible-window nil)
-(define-key global-map [(super d)] 'dumb-jump-go) ;; go-to-definition!
-(define-key global-map [(super shift d)] 'dumb-jump-back)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Helm
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (require 'helm-config)
-;; (helm-mode 1)
-;; ;;(helm-migemo-mode 1)
-
-;; ;; C-hで前の文字削除
-;; (define-key helm-map (kbd "C-h") 'delete-backward-char)
-;; (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
-
-;; ;; TABとC-zを入れ替える
-;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)   ; rebind tab to run persistent action
-;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)       ; make TAB work in terminal
-;; (define-key helm-map (kbd "C-z")  'helm-select-action)            ; list actions using C-z
-;; ;;(define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
-;; ;;(define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-
-;; ;; キーバインド
-;; (global-set-key (kbd "C-c h") 'helm-mini)
-;; (global-set-key (kbd "<f10>") 'helm-mini)
-;; (define-key global-map (kbd "C-x b")   'helm-buffers-list)
-;; ;;(define-key global-map (kbd "C-x b") 'helm-for-files)
-;; (define-key global-map (kbd "C-x C-f") 'helm-find-files)
-;; (define-key global-map (kbd "M-x")     'helm-M-x)
-;; (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Swiper Helm
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (require 'use-package)
-;; (use-package swiper-helm
-;;   :commands (swiper
-;;              swiper-helm
-;;              swiper-helm-at-point
-;;              swiper-helm-from-isearch)
-;;   :bind (("s-s" . swiper-helm-at-point)
-;;          ("C-s-s" . swiper-helm))
-;;   :bind (:map isearch-mode-map
-;;               ("s-s" . swiper-helm-from-isearch))
-;;   ;; Configuration
-;;   :config
-;;   ;; Newly defined
-;;   (defun swiper-helm-at-point ()
-;;     "Custom function to pick up a thing at a point for swiper-helm
-
-;; If there is a symbol at the current point, its textual representation is
-;; searched for by swiper-helm. If there is no symbol, empty search box is
-;; started."
-;;     (interactive)
-;;     (swiper-helm (cond
-;;                   ;; If there is selection use it
-;;                   ((and transient-mark-mode mark-active (not (eq (mark) (point))))
-;;                    (buffer-substring-no-properties (mark) (point)))
-;;                   ;; Otherwise, use symbol at point or empty
-;;                   (t (format "%s"
-;;                              (or (thing-at-point 'symbol)
-;;                                  "")))))))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 起動画面を Dashboardに
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (require 'dashboard)
-;; (dashboard-setup-startup-hook)
-;; ;; Or if you use use-package
-;; (use-package dashboard
-;;   :ensure t
-;;   :config
-;;   (dashboard-setup-startup-hook))
-
-;; ;; Set the title
-;; (setq dashboard-banner-logo-title "!! Welcome back, Master !!")
-;; ;; Set the banner
-;; (setq dashboard-startup-banner "~/.emacs.d/.image/palta.png")
-;; ;; Value can be
-;; ;; 'official which displays the official emacs logo
-;; ;; 'logo which displays an alternative emacs logo
-;; ;; 1, 2 or 3 which displays one of the text banners
-;; ;; "path/to/your/image.png" which displays whatever image you would prefer
-
-;;;;;;;;;;;;;;;;;;;;;;
-;; 複数行同時編集
-;;;;;;;;;;;;;;;;;;;;;;
-(require 'multiple-cursors)
-(global-set-key (kbd "C-c C-e") 'mc/edit-lines)
-;; (global-set-key (kbd "C-c C-f") 'mc/mark-next-like-this)
-;; (global-set-key (kbd "C-c C-b") 'mc/mark-previous-like-this)
-;; (global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
-
-;;;;;;;;;;;;;;;;;;;;;
-;; Org Mode
-;;;;;;;;;;;;;;;;;;;;;
-;; 画像をインラインで表示
-(setq org-startup-with-inline-images t)
-
-;; 見出しの余分な*を消す
-(setq org-hide-leading-stars t)
-
-;; LOGBOOK drawerに時間を格納する
-(setq org-clock-into-drawer t)
-
-;; .orgファイルは自動的にorg-mode
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-
-;; org-directory内のファイルすべてからagendaを作成する
-(setq my-org-agenda-dir "~/org/")
-(setq org-agenda-files (list my-org-agenda-dir))
-
-;; TODO状態
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
-
-;; DONEの時刻を記録
-(setq org-log-done 'time)
-
-;; ショートカットキー
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-
-(setq org-latex-pdf-process (list "latexmk -f -pdf %f"))
+ '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))
 
 (provide 'init)
+;;; End:
 ;;; init.el ends here
-
