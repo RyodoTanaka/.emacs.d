@@ -264,6 +264,14 @@
          ("C-c C-d" . hs-hide-all))
   )
 
+;;; iedit-mode
+;; 複数行同時編集のためのパッケージ
+(leaf iedit
+  :bind ("C-i" . iedit-mode)
+  :custom
+  (iedit-current-symbol-default . nil) 
+  )
+
 ;;; neotree
 ;; ファイル階層を開いてくれる
 ;; F9 で開いたり閉じたりするように設定
@@ -748,6 +756,8 @@
  '(el-get-git-shallow-clone t)
  '(git-complete-enable-autopair t)
  '(highlight-indent-guides-method (quote character) t)
+ '(iedit-current-symbol-default nil t)
+ '(iedit-toggle-key-default "C-;" t)
  '(neo-theme (quote nerd2) t)
  '(org-clock-into-drawer t t)
  '(org-format-latex-header
