@@ -266,11 +266,11 @@
 
 ;;; iedit-mode
 ;; 複数行同時編集のためのパッケージ
-(leaf iedit
-  :bind ("C-i" . iedit-mode)
-  :custom
-  (iedit-current-symbol-default . nil) 
-  )
+;; (leaf iedit
+;;   :bind ("C-i" . iedit-mode)
+;;   :custom
+;;   (iedit-current-symbol-default . nil) 
+;;   )
 
 ;;; neotree
 ;; ファイル階層を開いてくれる
