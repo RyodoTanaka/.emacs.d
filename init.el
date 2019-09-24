@@ -101,6 +101,15 @@
   (global-font-lock-mode t) ;色分け設定
   (setq font-lock-support-mode 'jit-lock-mode) ;Just-In-Timeな文字装飾方式
   (keyboard-translate ?\C-h ?\C-?) ;C-hをバックスペースに変更
+  ;; Docモードやpdf-modeで行番号は付けない
+  (add-hook 'doc-view-mode-hook
+            (lambda ()
+              (linum-mode -1)
+              ))
+  (add-hook 'pdf-view-mode-hook
+            (lambda ()
+              (linum-mode -1)
+              ))
   )
 
 ;;; Start up setting
