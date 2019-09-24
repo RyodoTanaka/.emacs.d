@@ -185,8 +185,8 @@
     (line-number-mode 0)
     (column-number-mode 0)
     (doom-modeline-def-modeline 'main
-      '(bar window-number matches buffer-info remote-host buffer-position parrot selection-info)
-      '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
+                                '(bar window-number matches buffer-info remote-host buffer-position parrot selection-info)
+                                '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
     )
   ;; Hide mode line
   ;; 特定のモードでモードラインを非表示にする
@@ -293,34 +293,142 @@
   :url "https://github.com/MaskRay/ccls/wiki/lsp-mode#find-definitionsreferences"
   :doc "lsp is language server protocol"
   :when (version<= "25.1" emacs-version)
+  :ensure use-package
   :config
   ;; lsp-mode
   ;; LSPの基本パッケージ
-  (leaf lsp-mode
-    :ensure t
-    :hook ( (c-mode          . lsp)
-           (c++-mode        . lsp)
-           (prog-major-mode . lsp-prog-major-mode-enable))
-    )
+  (use-package lsp-mode
+    :commands lsp
+    :custom
+    ((lsp-enable-snippet t)
+     (lsp-enable-indentation nil)
+     (lsp-prefer-flymake nil)
+     (lsp-document-sync-method 'incremental)
+     (lsp-inhibit-message t)
+     (lsp-message-project-root-warning t)
+     (create-lockfiles nil))
+    :init
+    (unbind-key "C-l")
+    :bind
+    (("C-l C-l"  . lsp)
+     ("C-l h"    . lsp-describe-session)
+     ("C-l t"    . lsp-goto-type-definition)
+     ("C-l r"    . lsp-rename)
+     ("C-l <f5>" . lsp-restart-workspace)
+     ("C-l l"    . lsp-lens-mode))
+    :hook
+    (prog-major-mode . lsp-prog-major-mode-enable))
   ;; lsp-ui
   ;; LSPのカッチョ良いUIパッケージ
-  (leaf lsp-ui
-    :ensure t
-    :hook (lsp-mode-hook . lsp-ui-mode)
-    )
-  ;; company-lsp
+  (use-package lsp-ui
+    :commands lsp-ui-mode
+    :after lsp-mode
+    :custom
+    ;; lsp-ui-doc
+    (lsp-ui-doc-enable t)
+    (lsp-ui-doc-header t)
+    (lsp-ui-doc-include-signature t)
+    (lsp-ui-doc-position 'top)
+    (lsp-ui-doc-max-width  60)
+    (lsp-ui-doc-max-height 20)
+    (lsp-ui-doc-use-childframe t)
+    (lsp-ui-doc-use-webkit nil)
+    ;; lsp-ui-flycheck
+    (lsp-ui-flycheck-enable t)
+    ;; lsp-ui-sideline
+    (lsp-ui-sideline-enable t)
+    (lsp-ui-sideline-ignore-duplicate t)
+    (lsp-ui-sideline-show-symbol t)
+    (lsp-ui-sideline-show-hover t)
+    (lsp-ui-sideline-show-diagnostics t)
+    (lsp-ui-sideline-show-code-actions t)
+    ;; lsp-ui-imenu
+    (lsp-ui-imenu-enable nil)
+    (lsp-ui-imenu-kind-position 'top)
+    ;; lsp-ui-peek
+    (lsp-ui-peek-enable t)
+    (lsp-ui-peek-always-show t)
+    (lsp-ui-peek-peek-height 30)
+    (lsp-ui-peek-list-width 30)
+    (lsp-ui-peek-fontify 'always)
+    :hook
+    (lsp-mode . lsp-ui-mode)
+    :bind
+    (("C-l s"   . lsp-ui-sideline-mode)
+     ("C-l C-d" . lsp-ui-peek-find-definitions)
+     ("C-l C-r" . lsp-ui-peek-find-references)))
+  ;; company & company-lsp
   ;; LSPベースの補間
-  ;; (leaf company-lsp
-  ;;   :ensure t
-  ;;   :config
-  ;;   (add-to-list 'company-backends 'company-lsp)
-  ;;   )
-  ;; lsp-treemacs
+  (use-package company
+    :custom
+    (company-transformers '(company-sort-by-backend-importance))
+    (company-idle-delay 0)
+    (company-echo-delay 0)
+    (company-minimum-prefix-length 2)
+    (company-selection-wrap-around t)
+    (completion-ignore-case t)
+    :bind
+    (("C-M-c" . company-complete))
+    (:map company-active-map
+          ("C-n" . company-select-next)
+          ("C-p" . company-select-previous)
+          ("C-s" . company-filter-candidates)
+          ("C-i" . company-complete-selection)
+          ([tab] . company-complete-selection))
+    (:map company-search-map
+          ("C-n" . company-select-next)
+          ("C-p" . company-select-previous))
+    :config
+    (global-company-mode)
+    ;; lowercaseを優先にするソート
+    (defun my-sort-uppercase (candidates)
+      (let (case-fold-search
+            (re "\\`[[:upper:]]*\\'"))
+        (sort candidates
+              (lambda (s1 s2)
+                (and (string-match-p re s2)
+                     (not (string-match-p re s1)))))))
+    (push 'my-sort-uppercase company-transformers)
+    ;; yasnippetとの連携
+    (defvar company-mode/enable-yas t)
+    (defun company-mode/backend-with-yas (backend)
+      (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+          backend
+        (append (if (consp backend) backend (list backend))
+                '(:with company-yasnippet))))
+    (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
+  ;; company-lsp
+  (use-package company-lsp
+    :commands company-lsp
+    :custom
+    (company-lsp-cache-candidates nil)
+    (company-lsp-async t)
+    (company-lsp-enable-recompletion t)
+    (company-lsp-enable-snippet t)
+    :after
+    (:all lsp-mode lsp-ui company yasnippet)
+    :init
+    (push 'company-lsp company-backends))
+  ;; lsp-treema
   ;; LSP用treemacs
   (leaf lsp-treemacs :ensure t)  
   )
-
-
+;;; yasnipet
+;; スニペットを使えるようにする
+(leaf *snipet-settings
+  :ensure use-package
+  :config
+  (use-package yasnippet
+    :bind
+    (:map yas-minor-mode-map
+          ("C-x i n" . yas-new-snippet)
+          ("C-x i v" . yas-visit-snippet-file)
+          ("C-M-i"   . yas-insert-snippet))
+    (:map yas-keymap
+          ("<tab>" . nil)) ;; because of avoiding conflict with company keymap
+    :init
+    (yas-global-mode t))
+  )
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Language settings ;;
 ;;;;;;;;;;;;;;;;;;;;;;;
@@ -340,7 +448,7 @@
 (leaf yaml-mode
   :ensure t;
   :mode (("\\.yml\\'")
-        ("\\.yaml\\'"))
+         ("\\.yaml\\'"))
   )
 
 ;;; C, C++ style
@@ -389,27 +497,36 @@
     :config
     ;; ccls
     ;; c,c++のLSP server
+    (use-package ccls
+      :custom
+      (ccls-executable "/usr/local/bin/ccls")
+      (ccls-sem-highlight-method 'font-lock)
+      (ccls-use-default-rainbow-sem-highlight)
+      :hook ((c-mode c++-mode objc-mode) .
+             (lambda () (require 'ccls) (lsp))))
     )
   )
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Auto generated parameters         ;;
-;; This part generates automatically ;;
+    ;; Auto generated parameters         ;;
+    ;; This part generates automatically ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+    (provide 'init)
+;;; End:
+;;; init.el ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ccls-executable "/usr/local/bin/ccls" t)
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project))
- '(doom-modeline-icon t)
- '(doom-modeline-major-mode-icon nil)
- '(doom-modeline-minor-modes nil)
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
+ '(doom-modeline-icon t t)
+ '(doom-modeline-major-mode-icon nil t)
+ '(doom-modeline-minor-modes nil t)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
- '(highlight-indent-guides-method (quote character))
+ '(highlight-indent-guides-method (quote character) t)
  '(neo-theme (quote nerd2) t)
  '(package-archives
    (quote
@@ -418,17 +535,13 @@
      ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
  '(package-selected-packages
    (quote
-    (ccls google-c-style lsp-mode yaml-mode highlight-indent-guides which-key rainbow-delimiters imenu-list minimap hide-mode-line doom-modeline smooth-scroll mozc neotree doom-themes el-get hydra leaf-keywords leaf)))
- '(show-paren-style (quote mixed))
- '(show-paren-when-point-in-periphery t)
- '(show-paren-when-point-inside-paren t))
+    (google-c-style yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line el-get doom-themes doom-modeline ccls)))
+ '(show-paren-style (quote mixed) t)
+ '(show-paren-when-point-in-periphery t t)
+ '(show-paren-when-point-inside-paren t t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))
-
-(provide 'init)
-;;; End:
-;;; init.el ends here
