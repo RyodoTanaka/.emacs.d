@@ -2,8 +2,8 @@
 My emacs settings.
 
 ## Requirements
-**Ubuntu 18.04 LTS**  
-**Emacs>=26.1**
+- **Ubuntu 18.04 LTS**  
+- **Emacs>=26.1**
 - [leaf](https://github.com/conao3/leaf.el)
 - [leaf-keywords](https://github.com/conao3/leaf-keywords.el#hydra-keyword)
 - [HackGen](https://github.com/yuru7/HackGen)
