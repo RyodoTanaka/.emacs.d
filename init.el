@@ -336,6 +336,21 @@
     )
   )
 
+;;; el-screen
+;; タブ機能
+(leaf elscreen
+  :ensure t
+  :preface
+  (global-unset-key (kbd "C-z"))
+  ;; :bind
+  ;; (elscreen-prefix-key . (kbd "C-z"))
+  :custom
+  (elscreen-tab-display-kill-screen . nil)
+  (elscreen-tab-display-control . nil)
+  (elscreen-display-screen-number . nil)
+  :hook (after-init-hook . elscreen-start)
+  )
+
 ;;; ivy & swiper
 ;; 文字検索用
 (leaf ivy
@@ -419,7 +434,8 @@
      (lsp-document-sync-method . 'incremental)
      (lsp-inhibit-message . t)
      (lsp-message-project-root-warning . t)
-     (create-lockfiles . nil))
+     (create-lockfiles . nil)
+     (lsp-file-watch-threshold .nil))
     :preface (global-unset-key (kbd "C-l"))
     :bind
     (("C-l C-l"  . lsp)
@@ -902,7 +918,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(\. nil t)
- '(all-the-icons-scale-factor 1.0)
+ '(\.nil nil t)
+ '(all-the-icons-scale-factor 1.0 t)
  '(ccls-executable "/usr/local/bin/ccls" t)
  '(ccls-sem-highlight-method (quote font-lock) t)
  '(ccls-use-default-rainbow-sem-highlight nil t)
@@ -915,10 +932,10 @@
  '(company-transformers (quote (company-sort-by-backend-importance)))
  '(completion-ignore-case t t)
  '(create-lockfiles nil)
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project))
- '(doom-modeline-icon t)
- '(doom-modeline-major-mode-icon nil)
- '(doom-modeline-minor-modes nil)
+ '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
+ '(doom-modeline-icon t t)
+ '(doom-modeline-major-mode-icon nil t)
+ '(doom-modeline-minor-modes nil t)
  '(doom-themes-enable-bold nil)
  '(doom-themes-enable-italic nil)
  '(dumb-jump-mode t)
@@ -938,6 +955,7 @@
  '(lsp-document-sync-method (quote incremental))
  '(lsp-enable-indentation nil)
  '(lsp-enable-snippet t)
+ '(lsp-file-watch-threshold nil)
  '(lsp-inhibit-message t t)
  '(lsp-message-project-root-warning t t)
  '(lsp-prefer-flymake nil)
@@ -1023,9 +1041,9 @@
  '(package-selected-packages
    (quote
     (all-the-icons-ivy ivy-rich company-childframe avy-migemo ivy-hydra web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
- '(show-paren-style (quote mixed))
- '(show-paren-when-point-in-periphery t)
- '(show-paren-when-point-inside-paren t)
+ '(show-paren-style (quote mixed) t)
+ '(show-paren-when-point-in-periphery t t)
+ '(show-paren-when-point-inside-paren t t)
  '(web-mode-enable-current-element-highlight t t)
  '(web-mode-engines-alist (quote (("php" . "\\.phtml\\'") ("blade" . "\\.blade\\."))) t))
 
