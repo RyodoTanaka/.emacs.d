@@ -359,6 +359,33 @@
     :ensure t
     :hook (ivy-mode-hook . avy-migemo-mode)
     )
+  ;; ivy-rich
+  (leaf ivy-rich
+    :ensure t all-the-icons-ivy all-the-icons
+    :hook (ivy-mode-hook . ivy-rich-mode)
+    :preface
+    (defun ivy-rich-switch-buffer-icon (candidate)
+      (with-current-buffer
+          (get-buffer candidate)
+        (let ((icon (all-the-icons-icon-for-mode major-mode)))
+          (if (symbolp icon)
+              (all-the-icons-icon-for-mode 'fundamental-mode)
+            icon))))
+    :config
+    (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+    (setq ivy-rich--display-transformers-list
+          '(ivy-switch-buffer
+            (:columns
+             ((ivy-rich-switch-buffer-icon :width 2)
+              (ivy-rich-candidate (:width 30))
+              (ivy-rich-switch-buffer-size (:width 7))
+              (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+              (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+              (ivy-rich-switch-buffer-project (:width 15 :face success))
+              (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+             :predicate
+             (lambda (cand) (get-buffer cand)))))
+    )
   )
 
 ;;; Emacs26 specified setting
@@ -995,7 +1022,7 @@
      ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
  '(package-selected-packages
    (quote
-    (company-childframe avy-migemo ivy-hydra web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
+    (all-the-icons-ivy ivy-rich company-childframe avy-migemo ivy-hydra web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
  '(show-paren-style (quote mixed))
  '(show-paren-when-point-in-periphery t)
  '(show-paren-when-point-inside-paren t)
