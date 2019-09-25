@@ -357,7 +357,7 @@
   ;; 日本語でも検索可能に
   (leaf avy-migemo
     :ensure t
-    :hook (ivy-mode . avy-migemo-mode)
+    :hook (ivy-mode-hook . avy-migemo-mode)
     )
   )
 
