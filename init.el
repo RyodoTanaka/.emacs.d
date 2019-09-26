@@ -853,7 +853,7 @@
   ;; DONEの時刻を記録
   (org-log-done . 'time)
   ;; latexのコンパイラ設定
-  (org-latex-pdf-process . '("latexmk -f -pdf %f"))
+  (org-latex-pdf-process . '("latexmk -f %f"))
   ;; Latex のHeader 設定
   (org-format-latex-header . '(\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
                                \\usepackage[usenames]{color}
