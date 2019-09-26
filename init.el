@@ -1027,7 +1027,7 @@
      ("" "forloop" nil nil)
      ("" "tablefootnote" nil nil)
      ("yyyymmdd" "datetime" nil nil))) t)
- '(org-latex-pdf-process (quote ("latexmk -f -pdf %f")) t)
+ '(org-latex-pdf-process (quote ("latexmk -f %f")) t)
  '(org-log-done (quote time) t)
  '(org-startup-with-inline-images t t)
  '(org-todo-keywords
