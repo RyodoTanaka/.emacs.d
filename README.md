@@ -2,8 +2,8 @@
 My emacs settings.
 
 ## Requirements
-**Ubuntu 18.04 LTS**
-**Emacs>=25.1**
+- **Ubuntu 18.04 LTS**  
+- **Emacs>=26.1**
 - [leaf](https://github.com/conao3/leaf.el)
 - [leaf-keywords](https://github.com/conao3/leaf-keywords.el#hydra-keyword)
 - [HackGen](https://github.com/yuru7/HackGen)
@@ -65,7 +65,7 @@ It succeed to install my emacs environment.
 
 ## Trouble Shooting
 ### The icon looks not good...
-This occurs when the computer have not downloaded the icon fonts yet...
+This occurs when the computer have not downloaded the icon fonts yet...  
 To fix this, 
 1. run emacs
 2. Do `M-x all-the-icons-install-fonts`
