@@ -831,229 +831,114 @@
 
 ;;; Org mode
 ;; Org modeの設定
-(leaf org-mode
-  :bind(("\C-cl" . org-store-link)
-        ("\C-cc" . org-capture)
-        ("\C-ca" . org-agenda)
-        ("\C-cb" . org-iswitchb))
+(leaf *org-mode-settings
   :config
-  ;; 拡張子
-  (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-  (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
-  :custom
-  ;; 画像をインラインで表示
-  (org-startup-with-inline-images . t)
-  ;; 見出しの余分な*を消す
-  (org-hide-leading-stars . t)
-  ;; LOGBOOK drawerに時間を格納する
-  (org-clock-into-drawer . t)
-  ;; TODO状態
-  (org-todo-keywords . '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
-  ;; DONEの時刻を記録
-  (org-log-done . 'time)
-  ;; latexのコンパイラ設定
-  (org-latex-pdf-process . '("latexmk -f %f"))
-  ;; Latex のHeader 設定
-  (org-format-latex-header . '(\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
-                               \\usepackage[usenames]{color}
-                               [PACKAGES]
-                               [DEFAULT-PACKAGES]
-                               \\pagestyle{empty}             % do not remove
-                               % The settings below are copied from fullpage.sty
-                               \\setlength{\\textwidth}{\\paperwidth}
-                               \\addtolength{\\textwidth}{-3cm}
-                               \\setlength{\\oddsidemargin}{1.5cm}
-                               \\addtolength{\\oddsidemargin}{-2.54cm}
-                               \\setlength{\\evensidemargin}{\\oddsidemargin}
-                               \\setlength{\\textheight}{\\paperheight}
-                               \\addtolength{\\textheight}{-\\headheight}
-                               \\addtolength{\\textheight}{-\\headsep}
-                               \\addtolength{\\textheight}{-\\footskip}
-                               \\addtolength{\\textheight}{-3cm}
-                               \\setlength{\\topmargin}{1.5cm}z
-                               \\addtolength{\\topmargin}{-2.54cm}))
-  ;; Latex のデフォルトパッケージ設定
-  (org-latex-default-packages-alist . (quote (("AUTO" "inputenc" t
-                                               ("pdflatex"))
-                                              ("T1" "fontenc" t
-                                               ("pdflatex"))
-                                              ("" "graphicx" t nil)
-                                              ("" "grffile" t nil)
-                                              ("" "longtable" nil nil)
-                                              ("" "wrapfig" nil nil)
-                                              ("" "rotating" nil nil)
-                                              ("normalem" "ulem" t nil)
-                                              ("" "amsmath" t nil)
-                                              ("" "textcomp" t nil)
-                                              ("" "amssymb" t nil)
-                                              ("" "capt-of" nil nil)
-                                              ("hidelinks" "hyperref" nil nil)
-                                              ("" "bm" nil nil)
-                                              ("" "ascmac" nil nil)
-                                              ("" "color" nil nil)
-                                              ("" "cite" nil nil)
-                                              ("" "latexsym" nil nil)
-                                              ("" "url" nil nil)
-                                              ("" "algorithm" nil nil)
-                                              ("" "algpseudocode" nil nil)
-                                              ("" "examplep" nil nil)
-                                              ("" "subfigure" nil nil)
-                                              ("toc,page" "appendix" nil nil)
-                                              ("" "forloop" nil nil)
-                                              ("" "tablefootnote" nil nil)
-                                              ("yyyymmdd" "datetime" nil nil))
-                                             )
-                                    )
+  ;; ox-latex
+  (leaf ox-latex
+    :require t
+    :custom (org-latex-listings . t)
+    )
+  ;; org-mode
+  (leaf org-mode
+    :bind(("\C-cl" . org-store-link)
+          ("\C-cc" . org-capture)
+          ("\C-ca" . org-agenda)
+          ("\C-cb" . org-iswitchb))
+    :config
+    ;; 拡張子
+    (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+    (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+    (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
+    :custom
+    ;; 画像をインラインで表示
+    (org-startup-with-inline-images . t)
+    ;; 見出しの余分な*を消す
+    (org-hide-leading-stars . t)
+    ;; LOGBOOK drawerに時間を格納する
+    (org-clock-into-drawer . t)
+    ;; TODO状態
+    (org-todo-keywords . '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
+    ;; DONEの時刻を記録
+    (org-log-done . 'time)
+    ;; latexのコンパイラ設定
+    (org-latex-pdf-process . '("latexmk -f %f"))
+    ;; Latex のHeader 設定
+    (org-format-latex-header . "\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
+[PACKAGES]
+[DEFAULT-PACKAGES]
+\\pagestyle{empty} % do not remove
+% The settings below are copied from fullpage.sty
+\\setlength{\\textwidth}{\\paperwidth}
+\\addtolength{\\textwidth}{-3cm}
+\\setlength{\\oddsidemargin}{1.5cm}
+\\addtolength{\\oddsidemargin}{-2.54cm}
+\\setlength{\\evensidemargin}{\\oddsidemargin}
+\\setlength{\\textheight}{\\paperheight}
+\\addtolength{\\textheight}{-\\headheight}
+\\addtolength{\\textheight}{-\\headsep}
+\\addtolength{\\textheight}{-\\footskip}
+\\addtolength{\\textheight}{-3cm}
+\\setlength{\\topmargin}{1.5cm}z
+\\addtolength{\\topmargin}{-2.54cm}
+\\lstset{%
+language={C},
+basicstyle={\\small},%
+identifierstyle={\\small},%
+commentstyle={\\small\\itshape},%
+keywordstyle={\\small\\bfseries},%
+ndkeywordstyle={\\small},%
+stringstyle={\\small\\ttfamily},
+frame={tb},
+breaklines=true,
+columns=[l]{fullflexible},%
+numbers=left,%
+xrightmargin=0zw,%
+xleftmargin=3zw,%
+numberstyle={\\scriptsize},%
+stepnumber=1,
+numbersep=1zw,%
+lineskip=-0.5ex}")
+    ;; Latex のデフォルトパッケージ設定
+    (org-latex-default-packages-alist . (quote (("AUTO" "inputenc" t
+                                                 ("pdflatex"))
+                                                ("T1" "fontenc" t
+                                                 ("pdflatex"))
+                                                ("" "graphicx" t nil)
+                                                ("" "grffile" t nil)
+                                                ("" "longtable" nil nil)
+                                                ("" "wrapfig" nil nil)
+                                                ("" "rotating" nil nil)
+                                                ("normalem" "ulem" t nil)
+                                                ("" "amsmath" t nil)
+                                                ("" "textcomp" t nil)
+                                                ("" "amssymb" t nil)
+                                                ("" "capt-of" nil nil)
+                                                ("hidelinks" "hyperref" nil nil)
+                                                ("" "bm" nil nil)
+                                                ("" "ascmac" nil nil)
+                                                ("usenames" "color" nil nil)
+                                                ("" "cite" nil nil)
+                                                ("" "latexsym" nil nil)
+                                                ("" "url" nil nil)
+                                                ("" "algorithm" nil nil)
+                                                ("" "algpseudocode" nil nil)
+                                                ("" "examplep" nil nil)
+                                                ("" "subfigure" nil nil)
+                                                ("toc,page" "appendix" nil nil)
+                                                ("" "forloop" nil nil)
+                                                ("" "tablefootnote" nil nil)
+                                                ("yyyymmdd" "datetime" nil nil)
+                                                ("" "listings" nil nil))
+                                               )
+                                      )
+    )
   )
+
+(provide 'init)
+;;; End:
+;;; init.el ends here
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto generated parameters         ;;
 ;; This part generates automatically ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(\. nil t)
- '(\.nil nil t)
- '(all-the-icons-scale-factor 1.0 t)
- '(ccls-executable "/usr/local/bin/ccls" t)
- '(ccls-sem-highlight-method (quote font-lock) t)
- '(ccls-use-default-rainbow-sem-highlight nil t)
- '(company-box-doc-enable nil)
- '(company-box-icons-alist (quote company-box-icons-all-the-icons))
- '(company-echo-delay 0 t)
- '(company-idle-delay 0)
- '(company-minimum-prefix-length 2)
- '(company-selection-wrap-around t)
- '(company-transformers (quote (company-sort-by-backend-importance)))
- '(completion-ignore-case t t)
- '(create-lockfiles nil)
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
- '(doom-modeline-icon t t)
- '(doom-modeline-major-mode-icon nil t)
- '(doom-modeline-minor-modes nil t)
- '(doom-themes-enable-bold nil)
- '(doom-themes-enable-italic nil)
- '(dumb-jump-mode t)
- '(dumb-jump-selector (quote ivy))
- '(dumb-jump-use-visible-window nil)
- '(el-get-git-shallow-clone t)
- '(enable-recursive-minibuffers t)
- '(git-complete-enable-autopair t)
- '(highlight-indent-guides-auto-enabled nil)
- '(highlight-indent-guides-method (quote character))
- '(iedit-current-symbol-default nil t)
- '(iedit-toggle-key-default "C-;" t)
- '(ivy-extra-directories nil)
- '(ivy-height 15)
- '(ivy-re-builders-alist\. nil t)
- '(ivy-use-virtual-buffers t)
- '(lsp-document-sync-method (quote incremental))
- '(lsp-enable-indentation nil)
- '(lsp-enable-snippet t)
- '(lsp-file-watch-threshold nil)
- '(lsp-inhibit-message t t)
- '(lsp-message-project-root-warning t t)
- '(lsp-prefer-flymake nil)
- '(lsp-ui-doc-enable t t)
- '(lsp-ui-doc-header t t)
- '(lsp-ui-doc-include-signature t t)
- '(lsp-ui-doc-max-height 20 t)
- '(lsp-ui-doc-max-width 60 t)
- '(lsp-ui-doc-position (quote top) t)
- '(lsp-ui-doc-use-childframe t t)
- '(lsp-ui-doc-use-webkit nil t)
- '(lsp-ui-flycheck-enable t t)
- '(lsp-ui-imenu-enable nil t)
- '(lsp-ui-imenu-kind-position (quote top) t)
- '(lsp-ui-peek-always-show t t)
- '(lsp-ui-peek-enable t t)
- '(lsp-ui-peek-fontify (quote always) t)
- '(lsp-ui-peek-list-width 30 t)
- '(lsp-ui-peek-peek-height 30 t)
- '(lsp-ui-sideline-enable t t)
- '(lsp-ui-sideline-ignore-duplicate t t)
- '(lsp-ui-sideline-show-code-actions t t)
- '(lsp-ui-sideline-show-diagnostics t t)
- '(lsp-ui-sideline-show-hover t t)
- '(lsp-ui-sideline-show-symbol t t)
- '(neo-theme (quote nerd2) t)
- '(org-clock-into-drawer t t)
- '(org-format-latex-header
-   (quote
-    (\\documentclass
-     [11pt
-      (\, a4paper)
-      (\, dvipdfmx)]
-     {jarticle} \\usepackage
-     [usenames]
-     {color}
-     [PACKAGES]
-     [DEFAULT-PACKAGES]
-     \\pagestyle{empty} % do not remove % The settings below are copied from fullpage\.sty \\setlength{\\textwidth}{\\paperwidth} \\addtolength{\\textwidth}{-3cm} \\setlength{\\oddsidemargin}{1\.5cm} \\addtolength{\\oddsidemargin}{-2\.54cm} \\setlength{\\evensidemargin}{\\oddsidemargin} \\setlength{\\textheight}{\\paperheight} \\addtolength{\\textheight}{-\\headheight} \\addtolength{\\textheight}{-\\headsep} \\addtolength{\\textheight}{-\\footskip} \\addtolength{\\textheight}{-3cm} \\setlength{\\topmargin}{1\.5cm}z \\addtolength{\\topmargin}{-2\.54cm})) t)
- '(org-hide-leading-stars t t)
- '(org-latex-default-packages-alist
-   (quote
-    (("AUTO" "inputenc" t
-      ("pdflatex"))
-     ("T1" "fontenc" t
-      ("pdflatex"))
-     ("" "graphicx" t nil)
-     ("" "grffile" t nil)
-     ("" "longtable" nil nil)
-     ("" "wrapfig" nil nil)
-     ("" "rotating" nil nil)
-     ("normalem" "ulem" t nil)
-     ("" "amsmath" t nil)
-     ("" "textcomp" t nil)
-     ("" "amssymb" t nil)
-     ("" "capt-of" nil nil)
-     ("hidelinks" "hyperref" nil nil)
-     ("" "bm" nil nil)
-     ("" "ascmac" nil nil)
-     ("" "color" nil nil)
-     ("" "cite" nil nil)
-     ("" "latexsym" nil nil)
-     ("" "url" nil nil)
-     ("" "algorithm" nil nil)
-     ("" "algpseudocode" nil nil)
-     ("" "examplep" nil nil)
-     ("" "subfigure" nil nil)
-     ("toc,page" "appendix" nil nil)
-     ("" "forloop" nil nil)
-     ("" "tablefootnote" nil nil)
-     ("yyyymmdd" "datetime" nil nil))) t)
- '(org-latex-pdf-process (quote ("latexmk -f %f")) t)
- '(org-log-done (quote time) t)
- '(org-startup-with-inline-images t t)
- '(org-todo-keywords
-   (quote
-    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))) t)
- '(package-archives
-   (quote
-    (("org" . "https://orgmode.org/elpa/")
-     ("melpa" . "https://melpa.org/packages/")
-     ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
- '(package-selected-packages
-   (quote
-    (all-the-icons-ivy ivy-rich company-childframe avy-migemo ivy-hydra web-mode yatex yasnippet yaml-mode which-key use-package smooth-scroll rainbow-delimiters popup neotree mozc minimap lsp-ui lsp-treemacs leaf-keywords imenu-list highlight-indent-guides hide-mode-line google-c-style el-get doom-themes doom-modeline company-lsp ccls)))
- '(show-paren-style (quote mixed) t)
- '(show-paren-when-point-in-periphery t t)
- '(show-paren-when-point-inside-paren t t)
- '(web-mode-enable-current-element-highlight t t)
- '(web-mode-engines-alist (quote (("php" . "\\.phtml\\'") ("blade" . "\\.blade\\."))) t))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))
-
-(provide 'init)
-;;; End:
-;;; init.el ends here
