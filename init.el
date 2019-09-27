@@ -838,6 +838,10 @@
     :require t
     :custom (org-latex-listings . t)
     )
+  ;; ox-gfm
+  (leaf ox-gfm
+    :ensure t
+    )
   ;; org-mode
   (leaf org-mode
     :bind(("\C-cl" . org-store-link)
