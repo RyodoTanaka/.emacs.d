@@ -938,6 +938,13 @@ lineskip=-0.5ex}")
     )
   )
 
+;;; dockerfile mode
+;; Dockerfile 用の設定
+(leaf dockerfile-mode
+  :ensure t
+  :mode (("Dockerfile" . dockerfile-mode))
+  )
+
 (provide 'init)
 ;;; End:
 ;;; init.el ends here
