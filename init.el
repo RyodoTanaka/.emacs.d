@@ -777,6 +777,13 @@
     (c-mode-common-hook . ROS-c-mode-hook)
     (c++-mode-common-hook . ROS-c-mode-hook)
     )
+  ;; clang-format
+  ;; clang-formatを使用する
+  (leaf clang-format
+    :ensure t
+    :custom
+    (clang-format-style-option . "llvm")    
+    )
   ;; google-c-style
   ;; Google-c-styleを利用する
   (leaf google-c-style
@@ -1127,7 +1134,7 @@ lineskip=-0.5ex}")
      ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
  '(package-selected-packages
    (quote
-    (google-translate yatex yaml-mode which-key web-mode use-package symbol-overlay smooth-scroll smart-jump slime-company rainbow-delimiters ox-gfm neotree mozc minimap magit lsp-ui lsp-treemacs leaf-keywords ivy-rich imenu-list highlight-indent-guides hide-mode-line google-c-style flycheck elscreen el-get doom-themes doom-modeline dockerfile-mode counsel company-quickhelp company-math company-lsp company-irony company-c-headers company-box company-auctex cmake-mode ccls avy-migemo all-the-icons-ivy)))
+    (clang-format yatex yaml-mode which-key web-mode use-package symbol-overlay smooth-scroll smart-jump slime-company rainbow-delimiters php-mode ox-gfm neotree mozc minimap magit lsp-ui lsp-treemacs leaf-keywords ivy-rich imenu-list highlight-indent-guides hide-mode-line google-translate google-c-style flycheck elscreen el-get doom-themes doom-modeline dockerfile-mode counsel company-quickhelp company-math company-lsp company-irony company-c-headers company-box company-auctex cmake-mode ccls avy-migemo all-the-icons-ivy)))
  '(show-paren-style (quote mixed) t)
  '(show-paren-when-point-in-periphery t t)
  '(show-paren-when-point-inside-paren t t)
