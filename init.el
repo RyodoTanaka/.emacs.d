@@ -829,6 +829,12 @@
   :hook (web-mode-hook . my-web-mode-hook)
   )
 
+;;; php-mode
+;; PHP modeの設定
+(leaf php-mode
+  :ensure t
+  )
+
 ;;; Org mode
 ;; Org modeの設定
 (leaf *org-mode-settings
