@@ -505,6 +505,24 @@
     (leaf lsp-treemacs :ensure t)  
     )
   )
+
+;;; flycheck
+;; 構文チェック
+(leaf flycheck
+  :ensure t
+  :commands flycheck-mode
+  :hook (prog-mode-hook . flycheck-mode) 
+  :custom
+  (flycheck-check-syntax-automatically . '(save new-line))
+  (flycheck-idle-change-delay . 5.0)
+  (flycheck-display-errors-delay . 0.9)
+  (flycheck-highlighting-mode . 'symbols)
+  (flycheck-indication-mode . 'left-fringe)
+  (flycheck-standard-error-navigation . t)
+  (flycheck-deferred-syntax-check . nil)
+  (flycheck-completion-system . nil)
+  )
+
 ;;; company
 ;; 補間機能が使えるようにする
 (leaf company
@@ -776,6 +794,7 @@
     :hook
     (c-mode-common-hook . ROS-c-mode-hook)
     (c++-mode-common-hook . ROS-c-mode-hook)
+    
     )
   ;; clang-format
   ;; clang-formatを使用する
