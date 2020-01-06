@@ -896,6 +896,8 @@
     (org-todo-keywords . '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
     ;; DONEの時刻を記録
     (org-log-done . 'time)
+    ;; イメージサイズの大きさを画面に合わせる
+    (org-image-actual-width . nil)
     ;; latexのコンパイラ設定
     (org-latex-pdf-process . '("latexmk -f %f"))
     ;; Latex のHeader 設定
