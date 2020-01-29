@@ -124,6 +124,9 @@
             (lambda ()
               (linum-mode -1)
               ))
+  ;; ファイルが #! から始まる場合， +x (実行権限) を付けて保存する
+  (add-hook 'after-save-hook
+            'executable-make-buffer-file-executable-if-script-p)
   )
 
 ;;; Start up setting
