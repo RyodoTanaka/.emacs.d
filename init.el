@@ -687,9 +687,9 @@
   (setq YaTeX-kanji-code nil)
   (setq YaTeX-latex-message-code 'utf-8)
   (setq YaTeX-use-font-lock t)
-  (setq tex-command "latexmk -pvc")  ;;保存したら自動で再コンパイル
+  (setq tex-command "latexmk -pvc -bibtex")  ;;保存したら自動で再コンパイル
   (setq dvi2-command "evince")
-  (setq bibtex-command "pbibtex")     ; BibTeX のコマンド
+  (setq bibtex-command "pbibtex -kanji=utf8")     ; BibTeX のコマンド
   (when  (eq system-type 'gnu/linux) ; for GNU/Linux
     ;; inverse search
     (defun un-urlify (fname-or-url)
