@@ -888,6 +888,11 @@
     (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
     (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
     (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
+    ;; hyperref
+    (add-to-list 'org-latex-packages-alist "\\hypersetup{colorlinks=true}" . org-mode)
+    (add-to-list 'org-latex-packages-alist "\\hypersetup{citecolor=blue}" . org-mode)
+    (add-to-list 'org-latex-packages-alist "\\hypersetup{linkcolor=red}" . org-mode)
+    (add-to-list 'org-latex-packages-alist "\\hypersetup{urlcolor=orange}" . org-mode)
     :custom
     ;; 画像をインラインで表示
     (org-startup-with-inline-images . t)
@@ -903,8 +908,10 @@
     (org-image-actual-width . nil)
     ;; latexのコンパイラ設定
     (org-latex-pdf-process . '("latexmk -f %f"))
+    ;; hperref の設定
+    (org-latex-with-hyperref . nil)
     ;; Latex のHeader 設定
-    (org-format-latex-header . "\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
+    (org-format-latex-header . '("\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
 [PACKAGES]
 [DEFAULT-PACKAGES]
 \\pagestyle{empty} % do not remove
@@ -938,12 +945,7 @@ xleftmargin=3zw,%
 numberstyle={\\scriptsize},%
 stepnumber=1,
 numbersep=1zw,%
-lineskip=-0.5ex}%
-\\hypersetup{%
-colorlinks=true,%
-citecolor=blue,%
-linkcolor=red,%
-urlcolor=orange}")
+lineskip=-0.5ex}"))
     ;; Latex のデフォルトパッケージ設定
     (org-latex-default-packages-alist . (quote (("AUTO" "inputenc" t
                                                  ("pdflatex"))
