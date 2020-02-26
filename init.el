@@ -938,7 +938,12 @@ xleftmargin=3zw,%
 numberstyle={\\scriptsize},%
 stepnumber=1,
 numbersep=1zw,%
-lineskip=-0.5ex}")
+lineskip=-0.5ex}%
+\\hypersetup{%
+colorlinks=true,%
+citecolor=blue,%
+linkcolor=red,%
+urlcolor=orange}")
     ;; Latex のデフォルトパッケージ設定
     (org-latex-default-packages-alist . (quote (("AUTO" "inputenc" t
                                                  ("pdflatex"))
@@ -954,7 +959,6 @@ lineskip=-0.5ex}")
                                                 ("" "textcomp" t nil)
                                                 ("" "amssymb" t nil)
                                                 ("" "capt-of" nil nil)
-                                                ("hidelinks" "hyperref" nil nil)
                                                 ("" "bm" nil nil)
                                                 ("" "ascmac" nil nil)
                                                 ("usenames" "color" nil nil)
@@ -969,7 +973,14 @@ lineskip=-0.5ex}")
                                                 ("" "forloop" nil nil)
                                                 ("" "tablefootnote" nil nil)
                                                 ("yyyymmdd" "datetime" nil nil)
-                                                ("" "listings" nil nil))
+                                                ("" "listings" nil nil)
+                                                ("dvipdfmx" "hyperref" nil nil)
+                                                ("dvipdfmx" "graphicx" nil nil)
+                                                ("dvipdfmx" "xcolor" nil nil)
+                                                ("" "cite" nil nil)
+                                                ("" "caption" nil nil)
+                                                ("" "subcaption" nil nil)
+                                                ("" "siunitx" nil nil))
                                                )
                                       )
     )
@@ -1027,146 +1038,3 @@ lineskip=-0.5ex}")
 ;; Auto generated parameters         ;;
 ;; This part generates automatically ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(\. nil t)
- '(\.nil nil t)
- '(all-the-icons-scale-factor 1.0 t)
- '(ccls-executable "/usr/local/bin/ccls" t)
- '(ccls-sem-highlight-method (quote font-lock) t)
- '(ccls-use-default-rainbow-sem-highlight nil t)
- '(company-echo-delay 0 t)
- '(company-idle-delay 0 t)
- '(company-minimum-prefix-length 2 t)
- '(company-selection-wrap-around t t)
- '(company-transformers (quote (company-sort-by-backend-importance)) t)
- '(completion-ignore-case t t)
- '(create-lockfiles nil)
- '(doom-modeline-buffer-file-name-style (quote truncate-with-project) t)
- '(doom-modeline-icon t t)
- '(doom-modeline-major-mode-icon nil t)
- '(doom-modeline-minor-modes nil t)
- '(doom-themes-enable-bold nil)
- '(doom-themes-enable-italic nil)
- '(dumb-jump-mode t)
- '(dumb-jump-selector (quote ivy))
- '(dumb-jump-use-visible-window nil)
- '(el-get-git-shallow-clone t)
- '(elscreen-display-screen-number nil t)
- '(elscreen-tab-display-control nil t)
- '(elscreen-tab-display-kill-screen nil t)
- '(enable-recursive-minibuffers t)
- '(git-complete-enable-autopair t t)
- '(highlight-indent-guides-auto-enabled nil t)
- '(highlight-indent-guides-method (quote character) t)
- '(ivy-extra-directories nil t)
- '(ivy-height 15 t)
- '(ivy-re-builders-alist\. nil t)
- '(ivy-use-virtual-buffers t t)
- '(lsp-document-sync-method (quote incremental) t)
- '(lsp-enable-indentation nil t)
- '(lsp-enable-snippet t t)
- '(lsp-file-watch-threshold nil t)
- '(lsp-inhibit-message t t)
- '(lsp-message-project-root-warning t t)
- '(lsp-prefer-flymake nil t)
- '(neo-theme (quote nerd2) t)
- '(org-clock-into-drawer t t)
- '(org-format-latex-header
-   "\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
-[PACKAGES]
-[DEFAULT-PACKAGES]
-\\pagestyle{empty} % do not remove
-% The settings below are copied from fullpage.sty
-\\setlength{\\textwidth}{\\paperwidth}
-\\addtolength{\\textwidth}{-3cm}
-\\setlength{\\oddsidemargin}{1.5cm}
-\\addtolength{\\oddsidemargin}{-2.54cm}
-\\setlength{\\evensidemargin}{\\oddsidemargin}
-\\setlength{\\textheight}{\\paperheight}
-\\addtolength{\\textheight}{-\\headheight}
-\\addtolength{\\textheight}{-\\headsep}
-\\addtolength{\\textheight}{-\\footskip}
-\\addtolength{\\textheight}{-3cm}
-\\setlength{\\topmargin}{1.5cm}z
-\\addtolength{\\topmargin}{-2.54cm}
-\\lstset{%
-language={C},
-basicstyle={\\small},%
-identifierstyle={\\small},%
-commentstyle={\\small\\itshape},%
-keywordstyle={\\small\\bfseries},%
-ndkeywordstyle={\\small},%
-stringstyle={\\small\\ttfamily},
-frame={tb},
-breaklines=true,
-columns=[l]{fullflexible},%
-numbers=left,%
-xrightmargin=0zw,%
-xleftmargin=3zw,%
-numberstyle={\\scriptsize},%
-stepnumber=1,
-numbersep=1zw,%
-lineskip=-0.5ex}")
- '(org-hide-leading-stars t)
- '(org-latex-default-packages-alist
-   (quote
-    (("AUTO" "inputenc" t
-      ("pdflatex"))
-     ("T1" "fontenc" t
-      ("pdflatex"))
-     ("" "graphicx" t nil)
-     ("" "grffile" t nil)
-     ("" "longtable" nil nil)
-     ("" "wrapfig" nil nil)
-     ("" "rotating" nil nil)
-     ("normalem" "ulem" t nil)
-     ("" "amsmath" t nil)
-     ("" "textcomp" t nil)
-     ("" "amssymb" t nil)
-     ("" "capt-of" nil nil)
-     ("hidelinks" "hyperref" nil nil)
-     ("" "bm" nil nil)
-     ("" "ascmac" nil nil)
-     ("usenames" "color" nil nil)
-     ("" "cite" nil nil)
-     ("" "latexsym" nil nil)
-     ("" "url" nil nil)
-     ("" "algorithm" nil nil)
-     ("" "algpseudocode" nil nil)
-     ("" "examplep" nil nil)
-     ("" "subfigure" nil nil)
-     ("toc,page" "appendix" nil nil)
-     ("" "forloop" nil nil)
-     ("" "tablefootnote" nil nil)
-     ("yyyymmdd" "datetime" nil nil)
-     ("" "listings" nil nil))))
- '(org-latex-listings t)
- '(org-latex-pdf-process (quote ("latexmk -f %f")))
- '(org-log-done (quote time))
- '(org-startup-with-inline-images t)
- '(org-todo-keywords
-   (quote
-    ((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)"))))
- '(package-archives
-   (quote
-    (("org" . "https://orgmode.org/elpa/")
-     ("melpa" . "https://melpa.org/packages/")
-     ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
- '(package-selected-packages
-   (quote
-    (clang-format yatex yaml-mode which-key web-mode use-package symbol-overlay smooth-scroll smart-jump slime-company rainbow-delimiters php-mode ox-gfm neotree mozc minimap magit lsp-ui lsp-treemacs leaf-keywords ivy-rich imenu-list highlight-indent-guides hide-mode-line google-translate google-c-style flycheck elscreen el-get doom-themes doom-modeline dockerfile-mode counsel company-quickhelp company-math company-lsp company-irony company-c-headers company-box company-auctex cmake-mode ccls avy-migemo all-the-icons-ivy)))
- '(show-paren-style (quote mixed) t)
- '(show-paren-when-point-in-periphery t t)
- '(show-paren-when-point-inside-paren t t)
- '(web-mode-enable-current-element-highlight t t)
- '(web-mode-engines-alist (quote (("php" . "\\.phtml\\'") ("blade" . "\\.blade\\."))) t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))
