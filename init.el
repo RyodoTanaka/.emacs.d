@@ -754,7 +754,9 @@
 (leaf yaml-mode
   :ensure t;
   :mode (("\\.yml\\'")
-         ("\\.yaml\\'"))
+         ("\\.yaml\\'")
+         ("\\.cnoid\\'")
+         )
   )
 
 ;;; cmake-mode
