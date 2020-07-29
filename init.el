@@ -867,6 +867,12 @@
   :ensure t
   )
 
+;;; csharp-mode
+;; C# modeの設定
+(leaf csharp-mode
+  :ensure t
+  )
+
 ;;; Org mode
 ;; Org modeの設定
 (leaf *org-mode-settings
