@@ -827,8 +827,8 @@
       :ensure t
       :custom
       (ccls-executable .  "/usr/local/bin/ccls")
-      (ccls-sem-highlight-method . 'font-lock)
-      (ccls-use-default-rainbow-sem-highlight .)
+      ;; (ccls-sem-highlight-method . 'font-lock)
+      ;; (ccls-use-default-rainbow-sem-highlight .)
       :hook ((c-mode-hook c++-mode-hook objc-mode-hook) .
              (lambda () (require 'ccls) (lsp))))
     )
