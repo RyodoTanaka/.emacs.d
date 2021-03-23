@@ -494,7 +494,7 @@
   ;; company-lsp
   ;; LSPベースの補間
   (leaf company-lsp
-    :ensure t
+    :url "https://github.com/tigersoldier/company-lsp"
     :commands company-lsp company
     :custom
     (company-lsp-cache-candidates . nil)
@@ -785,6 +785,8 @@
     (defun ROS-c-mode-hook()
       (setq c-basic-offset 2)
       (setq indent-tabs-mode nil)
+      (hide-ifdef-mode t)
+      (hide-ifdefs)
       (c-set-offset 'substatement-open 0)
       (c-set-offset 'innamespace 0)
       (c-set-offset 'case-label '+)
@@ -1049,3 +1051,25 @@ lineskip=-0.5ex}"))
 ;; Auto generated parameters         ;;
 ;; This part generates automatically ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(doom-themes-enable-bold nil)
+ '(doom-themes-enable-italic nil)
+ '(el-get-git-shallow-clone t)
+ '(package-archives
+   (quote
+    (("org" . "https://orgmode.org/elpa/")
+     ("melpa" . "https://melpa.org/packages/")
+     ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
+ '(package-selected-packages
+   (quote
+    (arduino-mode yatex yaml-mode which-key web-mode symbol-overlay smooth-scroll smart-jump slime-company rainbow-delimiters php-mode ox-gfm neotree mozc minimap magit lsp-ui leaf-keywords ivy-rich imenu-list hydra highlight-indent-guides hide-mode-line google-translate google-c-style flycheck elscreen el-get doom-themes doom-modeline dockerfile-mode csharp-mode counsel company-quickhelp company-math company-lsp company-irony company-c-headers company-box company-auctex cmake-mode clang-format ccls avy-migemo all-the-icons-ivy))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))) nil "Customized with leaf in `paren' block at `/home/ryodo/.emacs.d/init.el'"))
