@@ -875,6 +875,12 @@
   :ensure t
   )
 
+;;; platformio-mode
+;; PlatformIO modeの設定
+(leaf platformio-mode
+  :ensure t
+  )
+
 ;;; Org mode
 ;; Org modeの設定
 (leaf *org-mode-settings
