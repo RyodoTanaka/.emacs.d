@@ -415,6 +415,12 @@
   (add-to-list 'default-mode-line-format '(:eval (count-lines-and-chars)))
   )
 
+;;; multi-term
+;; Terminal ソフトウェア
+(leaf multi-term
+  :ensure t
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;
 ;; IDE environment ;;
 ;;;;;;;;;;;;;;;;;;;;;
