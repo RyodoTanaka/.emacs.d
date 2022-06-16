@@ -499,20 +499,20 @@
     )
   ;; company-lsp
   ;; LSPベースの補間
-  (leaf company-lsp
-    :url "https://github.com/tigersoldier/company-lsp"
-    :commands company-lsp company
-    :custom
-    (company-lsp-cache-candidates . nil)
-    (company-lsp-async . t)
-    (company-lsp-enable-recompletion . t)
-    (company-lsp-enable-snippet . t)
-    :after
-    (:all lsp-mode lsp-ui company yasnippet)
-    ;; lsp-treema
-    ;; LSP用treemacs
-    (leaf lsp-treemacs :ensure t)  
-    )
+  ;; (leaf company-lsp
+  ;;   :ensure t
+  ;;   :commands company-lsp company
+  ;;   :custom
+  ;;   (company-lsp-cache-candidates . nil)
+  ;;   (company-lsp-async . t)
+  ;;   (company-lsp-enable-recompletion . t)
+  ;;   (company-lsp-enable-snippet . t)
+  ;;   :after
+  ;;   (:all lsp-mode lsp-ui company yasnippet)
+  ;;   ;; lsp-treema
+  ;;   ;; LSP用treemacs
+  ;;   (leaf lsp-treemacs :ensure t)  
+  ;;   )
   )
 
 ;;; flycheck
@@ -585,7 +585,7 @@
                                    company-clang
                                    company-xcode
                                    company-cmake
-                                   company-capf
+                                   company-mode/company-capf
                                    company-dabbrev-code
                                    company-gtags
                                    company-etags
@@ -600,7 +600,6 @@
                                    company-c-headers
                                    company-auctex
                                    company-math-symbols-unicode
-                                   company-lsp
                                    company-elisp
                                    company-yasnippet)
                )
@@ -1079,7 +1078,7 @@ lineskip=-0.5ex}"))
      ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
  '(package-selected-packages
    (quote
-    (arduino-mode yatex yaml-mode which-key web-mode symbol-overlay smooth-scroll smart-jump slime-company rainbow-delimiters php-mode ox-gfm neotree mozc minimap magit lsp-ui leaf-keywords ivy-rich imenu-list hydra highlight-indent-guides hide-mode-line google-translate google-c-style flycheck elscreen el-get doom-themes doom-modeline dockerfile-mode csharp-mode counsel company-quickhelp company-math company-lsp company-irony company-c-headers company-box company-auctex cmake-mode clang-format ccls avy-migemo all-the-icons-ivy))))
+    (arduino-mode yatex yaml-mode which-key web-mode symbol-overlay smooth-scroll smart-jump slime-company rainbow-delimiters php-mode ox-gfm neotree mozc minimap magit lsp-ui leaf-keywords ivy-rich imenu-list hydra highlight-indent-guides hide-mode-line google-translate google-c-style flycheck elscreen el-get doom-themes doom-modeline dockerfile-mode csharp-mode counsel company-quickhelp company-math company-capf company-irony company-c-headers company-box company-auctex cmake-mode clang-format ccls avy-migemo all-the-icons-ivy))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
