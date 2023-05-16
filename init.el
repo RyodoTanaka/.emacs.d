@@ -300,6 +300,10 @@
          ("C-c C-g" . hs-hide-all))
   )
 
+(leaf yafolding
+  :ensure t
+  )
+
 ;;; multiple-cursors
 ;; 複数行同時編集のためのパッケージ
 ;; (leaf multiple-cursors
