@@ -299,7 +299,6 @@
          ("C-c C-a" . hs-show-all)
          ("C-c C-g" . hs-hide-all))
   )
-
 (leaf yafolding
   :ensure t
   )
@@ -1020,6 +1019,13 @@ lineskip=-0.5ex}"))
 (leaf dockerfile-mode
   :ensure t
   :mode (("Dockerfile" . dockerfile-mode))
+  )
+
+;;; protobuf mode
+;; protobuffer 用の設定
+(leaf protobuf-mode
+  :ensure t
+  :mode (("\\.proto\\'" . protobuf-mode))
   )
 
 ;;; Google Translate
