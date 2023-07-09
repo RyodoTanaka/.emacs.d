@@ -432,7 +432,6 @@
   :url "https://github.com/MaskRay/ccls/wiki/lsp-mode#find-definitionsreferences"
   :doc "lsp is language server protocol"
   :when (version<= "25.1" emacs-version)
-  :ensure flycheck
   :config
   ;; lsp-mode
   ;; LSPの基本パッケージ
@@ -475,8 +474,6 @@
     (lsp-ui-doc-max-height . 20)
     (lsp-ui-doc-use-childframe . t)
     (lsp-ui-doc-use-webkit . nil)
-    ;; lsp-ui-flycheck
-    (lsp-ui-flycheck-enable . t)
     ;; lsp-ui-sideline
     (lsp-ui-sideline-enable . nil)
     (lsp-ui-sideline-ignore-duplicate . t)
@@ -516,23 +513,6 @@
   ;;   ;; LSP用treemacs
   ;;   (leaf lsp-treemacs :ensure t)  
   ;;   )
-  )
-
-;;; flycheck
-;; 構文チェック
-(leaf flycheck
-  :ensure t
-  :commands flycheck-mode
-  :hook (prog-mode-hook . flycheck-mode) 
-  :custom
-  (flycheck-check-syntax-automatically . '(save new-line))
-  (flycheck-idle-change-delay . 5.0)
-  (flycheck-display-errors-delay . 0.9)
-  (flycheck-highlighting-mode . 'symbols)
-  (flycheck-indication-mode . 'left-fringe)
-  (flycheck-standard-error-navigation . t)
-  (flycheck-deferred-syntax-check . nil)
-  (flycheck-completion-system . nil)
   )
 
 ;;; company
