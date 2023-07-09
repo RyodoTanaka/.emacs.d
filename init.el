@@ -652,6 +652,35 @@
     )
   )
 
+;;; copilot
+;; Github Copilot を使えるようにする
+(leaf copilot
+  :el-get (copilot
+           :type github
+           :pkgname "zerolfx/copilot.el"
+           )
+  :config
+  (leaf editorconfig
+    :ensure t
+    )
+  (leaf s
+    :ensure t
+    )
+  (leaf dash
+    :ensure t
+    )
+  (leaf jsonrpc
+    :ensure t
+    )
+  (defun my/copilot-tab ()
+    (interactive)
+    (or (copilot-accept-completion)
+        (indent-for-tab-command)))
+
+  (with-eval-after-load 'copilot
+    (define-key copilot-mode-map (kbd "<tab>") #'my/copilot-tab))
+  )
+
 ;;; magit
 ;; magitの設定
 (leaf magit
