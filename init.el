@@ -924,10 +924,10 @@
     (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
     (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
     ;; hyperref
-    (add-to-list 'org-latex-packages-alist "\\hypersetup{colorlinks=true}" . org-mode)
-    (add-to-list 'org-latex-packages-alist "\\hypersetup{citecolor=blue}" . org-mode)
-    (add-to-list 'org-latex-packages-alist "\\hypersetup{linkcolor=red}" . org-mode)
-    (add-to-list 'org-latex-packages-alist "\\hypersetup{urlcolor=orange}" . org-mode)
+    ;; (add-to-list 'org-latex-packages-alist "\\hypersetup{colorlinks=true}" . org-mode)
+    ;; (add-to-list 'org-latex-packages-alist "\\hypersetup{citecolor=blue}" . org-mode)
+    ;; (add-to-list 'org-latex-packages-alist "\\hypersetup{linkcolor=red}" . org-mode)
+    ;; (add-to-list 'org-latex-packages-alist "\\hypersetup{urlcolor=orange}" . org-mode)
     :custom
     ;; 画像をインラインで表示
     (org-startup-with-inline-images . t)
