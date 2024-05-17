@@ -902,127 +902,127 @@
 
 ;;; Org mode
 ;; Org modeの設定
-(leaf *org-mode-settings
-  :config
-  ;; ox-latex
-  (leaf ox-latex
-    :require t
-    :custom (org-latex-listings . t)
-    )
-  ;; ox-gfm
-  (leaf ox-gfm
-    :ensure t
-    )
-  ;; org-mode
-  (leaf org-mode
-    :bind(("\C-cl" . org-store-link)
-          ("\C-cc" . org-capture)
-          ("\C-ca" . org-agenda)
-          ("\C-cb" . org-iswitchb))
-    :config
-    ;; 拡張子
-    (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-    (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-    (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
-    ;; hyperref
-    (add-to-list 'org-latex-packages-alist "\\hypersetup{colorlinks=true}" . org-mode)
-    (add-to-list 'org-latex-packages-alist "\\hypersetup{citecolor=blue}" . org-mode)
-    (add-to-list 'org-latex-packages-alist "\\hypersetup{linkcolor=red}" . org-mode)
-    (add-to-list 'org-latex-packages-alist "\\hypersetup{urlcolor=orange}" . org-mode)
-    :custom
-    ;; 画像をインラインで表示
-    (org-startup-with-inline-images . t)
-    ;; 見出しの余分な*を消す
-    (org-hide-leading-stars . t)
-    ;; LOGBOOK drawerに時間を格納する
-    (org-clock-into-drawer . t)
-    ;; TODO状態
-    (org-todo-keywords . '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
-    ;; DONEの時刻を記録
-    (org-log-done . 'time)
-    ;; イメージサイズの大きさを画面に合わせる
-    (org-image-actual-width . nil)
-    ;; latexのコンパイラ設定
-    (org-latex-pdf-process . '("latexmk -f %f"))
-    ;; hperref の設定
-    (org-latex-with-hyperref . nil)
-    ;; Latex のHeader 設定
-    (org-format-latex-header . '("\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
-[PACKAGES]
-[DEFAULT-PACKAGES]
-\\pagestyle{empty} % do not remove
-% The settings below are copied from fullpage.sty
-\\setlength{\\textwidth}{\\paperwidth}
-\\addtolength{\\textwidth}{-3cm}
-\\setlength{\\oddsidemargin}{1.5cm}
-\\addtolength{\\oddsidemargin}{-2.54cm}
-\\setlength{\\evensidemargin}{\\oddsidemargin}
-\\setlength{\\textheight}{\\paperheight}
-\\addtolength{\\textheight}{-\\headheight}
-\\addtolength{\\textheight}{-\\headsep}
-\\addtolength{\\textheight}{-\\footskip}
-\\addtolength{\\textheight}{-3cm}
-\\setlength{\\topmargin}{1.5cm}z
-\\addtolength{\\topmargin}{-2.54cm}
-\\lstset{%
-language={C},
-basicstyle={\\small},%
-identifierstyle={\\small},%
-commentstyle={\\small\\itshape},%
-keywordstyle={\\small\\bfseries},%
-ndkeywordstyle={\\small},%
-stringstyle={\\small\\ttfamily},
-frame={tb},
-breaklines=true,
-columns=[l]{fullflexible},%
-numbers=left,%
-xrightmargin=0zw,%
-xleftmargin=3zw,%
-numberstyle={\\scriptsize},%
-stepnumber=1,
-numbersep=1zw,%
-lineskip=-0.5ex}"))
-    ;; Latex のデフォルトパッケージ設定
-    (org-latex-default-packages-alist . (quote (("AUTO" "inputenc" t
-                                                 ("pdflatex"))
-                                                ("T1" "fontenc" t
-                                                 ("pdflatex"))
-                                                ("" "graphicx" t nil)
-                                                ("" "grffile" t nil)
-                                                ("" "longtable" nil nil)
-                                                ("" "wrapfig" nil nil)
-                                                ("" "rotating" nil nil)
-                                                ("normalem" "ulem" t nil)
-                                                ("" "amsmath" t nil)
-                                                ("" "textcomp" t nil)
-                                                ("" "amssymb" t nil)
-                                                ("" "capt-of" nil nil)
-                                                ("" "bm" nil nil)
-                                                ("" "ascmac" nil nil)
-                                                ("usenames" "color" nil nil)
-                                                ("" "cite" nil nil)
-                                                ("" "latexsym" nil nil)
-                                                ("" "url" nil nil)
-                                                ("" "algorithm" nil nil)
-                                                ("" "algpseudocode" nil nil)
-                                                ("" "examplep" nil nil)
-                                                ("" "subfigure" nil nil)
-                                                ("toc,page" "appendix" nil nil)
-                                                ("" "forloop" nil nil)
-                                                ("" "tablefootnote" nil nil)
-                                                ("yyyymmdd" "datetime" nil nil)
-                                                ("" "listings" nil nil)
-                                                ("dvipdfmx" "hyperref" nil nil)
-                                                ("dvipdfmx" "graphicx" nil nil)
-                                                ("dvipdfmx" "xcolor" nil nil)
-                                                ("" "cite" nil nil)
-                                                ("" "caption" nil nil)
-                                                ("" "subcaption" nil nil)
-                                                ("" "siunitx" nil nil))
-                                               )
-                                      )
-    )
-  )
+;; (leaf *org-mode-settings
+;;   :config
+;;   ;; ox-latex
+;;   (leaf ox-latex
+;;     :require t
+;;     :custom (org-latex-listings . t)
+;;     )
+;;   ;; ox-gfm
+;;   (leaf ox-gfm
+;;     :ensure t
+;;     )
+;;   ;; org-mode
+;;   (leaf org-mode
+;;     :bind(("\C-cl" . org-store-link)
+;;           ("\C-cc" . org-capture)
+;;           ("\C-ca" . org-agenda)
+;;           ("\C-cb" . org-iswitchb))
+;;     :config
+;;     ;; 拡張子
+;;     (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+;;     (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+;;     (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
+;;     ;; hyperref
+;;     (add-to-list 'org-latex-packages-alist "\\hypersetup{colorlinks=true}" . org-mode)
+;;     (add-to-list 'org-latex-packages-alist "\\hypersetup{citecolor=blue}" . org-mode)
+;;     (add-to-list 'org-latex-packages-alist "\\hypersetup{linkcolor=red}" . org-mode)
+;;     (add-to-list 'org-latex-packages-alist "\\hypersetup{urlcolor=orange}" . org-mode)
+;;     :custom
+;;     ;; 画像をインラインで表示
+;;     (org-startup-with-inline-images . t)
+;;     ;; 見出しの余分な*を消す
+;;     (org-hide-leading-stars . t)
+;;     ;; LOGBOOK drawerに時間を格納する
+;;     (org-clock-into-drawer . t)
+;;     ;; TODO状態
+;;     (org-todo-keywords . '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)"  "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
+;;     ;; DONEの時刻を記録
+;;     (org-log-done . 'time)
+;;     ;; イメージサイズの大きさを画面に合わせる
+;;     (org-image-actual-width . nil)
+;;     ;; latexのコンパイラ設定
+;;     (org-latex-pdf-process . '("latexmk -f %f"))
+;;     ;; hperref の設定
+;;     (org-latex-with-hyperref . nil)
+;;     ;; Latex のHeader 設定
+;;     (org-format-latex-header . '("\\documentclass[11pt,a4paper,dvipdfmx]{jarticle}
+;; [PACKAGES]
+;; [DEFAULT-PACKAGES]
+;; \\pagestyle{empty} % do not remove
+;; % The settings below are copied from fullpage.sty
+;; \\setlength{\\textwidth}{\\paperwidth}
+;; \\addtolength{\\textwidth}{-3cm}
+;; \\setlength{\\oddsidemargin}{1.5cm}
+;; \\addtolength{\\oddsidemargin}{-2.54cm}
+;; \\setlength{\\evensidemargin}{\\oddsidemargin}
+;; \\setlength{\\textheight}{\\paperheight}
+;; \\addtolength{\\textheight}{-\\headheight}
+;; \\addtolength{\\textheight}{-\\headsep}
+;; \\addtolength{\\textheight}{-\\footskip}
+;; \\addtolength{\\textheight}{-3cm}
+;; \\setlength{\\topmargin}{1.5cm}z
+;; \\addtolength{\\topmargin}{-2.54cm}
+;; \\lstset{%
+;; language={C},
+;; basicstyle={\\small},%
+;; identifierstyle={\\small},%
+;; commentstyle={\\small\\itshape},%
+;; keywordstyle={\\small\\bfseries},%
+;; ndkeywordstyle={\\small},%
+;; stringstyle={\\small\\ttfamily},
+;; frame={tb},
+;; breaklines=true,
+;; columns=[l]{fullflexible},%
+;; numbers=left,%
+;; xrightmargin=0zw,%
+;; xleftmargin=3zw,%
+;; numberstyle={\\scriptsize},%
+;; stepnumber=1,
+;; numbersep=1zw,%
+;; lineskip=-0.5ex}"))
+;;     ;; Latex のデフォルトパッケージ設定
+;;     (org-latex-default-packages-alist . (quote (("AUTO" "inputenc" t
+;;                                                  ("pdflatex"))
+;;                                                 ("T1" "fontenc" t
+;;                                                  ("pdflatex"))
+;;                                                 ("" "graphicx" t nil)
+;;                                                 ("" "grffile" t nil)
+;;                                                 ("" "longtable" nil nil)
+;;                                                 ("" "wrapfig" nil nil)
+;;                                                 ("" "rotating" nil nil)
+;;                                                 ("normalem" "ulem" t nil)
+;;                                                 ("" "amsmath" t nil)
+;;                                                 ("" "textcomp" t nil)
+;;                                                 ("" "amssymb" t nil)
+;;                                                 ("" "capt-of" nil nil)
+;;                                                 ("" "bm" nil nil)
+;;                                                 ("" "ascmac" nil nil)
+;;                                                 ("usenames" "color" nil nil)
+;;                                                 ("" "cite" nil nil)
+;;                                                 ("" "latexsym" nil nil)
+;;                                                 ("" "url" nil nil)
+;;                                                 ("" "algorithm" nil nil)
+;;                                                 ("" "algpseudocode" nil nil)
+;;                                                 ("" "examplep" nil nil)
+;;                                                 ("" "subfigure" nil nil)
+;;                                                 ("toc,page" "appendix" nil nil)
+;;                                                 ("" "forloop" nil nil)
+;;                                                 ("" "tablefootnote" nil nil)
+;;                                                 ("yyyymmdd" "datetime" nil nil)
+;;                                                 ("" "listings" nil nil)
+;;                                                 ("dvipdfmx" "hyperref" nil nil)
+;;                                                 ("dvipdfmx" "graphicx" nil nil)
+;;                                                 ("dvipdfmx" "xcolor" nil nil)
+;;                                                 ("" "cite" nil nil)
+;;                                                 ("" "caption" nil nil)
+;;                                                 ("" "subcaption" nil nil)
+;;                                                 ("" "siunitx" nil nil))
+;;                                                )
+;;                                       )
+;;     )
+;;   )
 
 ;;; dockerfile mode
 ;; Dockerfile 用の設定
