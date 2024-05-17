@@ -296,8 +296,9 @@
   :hook
   (prog-mode-hook . (lambda () (hs-minor-mode 1))) 
   :bind (("C-c C-f" . hs-toggle-hiding)
-         ("C-c C-a" . hs-show-all)
-         ("C-c C-g" . hs-hide-all))
+         ("C-c f" . hs-show-block)
+         ("C-c C-g" . hs-hide-all)
+         ("C-c g" . hs-show-all))
   )
 (leaf yafolding
   :ensure t
