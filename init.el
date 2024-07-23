@@ -27,6 +27,7 @@
 
 (prog1 "prepare leaf"
   (prog1 "package"
+    (setq package-check-signature nil)
     (custom-set-variables
      '(package-archives '(("org"   . "https://orgmode.org/elpa/")
                           ("melpa" . "https://melpa.org/packages/")
@@ -212,16 +213,19 @@
     (column-number-mode 0)
     (doom-modeline-def-modeline 'main
       '(bar window-number matches buffer-info remote-host buffer-position parrot selection-info)
-      '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
+      '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs))
     )
+  
   ;; Hide mode line
   ;; 特定のモードでモードラインを非表示にする
   (leaf hide-mode-line
-    :ensure t neotree minimap imenu-list
+    :ensure t
+    :after neotree minimap imenu-list
     :hook
     ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode)
     )
   )
+
 
 ;;; deliminator-settings
 ;; 括弧に関する設定
@@ -1091,13 +1095,11 @@ lineskip=-0.5ex}"))
  '(doom-themes-enable-italic nil)
  '(el-get-git-shallow-clone t)
  '(package-archives
-   (quote
-    (("org" . "https://orgmode.org/elpa/")
+   '(("org" . "https://orgmode.org/elpa/")
      ("melpa" . "https://melpa.org/packages/")
-     ("gnu" . "https://mirrors.163.com/elpa/gnu/"))))
+     ("gnu" . "https://mirrors.163.com/elpa/gnu/")))
  '(package-selected-packages
-   (quote
-    (arduino-mode yatex yaml-mode which-key web-mode symbol-overlay smooth-scroll smart-jump slime-company rainbow-delimiters php-mode ox-gfm neotree mozc minimap magit lsp-ui leaf-keywords ivy-rich imenu-list hydra highlight-indent-guides hide-mode-line google-translate google-c-style flycheck elscreen el-get doom-themes doom-modeline dockerfile-mode csharp-mode counsel company-quickhelp company-math company-capf company-irony company-c-headers company-box company-auctex cmake-mode clang-format ccls avy-migemo all-the-icons-ivy))))
+   '(doom doom-modeline-now-playing all-the-icons arduino-mode yatex yaml-mode which-key web-mode symbol-overlay smooth-scroll smart-jump slime-company rainbow-delimiters php-mode ox-gfm neotree mozc minimap magit lsp-ui leaf-keywords ivy-rich imenu-list hydra highlight-indent-guides hide-mode-line google-translate google-c-style flycheck elscreen el-get doom-themes doom-modeline dockerfile-mode csharp-mode counsel company-quickhelp company-math company-capf company-irony company-c-headers company-box company-auctex cmake-mode clang-format ccls avy-migemo all-the-icons-ivy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
